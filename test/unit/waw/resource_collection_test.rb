@@ -9,16 +9,22 @@ module Waw
         second_one 2
         third_one 2*33
       EOF
+      assert r.has_resource?(:first_one)
       assert_equal "Hello world", r.first_one
+      assert_equal "Hello world", r[:first_one]
       assert_equal 2, r.second_one
       assert_equal 66, r.third_one
+      assert !r.has_resource?(:missing)
     end
     
     def test_resources_on_file
       r = ResourceCollection.parse_resource_file(File.join(File.dirname(__FILE__), 'resources.txt'))
+      assert r.has_resource?(:first_one)
       assert_equal "Hello world", r.first_one
+      assert_equal "Hello world", r[:first_one]
       assert_equal 2, r.second_one
       assert_equal 66, r.third_one
+      assert !r.has_resource?(:missing)
     end
     
     def test_on_missing_resources
@@ -28,6 +34,7 @@ module Waw
         third_one 2*33
       EOF
       assert_equal nil, r.hello
+      assert_equal "world", r.hello("world")
     end
     
   end

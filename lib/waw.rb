@@ -93,7 +93,7 @@ module Waw
     if File.directory?(resource_dir)
       Dir[File.join(resource_dir, '*.rs')].each do |file|
         name = File.basename(file, '.rs')
-        Resources.add_resource(name, ResourceCollection.parse_resource_file(file))
+        Resources.send(:add_resource, name, ResourceCollection.parse_resource_file(file))
       end
     end
     

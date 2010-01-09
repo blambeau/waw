@@ -23,20 +23,36 @@ module Waw
       @name = name
     end
     
+    # Returns the resource installed under name
+    def [](name)
+      @resources[name]
+    end
+    
+    # Checks if a resource exists
+    def has_resource?(name)
+      @resources.has_key?(name)
+    end
+    
     # Add a resource
     def add_resource(name, value)
       @resources[name.to_s.to_sym] = value
       self.instance_eval <<-EOF
         def #{name}
-          @resources[:#{name}]
+          @resources[:#{name}] 
         end
       EOF
     end
     
     # Logs a friendly message and returns nil
     def method_missing(name, *args)
-      Waw.logger.warn("No such resource #{name} on #{@name}")
-      nil
+      if args.size==1
+        args[0]
+      elsif args.size==0
+        Waw.logger.warn("No such resource #{name} on #{@name}")
+        nil
+      else
+        super
+      end
     end
     
     # Parses some resource string
