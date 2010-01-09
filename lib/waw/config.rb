@@ -28,6 +28,11 @@ module Waw
       raise ConfigurationError, message
     end
     
+    # Checks if a configuration property is known
+    def knows?(name)
+      self.respond_to?(name.to_s.to_sym)
+    end
+    
     # Installs a configuration parameter
     def install_configuration_property(name, value)
       case name
