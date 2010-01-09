@@ -24,7 +24,7 @@ module Waw
       
       # Refreshes the browser
       def refresh
-        fetch(@location)
+        fetch(location)
       end
       
       # Fetchs a given location
@@ -36,15 +36,21 @@ module Waw
         case response
           when Net::HTTPSuccess     then @response
           when Net::HTTPRedirection then fetch(@response['location'], limit - 1)
+          when Net::HTTPNotFound    then @response
           else
             raise "Unexpected response from web server #{response}"
         end
         true
       end
       
+      # Checks if the last request waw answered by a 404 not found
+      def is404
+        (Net::HTTPNotFound === response)
+      end
+      
       # Returns the current shown contents
       def contents
-        @response ? @response.read_body : nil
+        response ? response.read_body : nil
       end
       
     end # class Browser

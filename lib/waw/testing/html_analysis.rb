@@ -4,7 +4,7 @@ module Waw
 
       # Assert that the user sees something in the browser contents
       def i_see(what)
-        contents = @browser.contents
+        contents = browser.contents
         not(contents.nil?) and not(contents.index(what).nil?)
       end
       
