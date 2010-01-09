@@ -2,6 +2,21 @@ module Waw
   # Implements waw configuration utility
   class Config
     
+    # Implementation of the config domain specific language
+    class DSL
+      
+      # Creates a DSL instance
+      def initialize(config)
+        @config = config
+      end
+      
+      # When a method is missing, install config parameter
+      def method_missing(name, *args)
+        @config.install_configuration_property(name, args.size==1 ? args[0] : args)
+      end
+      
+    end # class DSL
+    
     # Initialize a configuration instance. If merge_default is set to true,
     # the default configuration file is automatically loaded.
     def initialize(merge_default = true)
@@ -30,14 +45,15 @@ module Waw
         when :rack_session
           config_error(name, "rack_session is expected to be true or false") unless true==value or false==value
         when :rack_session_expire
-          config_error(name, "rack_session_expire is expected to be an Integer") unless Integer==value
+          config_error(name, "rack_session_expire is expected to be an Integer") unless Integer===value
         when :waw_services
           config_error(name, "Unrecognized waw services #{value}") unless check_services(value)
       end
       instance_eval "@#{name} = value"
       instance_eval <<-EOF
-        def #{name}()
-          @#{name}
+        def #{name}(force_array = false)
+          value = @#{name}
+          force_array ? (Array===value ? value : [value]) : value
         end
       EOF
     end
@@ -50,18 +66,12 @@ module Waw
     # Merges the configuration with a given configuration file
     def merge(config_file)
       raise ArgumentError, "Config file does not exists" unless File.exists?(config_file)
-      File.readlines(config_file).each_with_index do |line, i|
-        next if /^#/ =~ (line = line.strip)
-        next if line.empty?
-        raise ConfigurationError, "Bad configuration line #{File.basename(config_file)}:#{i} (#{line})"\
-          unless /^([a-z_]+)\s+(.*)$/ =~ line
-
-        begin
-          name, value = $1, Kernel.eval($2)
-          install_configuration_property(name, value)
-        rescue Exception => ex
-          raise ConfigurationError, "Bad configuration line #{File.basename(config_file)}:#{i} (#{line})\n#{ex.message}"
-        end
+      begin
+        DSL.new(self).instance_eval File.read(config_file)
+      rescue ConfigurationError => ex
+        raise ex
+      rescue Exception => ex
+        raise ConfigurationError, "Error when loading #{config_file}", ex
       end
       self
     end

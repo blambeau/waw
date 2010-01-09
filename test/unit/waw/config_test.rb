@@ -9,6 +9,8 @@ module Waw
       assert_equal 'weekly', c.log_frequency
       assert_equal Logger::DEBUG, c.log_level
       assert_equal [Waw::Services::PublicPages], c.waw_services
+      assert_equal ['logs'], c.log_dir(true)
+      assert_equal [Waw::Services::PublicPages], c.waw_services(true)
     end
     
   end
