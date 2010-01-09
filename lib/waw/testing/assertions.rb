@@ -1,4 +1,4 @@
-require 'test/unit'
+require 'test/unit/assertions'
 module Waw
   module Testing
     module Assertions
