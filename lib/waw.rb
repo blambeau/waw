@@ -4,7 +4,7 @@ require 'wlang'
 
 require 'waw/errors'
 require 'waw/ext'
-require 'waw/resources'
+require 'waw/resource_collection'
 require 'waw/config'
 require 'waw/validation'
 require 'waw/environment_utils'
@@ -16,7 +16,11 @@ require 'waw/services'
 require 'waw/testing'
 module Waw
   
+  # Waw version
   VERSION = "0.0.1".freeze
+
+  # Loaded resources
+  Resources = ResourceCollection.new
 
   # Returns waw loaded configuration
   def self.config

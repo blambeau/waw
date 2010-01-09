@@ -1,6 +1,6 @@
 module Waw
   # Localized resources
-  class Resources
+  class ResourceCollection
     
     # DSL for resources
     class DSL
@@ -34,7 +34,7 @@ module Waw
     
     # Parses some resource string
     def self.parse_resources(str)
-      r = Resources.new
+      r = ResourceCollection.new
       DSL.new(r).instance_eval str
       r
     end
@@ -44,5 +44,5 @@ module Waw
       parse_resources File.read(f)
     end
     
-  end # class Resources
+  end # class ResourceCollection
 end # module Waw
