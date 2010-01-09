@@ -4,6 +4,7 @@ require 'wlang'
 
 require 'waw/errors'
 require 'waw/ext'
+require 'waw/resources'
 require 'waw/config'
 require 'waw/validation'
 require 'waw/environment_utils'

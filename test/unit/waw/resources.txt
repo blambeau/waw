@@ -1,0 +1,4 @@
+first_one  "Hello world"
+second_one 2
+# nothing expected here
+third_one 2*33
