@@ -23,6 +23,11 @@ module Waw
       @name = name
     end
     
+    # Yields the block with each resource key,value pair
+    def each
+      @resources.each_pair {|k, v| yield(k, v)}
+    end
+    
     # Returns the resource installed under name
     def [](name)
       @resources[name]
@@ -48,7 +53,7 @@ module Waw
       if args.size==1
         args[0]
       elsif args.size==0
-        Waw.logger.warn("No such resource #{name} on #{@name}")
+        Waw.logger.warn("No such resource #{name} on #{@name}, (#{caller[0]})")
         nil
       else
         super

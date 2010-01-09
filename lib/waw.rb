@@ -20,7 +20,7 @@ module Waw
   VERSION = "0.0.1".freeze
 
   # Loaded resources
-  Resources = ResourceCollection.new
+  Resources = ResourceCollection.new("main_waw_resources")
 
   # Returns waw loaded configuration
   def self.config

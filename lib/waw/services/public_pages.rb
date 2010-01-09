@@ -186,6 +186,7 @@ module Waw
                    "env"         => env,
                    "request"     => req, 
                    "response"    => res}
+        Waw::Resources.each {|k, v| context[k.to_s] = v}
         layout = File.join(templates_folder, main_template)
         composed = WLang.file_instantiate(layout, context).to_s
       
