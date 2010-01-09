@@ -22,6 +22,7 @@ module Waw
       
       # Installs a routing block for the next action
       def routing(&block)
+        Waw::Routing::ActionRouting.new(&block)
       end
       
       # If a signature has been installed, let the next added method
