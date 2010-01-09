@@ -36,6 +36,8 @@ module Waw
           config_error(name, "Unable to access log_dir #{value}") unless File.exists?(value) and 
                                                                          File.directory?(value) and
                                                                          File.writable?(value)
+        when :log_file
+          config_error(name, "log_file is expected to be a string") unless String===value
         when :log_level
           config_error(name, "Bad log_level #{value}") unless value>=0 and value<=5
         when :log_frequency
@@ -47,6 +49,7 @@ module Waw
         when :rack_session_expire
           config_error(name, "rack_session_expire is expected to be an Integer") unless Integer===value
         when :waw_services
+          value = [value] unless Array===value
           config_error(name, "Unrecognized waw services #{value}") unless check_services(value)
       end
       instance_eval "@#{name} = value"
@@ -70,8 +73,6 @@ module Waw
         DSL.new(self).instance_eval File.read(config_file)
       rescue ConfigurationError => ex
         raise ex
-      rescue Exception => ex
-        raise ConfigurationError, "Error when loading #{config_file}", ex
       end
       self
     end

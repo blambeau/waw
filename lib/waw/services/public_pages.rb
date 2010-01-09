@@ -5,6 +5,20 @@ module Waw
     #
     class PublicPages < Waw::Controller
       
+      # Service installation on a rack builder
+      def install_on_rack_builder(config, builder)
+        myself = self
+        public_dirs = []
+        Dir["#{public_folder}/*"].each do |dir|
+          public_dirs << "/#{File.basename(dir)}" if File.directory?(dir) and is_public?(dir)
+        end
+        Waw.logger.info("Starting public service on #{public_dirs.inspect}")
+        builder.use Rack::Static, :urls => public_dirs, :root => File.basename(public_folder)
+        builder.map('/') do 
+          run myself
+        end
+      end
+      
       ##############################################################################################
       ### Class or instance utilities
       ##############################################################################################
@@ -43,9 +57,10 @@ module Waw
       ##############################################################################################
       
       # Default options of this service
-      DEFAULT_OPTIONS = {:templates_folder => 'templates', 
-                         :pages_folder    => File.join('public', 'pages'),
-                         :main_template   => 'layout.wtpl'}
+      DEFAULT_OPTIONS = {:templates_folder => 'templates',
+                         :public_folder    => 'public',
+                         :pages_folder     => File.join('public', 'pages'),
+                         :main_template    => 'layout.wtpl'}
       
       # Checks some service options
       def self.check_options(options = DEFAULT_OPTIONS)
@@ -75,6 +90,11 @@ module Waw
       end
       
       # Returns the pages folder
+      def public_folder
+        options[:public_folder]
+      end
+      
+      # Returns the pages folder
       def pages_folder
         options[:pages_folder]
       end
@@ -82,6 +102,12 @@ module Waw
       # Returns the pages folder
       def main_template
         options[:main_template]
+      end
+      
+      # Checks if a given folder is considered public
+      def is_public?(dir)
+        dir = File.expand_path(dir)
+        not([pages_folder, templates_folder].collect{|f| File.expand_path(f)}.include?(dir))
       end
       
       # Resolves the location of the titles file

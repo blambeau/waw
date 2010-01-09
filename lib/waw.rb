@@ -19,6 +19,7 @@ module Waw
 
   # Returns waw loaded configuration
   def self.config
+    @config
   end
 
   # Sets the logger to use for Waw itself
@@ -31,14 +32,14 @@ module Waw
     @logger ||= Logger.new(STDOUT)
   end
   
-  # Starts the waw web application
-  def self.start(root_folder = '')
+  # Loads waw configuration and deployment
+  def self.load_config(root_folder = '')
     # create an default configuration
     config = Waw::Config.new(true)
     
     # Locates the wawdeploy file
     deploy_file = File.join(root_folder, 'wawdeploy')
-    raise ConfigurationError, "Missing deploy file" unless File.exists?(deploy_file)
+    raise ConfigurationError, "Missing deploy file #{deploy_file}" unless File.exists?(deploy_file)
     
     # Read it and analyse merged configurations
     File.readlines(deploy_file).each do |line|
@@ -53,7 +54,55 @@ module Waw
     end
     
     @config = config
-    true
+  end
+  
+  # Loads the Rack architecture now
+  def self.load_rack(config)
+    app = Rack::Builder.new do
+      use Rack::CommonLogger, Waw.logger
+      use Rack::ShowExceptions
+    end
+    config.waw_services(true).each do |service|
+      logger.info("Loading waw service #{service} into Rack")
+      service.new.install_on_rack_builder(config, app)
+    end
+    if config.rack_session
+      app = Rack::Session::Pool.new(app, :domain       => config.web_domain,
+                                         :expire_after => config.rack_session_expire)
+    end
+    app
+  end
+  
+  # Loads the entire waw web application
+  def self.load_application(root_folder = '')
+    return unless config = load_config(root_folder)
+    
+    # 1) Install logger now
+    log_file = File.join(config.log_dir, config.log_file)
+    self.logger = Logger.new(log_file, config.log_frequency)
+    self.logger.level = config.log_level
+    self.logger.info("Waw configuration loaded successfully, reaching load stage 2")
+    
+    # 2) make all requires
+    $LOAD_PATH.unshift(*config.load_path(true)) if config.respond_to?(:load_path)
+    config.requires(true).each{|f| require(f)} if config.respond_to?(:requires)
+    
+    # 3) start hooks now
+    start_hooks_dir = File.join(root_folder, 'hooks', 'start')
+    Dir[File.join(start_hooks_dir, '*.rb')].each do |file|
+      logger.info("Running waw start hook #{file}...")
+      Kernel.load(file)
+    end
+    
+    # 4) load the web architecture now
+    self.logger.info("Start hooks successfully executed, reaching load stage 3")
+    webapp = load_rack(config)
+  rescue ConfigurationError => ex
+    raise ex
+  rescue Exception => ex
+    logger.fatal(ex.class.name.to_s + " : " + ex.message)
+    logger.fatal(ex.backtrace.join("\n"))
+    false
   end
 
   extend Waw::EnvironmentUtils
