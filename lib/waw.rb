@@ -83,18 +83,14 @@ module Waw
     self.logger.level = config.log_level
     self.logger.info("Waw configuration loaded successfully, reaching load stage 2")
     
-    # 2) make all requires
-    $LOAD_PATH.unshift(*config.load_path(true)) if config.respond_to?(:load_path)
-    config.requires(true).each{|f| require(f)} if config.respond_to?(:requires)
-    
-    # 3) start hooks now
+    # 2) start hooks now
     start_hooks_dir = File.join(root_folder, 'hooks', 'start')
     Dir[File.join(start_hooks_dir, '*.rb')].each do |file|
       logger.info("Running waw start hook #{file}...")
       Kernel.load(file)
     end
     
-    # 4) load the web architecture now
+    # 3) load the web architecture now
     self.logger.info("Start hooks successfully executed, reaching load stage 3")
     webapp = load_rack(config)
   rescue ConfigurationError => ex

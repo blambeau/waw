@@ -31,6 +31,12 @@ module Waw
     # Installs a configuration parameter
     def install_configuration_property(name, value)
       case name
+        when :load_path
+          value = [value] unless Array===value
+          $LOAD_PATH.unshift(*value)
+        when :requires
+          value = [value] unless Array===value
+          value.each{|f| require(f)}
         when :log_dir
           config_error(name, "log_dir is expected to be a string") unless String===value
           config_error(name, "Unable to access log_dir #{value}") unless File.exists?(value) and 
