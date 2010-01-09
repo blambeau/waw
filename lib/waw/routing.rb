@@ -1,2 +1,7 @@
 require 'waw/routing/dsl'
 require 'waw/routing/action_routing'
+require 'waw/routing/routing_rule'
+require 'waw/routing/feedback'
+require 'waw/routing/form_validation_feedback'
+require 'waw/routing/refresh'
+require 'waw/routing/redirect'

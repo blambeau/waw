@@ -17,18 +17,22 @@ module Waw
       
       # Feedback routing execution
       def feedback
+        Waw::Routing::Feedback.new
       end
       
       # Form validation feedback routing execution
       def form_validation_feedback
+        Waw::Routing::FormValidationFeedback.new
       end
       
       # Refresh routing execution
       def refresh
+        Waw::Routing::Refresh.new
       end
       
       # Redirect routing execution
       def redirect(opts)
+        Waw::Routing::Redirect.new(opts)
       end
       
     end # class DSL

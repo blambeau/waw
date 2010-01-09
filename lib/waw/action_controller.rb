@@ -22,17 +22,17 @@ module Waw
       
       # Installs a routing block for the next action
       def routing(&block)
-        Waw::Routing::ActionRouting.new(&block)
+        @routing = Waw::Routing::ActionRouting.new(&block)
       end
       
       # If a signature has been installed, let the next added method
       # become an action
       def method_added(name)
         if @signature and not(@critical)
-          @critical = true                      # next method will be added by myself
+          @critical = true
       
           # Create the action instance
-          action = Waw::ActionController::Action.new(name, @signature, instance_method(name))
+          action = Waw::ActionController::Action.new(name, @signature, @routing, instance_method(name))
           actions[name] = action
           
           # Define the secure method
@@ -40,7 +40,7 @@ module Waw
             action.execute(self, params)
           end 
         end
-        @signature, @critical = nil, false       # erase signature, leave critical section
+        @signature, @routing, @critical = nil, nil, false
       end
       
     end # end of class methods

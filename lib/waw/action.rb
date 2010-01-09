@@ -8,9 +8,12 @@ module Waw
       # The action name
       attr_reader :name
     
+      # Action routing
+      attr_reader :routing
+    
       # Creates an action instance
-      def initialize(name, signature, method)
-        @name, @signature, @method = name, signature, method
+      def initialize(name, signature, routing, method)
+        @name, @signature, @routing, @method = name, signature, routing, method
       end
     
       # Executes the action
