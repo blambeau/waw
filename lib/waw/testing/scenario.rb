@@ -4,6 +4,9 @@ module Waw
       include Assertions
       include HTMLAnalysis
       
+      # The browser instance underlying this scenario
+      attr_reader :browser
+      
       # Creates a scenario instance
       def initialize(&block)
         @browser = Browser.new
@@ -11,7 +14,7 @@ module Waw
       end
       
       # Sets the current location
-      def location=(location)
+      def location(location)
         @browser.location = location
       end
       
