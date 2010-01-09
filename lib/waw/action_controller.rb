@@ -20,6 +20,10 @@ module Waw
         @signature = signature
       end
       
+      # Installs a routing block for the next action
+      def routing(&block)
+      end
+      
       # If a signature has been installed, let the next added method
       # become an action
       def method_added(name)
