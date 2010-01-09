@@ -112,7 +112,7 @@ module Waw
   rescue Exception => ex
     logger.fatal(ex.class.name.to_s + " : " + ex.message)
     logger.fatal(ex.backtrace.join("\n"))
-    false
+    raise ex
   end
 
   extend Waw::EnvironmentUtils
