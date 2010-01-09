@@ -12,14 +12,15 @@ module Waw
       
       # Adds a resource to the collection
       def method_missing(name, *args)
-        @resources.add_resource(name, args[0])
+        @resources.send(:add_resource, name, args[0])
       end
       
     end # class Resources
     
     # Creates a resource collection
-    def initialize
+    def initialize(name = "unnamed")
       @resources = {}
+      @name = name
     end
     
     # Add a resource
@@ -32,17 +33,24 @@ module Waw
       EOF
     end
     
+    # Logs a friendly message and returns nil
+    def method_missing(name, *args)
+      Waw.logger.warn("No such resource #{name} on #{@name}")
+      nil
+    end
+    
     # Parses some resource string
-    def self.parse_resources(str)
-      r = ResourceCollection.new
+    def self.parse_resources(str, name = "unnamed")
+      r = ResourceCollection.new(name)
       DSL.new(r).instance_eval str
       r
     end
     
     # Parses a resource file
-    def self.parse_resource_file(f)
-      parse_resources File.read(f)
+    def self.parse_resource_file(f, name=File.basename(f, '.rs'))
+      parse_resources File.read(f), name
     end
     
+    private :add_resource
   end # class ResourceCollection
 end # module Waw

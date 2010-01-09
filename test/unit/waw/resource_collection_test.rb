@@ -21,5 +21,14 @@ module Waw
       assert_equal 66, r.third_one
     end
     
+    def test_on_missing_resources
+      r = ResourceCollection.parse_resources <<-EOF
+        first_one  "Hello world"
+        second_one 2
+        third_one 2*33
+      EOF
+      assert_equal nil, r.hello
+    end
+    
   end
 end

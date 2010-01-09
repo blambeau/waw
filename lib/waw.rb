@@ -88,14 +88,23 @@ module Waw
     self.logger.level = config.log_level
     self.logger.info("Waw configuration loaded successfully, reaching load stage 2")
     
-    # 2) start hooks now
+    # 2) Loading resources
+    resource_dir = File.join(root_folder, 'resources')
+    if File.directory?(resource_dir)
+      Dir[File.join(resource_dir, '*.rs')].each do |file|
+        name = File.basename(file, '.rs')
+        Resources.add_resource(name, ResourceCollection.parse_resource_file(file))
+      end
+    end
+    
+    # 3) start hooks now
     start_hooks_dir = File.join(root_folder, 'hooks', 'start')
     Dir[File.join(start_hooks_dir, '*.rb')].each do |file|
       logger.info("Running waw start hook #{file}...")
       Kernel.load(file)
     end
     
-    # 3) load the web architecture now
+    # 4) load the web architecture now
     self.logger.info("Start hooks successfully executed, reaching load stage 3")
     webapp = load_rack(config)
   rescue ConfigurationError => ex
