@@ -8,6 +8,7 @@ require 'waw/controller'
 require 'waw/routing'
 require 'waw/action'
 require 'waw/action_controller'
+require 'waw/testing'
 module Waw
   
   VERSION = "0.0.1".freeze
