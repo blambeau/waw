@@ -1,0 +1,1 @@
+require 'waw/services/public_pages'

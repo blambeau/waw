@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'rack'
+require 'wlang'
 
 require 'waw/ext'
 require 'waw/validation'
@@ -8,6 +9,7 @@ require 'waw/controller'
 require 'waw/routing'
 require 'waw/action'
 require 'waw/action_controller'
+require 'waw/services'
 require 'waw/testing'
 module Waw
   
