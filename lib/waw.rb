@@ -16,6 +16,7 @@ require 'waw/action_controller'
 require 'waw/services'
 require 'waw/testing'
 require 'waw/app'
+require 'waw/wlang/waw_dialects'
 module Waw
   extend Waw::App
   extend Waw::EnvironmentUtils
