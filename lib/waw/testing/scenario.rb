@@ -3,6 +3,7 @@ module Waw
   module Testing
     class Scenario
       include Assertions
+      include Invocations
       include HTMLAnalysis
       
       # The browser instance underlying this scenario
@@ -16,23 +17,6 @@ module Waw
         @browser = Browser.new
         @block = block
         @assertion_count = 0
-      end
-      
-      # Sets the current location
-      def location(location)
-        @browser.location = location
-      end
-      alias :go :location
-      
-      # Follow some tag (typically a <a href="..."> or a <form action="...">)
-      def follow(tag, attributes)
-        assert_not_nil(found = has_tag?(tag, attributes), "tag #{tag}, #{attributes.inspect} can be found for follow")
-        case tag
-          when 'a', :a
-            browser.click_href(found[:href])
-          else
-            raise ArgumentError, "Unexpected tag type #{tag} for follow"
-        end
       end
       
       # Adds an assertion

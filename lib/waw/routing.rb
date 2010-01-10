@@ -11,7 +11,7 @@ module Waw
       
       # Checks if a service response matches some expected pattern
       def matches?(what, json_response = self)
-        raise ArgumentError, "Array expected as json_response" unless Array===json_response
+        raise ArgumentError, "Array expected as json_response (#{json_response.inspect} found)" unless Array===json_response
         json_response = json_response.dup
         what.split('/').each do |elm|
           return false if json_response.empty?

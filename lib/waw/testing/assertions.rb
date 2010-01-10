@@ -4,36 +4,28 @@ module Waw
     module Assertions
       include ::Test::Unit::Assertions
       
-      # Execute the action routing of a given result
-      def execute_action_routing(service, result)
-        app = Waw.find_rack_app(service) {|app| Waw::ActionController===app}
-        assert_not_nil app, "Service #{service} has been found"
-        assert Waw::ActionController===app, "Invoked service #{service} by an action controller"
-        action = app.find_action(service)
-        assert_not_nil action, "If service is found, an action is matching"
-        action.routing.apply_on_browser(result, browser) if action.routing
-        result
+      #################################################################### Assertions about HTTP and browser
+      
+      # Asserts that going to a given location does not lead to a 404
+      # Not found error
+      def assert_not_404(location, msg="Location #{location} is not a 404")
+        go location
+        assert !browser.is404?, msg
       end
       
-      # Invokes a server json service
-      def invoke_json_service(service, data)
-        case res = browser.server_invoke(service, data)
-          when Net::HTTPSuccess
-            result = execute_action_routing(service, JSON.parse(res.body))
-            result.extend(Waw::Routing::Methods)
-          when Net::HTTPNotFound
-            assert false, "JSON service #{service} can be found"
-        end
+      #################################################################### Assertions about HTML contents
+      
+      # Asserts that I see something
+      def assert_i_see(what, msg = "User sees |#{what}| on the current page")
+        assert i_see?(what), msg
       end
       
-      def service(*args)
-        args
+      # Asserts that a tag can be found
+      def assert_has_tag(name, opts, msg="Tag <#{name} #{opts.inspect}> can be found")
+        assert has_tag?(name, opts), msg
       end
       
-      # Checks if the last request was answered by a 404 not found
-      def is404
-        browser.is404
-      end
+      #################################################################### Assertions about service invocations
       
       # Asserts that the invocation of a service leads to a given result
       def assert_json_service_result(json_response, result, msg="")
@@ -50,15 +42,10 @@ module Waw
         assert Waw::Routing.matches?(what, json_response), msg + "\n(#{what} against #{json_response.inspect})"
       end
       
-      def assert_server_invoke(match, msg="")
-        service, data = yield
-        case res = browser.server_invoke(service, data)
-          when Net::HTTPSuccess
-            result = execute_action_routing(service, JSON.parse(res.body))
-            result.extend(Waw::Routing::Methods)
-          when Net::HTTPNotFound
-            assert false, "JSON service #{service} can be found"
-        end
+      def assert_service_invoke(match, msg="")
+        result = yield
+        assert_not_nil result, "assert_service_invoke block leads to a service result (#{caller[0]})"
+        assert Waw::Routing.matches?(match, result), "#{msg}\n (#{match} expected, found #{result.inspect})"
       end
       
     end # module Assertions

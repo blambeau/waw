@@ -58,6 +58,7 @@ module Waw
       def is404
         (Net::HTTPNotFound === response)
       end
+      alias :is404? :is404
       
       # Returns the current shown contents
       def contents
