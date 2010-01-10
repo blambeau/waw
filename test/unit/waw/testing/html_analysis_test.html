@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- index.wtpl -->
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-language" content="fr" />
+		<meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
+    <base href="http://localhost:9292/"/>
+		<title>UCLouvain ACM Student Chapter</title>
+		<link rel="stylesheet" type="text/css" href="/css/style.css" />
+		<script type="text/javascript" src="/js/jquery-1.3.2.min.js"></script>
+		<script type="text/javascript" src="/js/acmscw_msg.js"></script>
+		<script type="text/javascript" src="/js/acmscw.js"></script>
+	</head>
+	<body class="index">
+    <div id="header">
+      <h1><a href="/"><span>UCLouvain ACM Student Chapter</span></a></h1>
+      <p>Spread computer science,<br />inform people&nbsp;</p>
+    </div>
+
+	  <div id="main">
+   
+   	<div id="img"><a href="/latex"><img src="images/Latex-6526.jpg" /></a></div>
+   
+   	<div class="box">
+   		<a href="/activites">Découvrez nos activités.</a>
+   	</div>
+   
+   	<div class="box">
+   		<a href="/scienceinfuse">Scienceinfuse<span>Les activités organisées</span></a>
+   	</div>
+   
+   	<div class="box">
+   		<a href="/securite-vie-privee">Conférence<span>Sécurité et vie privée</span></a>
+   	</div>
+   
+   	<div class="box">
+   		<a href="/latex">LaTeX<span>Informations complémentaires</span></a>
+   	</div>
+   
+   	<div class="grey-box">
+   		<form action="javascript:newsletter_subscribe()" method="post" enctype="multipart/form-data" id="newsletter_subscribe">
+         <label for="mail" id="newsletter_subscribe_feedback">Inscrivez-vous<br /> à la newsletter</label>
+   			<input type="text" value="john.doe@mail.com" name="mail" id="mail"/>
+   			<input type="submit" value="Go »" />
+   		</form>
+   	</div>
+   
+   </div>
+
+    <div id="footer">
+    	<p id="social-links">
+    		<a href="http://www.linkedin.com/groupInvitation?groupID=2257150&sharedKey=338B55712F39">Rejoignez-nous<br />sur LinkedIn</a>
+    		<a href="http://www.facebook.com/home.php#/group.php?gid=121511173853&ref=ts">Ajoutez-nous<br />sur Facebook</a>
+    		<a href="http://twitter.com/uclouvainacmsc">Suivez-nous<br />sur Twitter</a>
+    	</p>
+    
+    	<p id="internal-links">
+        <a href="javascript:show_login_form()">Connexion</a>
+      	  <a href="/people/subscribe">Inscription</a>
+    
+    		<a href="/mentions">Mentions légales</a>
+    		<a href="mailto:info@uclouvain.acm-sc.be">Contactez nous</a>
+    	</p>
+      <form id="login" action="javascript:login()">
+        <p id="login_feedback">Entrez votre e-mail et mot de passe (<a href="/people/lost_password">perdu?</a>)</p>
+        <input type="text" name="mail" value=""/>
+        <input type="password" name="password" value=""/>
+        <input type="submit" value="Go »">
+      </form>
+      <script type="text/javascript">
+        function show_login_form() {
+          $('p#internal-links').hide();
+          $('form#login').show();
+        }
+      </script>
+    </div>
+
+    
+	</body>
+</html>

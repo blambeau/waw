@@ -1,3 +1,4 @@
+require 'json'
 module Waw
   module Testing
     class Scenario
@@ -22,6 +23,17 @@ module Waw
         @browser.location = location
       end
       
+      # Follow some tag (typically a <a href="..."> or a <form action="...">)
+      def follow(tag, attributes)
+        assert_not_nil(found = has_tag?(tag, attributes), "tag #{tag}, #{attributes.inspect} can be found for follow")
+        case tag
+          when 'a', :a
+            browser.click_href(found[:href])
+          else
+            raise ArgumentError, "Unexpected tag type #{tag} for follow"
+        end
+      end
+      
       # Adds an assertion
       def add_assertion
         @assertion_count += 1
@@ -30,6 +42,21 @@ module Waw
       # Run the test scenario
       def run
         self.instance_eval &@block
+      end
+      
+      # Execute the action routing of a given result
+      def execute_action_routing(result)
+        result
+      end
+      
+      # Invokes a server json service
+      def invoke_json_service(service, data)
+        case res = browser.server_invoke(service, data)
+          when Net::HTTPSuccess
+            execute_action_routing JSON.parse(res.body)
+          when Net::HTTPNotFound
+            assert false, "JSON service #{service} can be found"
+        end
       end
       
     end # class Scenario
