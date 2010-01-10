@@ -47,7 +47,11 @@ module Waw
       # Execute the action routing of a given result
       def execute_action_routing(service, result)
         app = Waw.find_rack_app(service) {|app| Waw::ActionController===app}
-        puts app
+        assert_not_nil app, "Service #{service} has been found"
+        assert Waw::ActionController===app, "Invoked service #{service} by an action controller"
+        action = app.find_action(service)
+        assert_not_nil action, "If service is found, an action is matching"
+        action.routing.apply_on_browser(result, browser) if action.routing
         result
       end
       

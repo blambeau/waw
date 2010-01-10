@@ -21,7 +21,7 @@ module Waw
       
       # Asserts that a given service matches something
       def assert_json_service_result_matches(json_response, what, msg=nil)
-        assert Waw::Services::JSONServices.matches?(json_response, what), msg
+        assert Waw::Routing.matches?(json_response, what), msg
       end
       
     end # module Assertions

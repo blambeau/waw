@@ -37,6 +37,8 @@ module Waw
       assert @controller.respond_to?(:subscribe)
       assert @controller.respond_to?(:not_an_action)
       assert_equal false, @controller.respond_to?(:action_not_an_action)
+      assert @controller.has_action?(:subscribe)
+      assert @controller.has_action?("/services/subscribe")
     end
     
     def test_controller_subscribe

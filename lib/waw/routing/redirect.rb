@@ -11,7 +11,7 @@ module Waw
       end
       
       # Forces the browser to refresh
-      def apply_on_browser(browser)
+      def apply_on_browser(result, browser)
         browser.location = @opts[:url]
       end
       

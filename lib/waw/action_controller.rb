@@ -4,9 +4,34 @@ module Waw
   # Defines a specific application controller for executing actions.
   #
   class ActionController < Waw::Controller
+  
+    # Common utilities about actions  
+    module ActionUtils
+      
+      # Extracts the action name from a given path
+      def extract_action_name(path)
+        return $1.to_sym if path =~ /([a-zA-Z_]+)$/
+        nil
+      end
+    
+      # Checks if an action exists
+      def has_action?(name)
+        name = extract_action_name(name) unless Symbol===name
+        return false unless name
+        actions.has_key?(name)
+      end
+      
+      def find_action(name)
+        name = extract_action_name(name) unless Symbol===name
+        return nil unless name
+        actions[name]
+      end
+      
+    end # module ActionUtils
     
     # Class methods
     class << self
+      include ActionUtils
       
       # Returns the actions
       def actions
@@ -45,6 +70,12 @@ module Waw
       
     end # end of class methods
     
+    include ActionUtils
+    
+    def actions
+      self.class.actions
+    end
+    
     # Ensapsules the action call 
     def encapsulate(action, actual_params, &block)
       yield
@@ -54,22 +85,17 @@ module Waw
     def execute(env, request, response)
       action_name = request.respond_to?(:path) ? request.path : request[:action]
       Waw.logger.debug("Executing the action whose name is #{action_name}")
-      result = if action_name =~ /([a-zA-Z_]+)$/
-        action = $1.to_sym 
-        if self.respond_to?(action) 
-          actual_params = request.params.symbolize_keys
-          encapsulate(action, actual_params) do 
-            self.send(action, actual_params)
-          end
-        else
-          Waw.logger.warn("Action #{action_name} has not been found (no matching method)")
-          [:error, :action_not_found]
+      action = find_action(action_name)
+      if action
+        actual_params = request.params.symbolize_keys
+        result = encapsulate(action, actual_params) do 
+          action.execute(self, actual_params)
         end
+        [:no_bypass, result]
       else
         Waw.logger.warn("Action #{action_name} has not been found")
         [:error, :action_not_found]
       end
-      [:no_bypass, result]
     end
   
   end # class ActionController

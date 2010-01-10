@@ -4,7 +4,7 @@ module Waw
       
       # Applies this routing rule on a Waw::Testing::Browser instance.
       # By default, does nothing at all.
-      def apply_on_browser(browser)
+      def apply_on_browser(result, browser)
       end
       
     end # RoutingRule

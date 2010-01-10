@@ -73,8 +73,12 @@ module Waw
       
       # Sets the current location
       def location=(loc)
-        @location, @response = fetch(loc)
-        @location
+        if (loc = ensure_uri(loc)).relative?
+          go_relative(loc)
+        else
+          @location, @response = fetch(loc)
+          @location
+        end
       end
       
       # Refreshes the browser

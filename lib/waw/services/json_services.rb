@@ -1,9 +1,7 @@
-require 'waw/services/json_services_utils'
 module Waw
   module Services
     # Helper to create json server services
     class JSONServices
-      extend Waw::Services::JSONServices::Utils
       
       # Creates a service instance with action controllers mapped
       # to given URLs

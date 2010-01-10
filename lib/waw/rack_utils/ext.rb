@@ -31,9 +31,9 @@ module Rack
     # checking for matching
     def find_rack_app(path, &block)
       return self if (block && block.call(self))
-      app = @mapping.each do |host, location, app|
-        next unless location == path[0, location.size]
-        next unless path[location.size] == nil || path[location.size] == ?/
+      app = @mapping.each do |host, location, match, app|
+        next unless path =~ match && rest = $1
+        next unless rest.empty? || rest[0] == ?/
         break app
       end
       return app unless block

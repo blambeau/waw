@@ -4,7 +4,7 @@ module Waw
     class Refresh < RoutingRule
 
       # Forces the browser to refresh
-      def apply_on_browser(browser)
+      def apply_on_browser(result, browser)
         browser.refresh
       end
       
