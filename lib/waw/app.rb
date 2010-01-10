@@ -22,18 +22,23 @@ module Waw
       raise ConfigurationError, "Missing deploy file #{deploy_file}" unless File.exists?(deploy_file)
     
       # Read it and analyse merged configurations
+      conf_file = deploy_file
       File.readlines(deploy_file).each do |line|
         next if /^#/ =~ (line = line.strip)
         next if line.empty?
         raise "Waw deploy file corrupted on line #{i} (#{line})" unless /^[a-z_]+(\s+[a-z_]+)*$/ =~ line
         line.split(/\s+/).each do |conf|
           conf_file = File.join(root_folder, 'config', "#{conf}.cfg")
-          raise "Missing config file config/#{conf}.cfg" unless File.exists?(conf_file)
-          config.merge(conf_file)
+          raise ConfigurationError, "Missing config file config/#{conf}.cfg" unless File.exists?(conf_file)
+          config.merge_file(conf_file)
         end
       end
     
       config
+    rescue ConfigurationError => ex
+      raise ex
+    rescue Exception => ex
+      raise ConfigurationError, "Error occured when loading configuration #{File.basename(conf_file)}\n#{ex.message}", ex.backtrace
     end
   
     # Loads the logger

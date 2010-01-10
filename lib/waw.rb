@@ -29,9 +29,13 @@ module Waw
       use Rack::CommonLogger, Waw.logger
       use Rack::ShowExceptions
     end
-    config.waw_services(true).each do |service|
-      logger.info("Loading waw service #{service} into Rack")
-      service.new.install_on_rack_builder(config, app)
+    if Waw.resources.has_resource?(:services)
+      Waw.resources.services.each do |name, service|
+        logger.info("Loading waw service #{name} (#{service}) into Rack")
+        service.install_on_rack_builder(config, app)
+      end
+    else
+      logger.warn("Waw installed without service (missing resources/services.cfg ?)")
     end
     if config.rack_session
       app = Rack::Session::Pool.new(app, :domain       => config.web_domain,
@@ -50,8 +54,10 @@ module Waw
   rescue ConfigurationError => ex
     raise ex
   rescue Exception => ex
-    logger.fatal(ex.class.name.to_s + " : " + ex.message)
-    logger.fatal(ex.backtrace.join("\n"))
+    if logger
+      logger.fatal(ex.class.name.to_s + " : " + ex.message)
+      logger.fatal(ex.backtrace.join("\n"))
+    end
     raise ex
   end
 

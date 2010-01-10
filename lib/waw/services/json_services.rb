@@ -1,39 +1,34 @@
+require 'waw/services/json_services_utils'
 module Waw
   module Services
     # Helper to create json server services
     class JSONServices
+      extend Waw::Services::JSONServices::Utils
       
-      module Utils
+      # Creates a service instance with action controllers mapped
+      # to given URLs
+      def initialize(mapped)
+        raise ArgumentError, "JSONServices expects a hash of path => Waw::ActionController, #{mapped.inspect} received" unless check_mapped(mapped)
+        @mapped = mapped
+      end
       
-        # Checks if a service response matches some expected pattern
-        def matches?(json_response, what)
-          raise ArgumentError, "Array expected as json_response" unless Array===json_response
-          json_response = json_response.dup
-          what.split('/').each do |elm|
-            return false if json_response.empty?
-            case part = json_response.shift
-              when String, Symbol
-                if elm == '*'
-                  # always ok here
-                else
-                  return false unless part.to_s==elm.to_s
-                end
-              when Array
-                if elm == '*'
-                  return false if part.empty?
-                else
-                  return false unless part.any?{|e| e.to_s == elm.to_s} or (elm=='*')
-                end
-              else
-                raise ArgumentError, "Unexpected part in json_response #{part}"
-            end
-          end
-          true
+      # Checks a mapped hash
+      def check_mapped(mapped)
+        Hash===mapped and mapped.all? do |path, c|
+          String===path and Waw::ActionController===c
         end
-        
-      end # Utils
+      end
       
-      extend Utils
+      # Service installation on a rack builder
+      def install_on_rack_builder(config, builder)
+        @mapped.each_pair do |path,controller|
+          builder.map path do
+            use Waw::RackUtils::JSON
+            run controller
+          end
+        end
+      end
+      
     end # class JSONServices
   end # module Services
 end # module Waw

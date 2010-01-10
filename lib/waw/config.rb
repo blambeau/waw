@@ -12,7 +12,11 @@ module Waw
       
       # When a method is missing, install config parameter
       def method_missing(name, *args)
-        @config.install_configuration_property(name, args.size==1 ? args[0] : args)
+        if args.length == 0
+          @config.send(name)
+        else          
+          @config.install_configuration_property(name, args.size==1 ? args[0] : args)
+        end
       end
       
     end # class DSL
@@ -20,7 +24,7 @@ module Waw
     # Initialize a configuration instance. If merge_default is set to true,
     # the default configuration file is automatically loaded.
     def initialize(merge_default = true)
-      self.merge(File.join(File.dirname(__FILE__), 'default_config.cfg')) if merge_default
+      self.merge_file(File.join(File.dirname(__FILE__), 'default_config.cfg')) if merge_default
     end
     
     # Raises a configuration error
@@ -59,9 +63,6 @@ module Waw
           config_error(name, "rack_session is expected to be true or false") unless true==value or false==value
         when :rack_session_expire
           config_error(name, "rack_session_expire is expected to be an Integer") unless Integer===value
-        when :waw_services
-          value = [value] unless Array===value
-          config_error(name, "Unrecognized waw services #{value}") unless check_services(value)
       end
       instance_eval "@#{name} = value"
       instance_eval <<-EOF
@@ -72,20 +73,20 @@ module Waw
       EOF
     end
     
-    # Checks waw services
-    def check_services(services)
-      services.all?{|m| Module===m}
-    end
-    
-    # Merges the configuration with a given configuration file
-    def merge(config_file)
-      raise ArgumentError, "Config file does not exists" unless File.exists?(config_file)
+    # Merges the configuration with a given configuration string
+    def merge(config_str)
       begin
-        DSL.new(self).instance_eval File.read(config_file)
+        DSL.new(self).instance_eval config_str
       rescue ConfigurationError => ex
         raise ex
       end
       self
+    end
+    
+    # Merges the configuration with a given configuration file
+    def merge_file(config_file)
+      raise ArgumentError, "Config file does not exists" unless File.exists?(config_file)
+      merge File.read(config_file)
     end
     
   end # class Config
