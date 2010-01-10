@@ -25,6 +25,19 @@ module Waw
         map
       end
       
+      # Looks for an action
+      def method_missing(name, *args, &block)
+        if name.to_s =~ /[a-z_]+/ and args.length==0
+          @mapped.each_value do |controller|
+            return controller.find_action(name) if controller.has_action?(name)
+          end
+          Waw.logger.warn("Unable to find action #{name} on JSONServices")
+          nil
+        else
+          super(name, *args, &block)
+        end
+      end
+      
     end # class JSONServices
   end # module Services
 end # module Waw

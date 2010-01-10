@@ -24,9 +24,11 @@ module Waw
       kind, result = execute(env, req, res)
       case kind
         when :bypass
+          Waw.logger.debug("Session is now #{session.inspect}")
           result
         when :no_bypass
           Waw.logger.debug("Returning 200 with #{result.inspect}")
+          Waw.logger.debug("Session is now #{session.inspect}")
           [200, {'Content-Type' => content_type}, result]
         else
           Waw.logger.fatal("Unexpected controller result #{kind}")

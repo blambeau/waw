@@ -10,7 +10,7 @@ module Waw
     
       # Action routing
       attr_reader :routing
-    
+      
       # Creates an action instance
       def initialize(name, signature, routing, method)
         @name, @signature, @routing, @method = name, signature, routing, method
