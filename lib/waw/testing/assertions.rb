@@ -44,10 +44,13 @@ module Waw
       
       # Asserts that a server-side service invocation leads to a given action
       # result
-      def assert_service_invoke(match, msg="")
-        result = yield
+      def assert_service_invoke(msg, opts)
+        raise ArgumentError, "assert_form_service_invoke expects :service, :arguments, :result keys, (#{caller[0]})\n"\
+                             "#{opts.keys.inspect} received."\
+          unless [:service, :arguments, :result].all?{|k| opts.has_key?(k)}
+        result = service(opts[:service], opts[:arguments])
         assert_not_nil result, "assert_service_invoke block leads to a service result (#{caller[0]})"
-        assert Waw::Routing.matches?(match, result), "#{msg}\n (#{match} expected, found #{result.inspect})"
+        assert Waw::Routing.matches?(opts[:result], result), "#{msg}\n (#{opts[:result]} expected, found #{result.inspect})"
       end
       
       # Asserts that a form for a given service exists and that invoking this services 
@@ -56,9 +59,11 @@ module Waw
         raise ArgumentError, "assert_form_service_invoke expects :service, :arguments, :result keys, (#{caller[0]})\n"\
                              "#{opts.keys.inspect} received."\
           unless [:service, :arguments, :result].all?{|k| opts.has_key?(k)}
-        result = service(opts[:service], opts[:arguments])
-        assert_not_nil result, "assert_service_invoke block leads to a service result (#{caller[0]})"
-        assert Waw::Routing.matches?(opts[:result], result), "#{msg}\n (#{opts[:result]} expected, found #{result.inspect})"
+        if opts[:check_form].nil? or opts[:check_form]
+          form_id = Waw::ActionController.extract_action_name(opts[:service])
+          assert_has_tag "form", :id => form_id.to_s, :action => opts[:service]
+        end
+        assert_service_invoke msg, opts
       end
       
     end # module Assertions
