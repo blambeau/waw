@@ -5,6 +5,7 @@ module Waw
   #
   class Controller
     include Waw::EnvironmentUtils
+    include Rack::FindRackAppDelegator
     
     # Content type of the controller
     attr_accessor :content_type

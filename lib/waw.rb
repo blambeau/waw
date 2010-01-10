@@ -23,6 +23,12 @@ module Waw
   # Waw version
   VERSION = "0.0.1".freeze
 
+  # Finds the Rack application that matches a given path
+  def self.find_rack_app(path, &block)
+    found = @app.find_rack_app(path)
+    (found and block_given?) ? found.find_rack_app(nil, &block) : found
+  end
+
   # Loads the Rack architecture now
   def self.load_rack(config)
     app = Rack::Builder.new do
@@ -37,11 +43,12 @@ module Waw
     else
       logger.warn("Waw installed without service (missing resources/services.cfg ?)")
     end
+    app = app.to_app
     if config.rack_session
       app = Rack::Session::Pool.new(app, :domain       => config.web_domain,
                                          :expire_after => config.rack_session_expire)
     end
-    app
+    @app = app
   end
   
   # Loads the entire waw web application

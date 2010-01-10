@@ -2,6 +2,7 @@ require 'json'
 module Waw
   module RackUtils
     class JSON
+      include Rack::FindRackAppDelegator
   
       def initialize app
         @app = app

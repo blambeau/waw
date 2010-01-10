@@ -45,7 +45,9 @@ module Waw
       end
       
       # Execute the action routing of a given result
-      def execute_action_routing(result)
+      def execute_action_routing(service, result)
+        app = Waw.find_rack_app(service) {|app| Waw::ActionController===app}
+        puts app
         result
       end
       
@@ -53,7 +55,7 @@ module Waw
       def invoke_json_service(service, data)
         case res = browser.server_invoke(service, data)
           when Net::HTTPSuccess
-            execute_action_routing JSON.parse(res.body)
+            execute_action_routing(service, JSON.parse(res.body))
           when Net::HTTPNotFound
             assert false, "JSON service #{service} can be found"
         end
