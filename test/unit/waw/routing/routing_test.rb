@@ -6,20 +6,20 @@ module Waw
     
     def test_installation_on_routing_itself
       result = ["success", "ok"]
-      assert Routing.matches?(result, "success/ok")
-      assert Routing.matches?(result, "success/*")
+      assert Routing.matches?("success/ok", result)
+      assert Routing.matches?("success/*", result)
       result = ["success", ["ok"]]
-      assert Routing.matches?(result, "success/ok")
-      assert Routing.matches?(result, "success/*")
+      assert Routing.matches?("success/ok", result)
+      assert Routing.matches?("success/*", result)
     end
     
     def test_matches
       result = ["success", "ok"]
-      assert matches?(result, "success/ok")
-      assert matches?(result, "success/*")
+      assert matches?("success/ok", result)
+      assert matches?("success/*", result)
       result = ["success", ["ok"]]
-      assert matches?(result, "success/ok")
-      assert matches?(result, "success/*")
+      assert matches?("success/ok", result)
+      assert matches?("success/*", result)
     end
     
   end

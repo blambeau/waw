@@ -20,7 +20,7 @@ module Waw
       # Applies this action routing on a browser
       def apply_on_browser(result, browser)
         @rules.each_pair do |pattern, rule|
-          rule.apply_on_browser(result, browser) if Waw::Routing.matches?(result, pattern)
+          rule.apply_on_browser(result, browser) if Waw::Routing.matches?(pattern, result)
         end
       end
     

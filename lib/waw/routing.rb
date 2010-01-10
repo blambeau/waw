@@ -10,7 +10,7 @@ module Waw
     module Methods
       
       # Checks if a service response matches some expected pattern
-      def matches?(json_response, what)
+      def matches?(what, json_response = self)
         raise ArgumentError, "Array expected as json_response" unless Array===json_response
         json_response = json_response.dup
         what.split('/').each do |elm|
@@ -34,6 +34,8 @@ module Waw
         end
         true
       end
+      alias :=~ :matches?
+      
     end # module Methods 
     extend Methods
   end # module Routing
