@@ -16,7 +16,7 @@ module Waw
       # Look for some html tag
       def has_tag?(name, opts = nil, contents = browser_contents, treat_values_as_regexp = true)
         # check that the tag exists
-        contents.scan /(<\s*#{name}\s*(.*?)\/?>)/ do |match|
+        contents.scan(/(<\s*#{name}\s*(.*?)\/?>)/) do |match|
           return match[0] if opts.nil? or opts.empty?
           
           # check tag attributes now

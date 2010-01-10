@@ -12,8 +12,8 @@ module Waw
     
     # Handler for Rack calls to the controller
     def call(env)
-      Waw.logger.debug("Starting Waw::Controller.call")
       req, res = Rack::Request.new(env), Rack::Response.new(env)
+      Waw.logger.debug("Starting Waw::Controller.call with #{req.cookies.inspect}")
       
       # Save thread local variables
       Thread.current[:rack_env] = env

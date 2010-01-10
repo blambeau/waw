@@ -24,12 +24,12 @@ module Waw
     
     # Builds a validator with a given block as validation code
     def self.validator(&block)
-      Validator.new &block
+      Validator.new(&block)
     end
 
     # Builds a signature with a given block as definition
     def self.signature(&block)
-      Signature.new &block
+      Signature.new(&block)
     end
 
     # Validator/Converter for missing values

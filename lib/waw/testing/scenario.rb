@@ -26,7 +26,7 @@ module Waw
       
       # Run the test scenario
       def run
-        self.instance_eval &@block
+        self.instance_eval(&@block)
       end
       
     end # class Scenario
