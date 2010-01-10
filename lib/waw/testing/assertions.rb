@@ -42,10 +42,23 @@ module Waw
         assert Waw::Routing.matches?(what, json_response), msg + "\n(#{what} against #{json_response.inspect})"
       end
       
+      # Asserts that a server-side service invocation leads to a given action
+      # result
       def assert_service_invoke(match, msg="")
         result = yield
         assert_not_nil result, "assert_service_invoke block leads to a service result (#{caller[0]})"
         assert Waw::Routing.matches?(match, result), "#{msg}\n (#{match} expected, found #{result.inspect})"
+      end
+      
+      # Asserts that a form for a given service exists and that invoking this services 
+      # matches a given action result
+      def assert_form_service_invoke(msg, opts)
+        raise ArgumentError, "assert_form_service_invoke expects :service, :arguments, :result keys, (#{caller[0]})\n"\
+                             "#{opts.keys.inspect} received."\
+          unless [:service, :arguments, :result].all?{|k| opts.has_key?(k)}
+        result = service(opts[:service], opts[:arguments])
+        assert_not_nil result, "assert_service_invoke block leads to a service result (#{caller[0]})"
+        assert Waw::Routing.matches?(opts[:result], result), "#{msg}\n (#{opts[:result]} expected, found #{result.inspect})"
       end
       
     end # module Assertions
