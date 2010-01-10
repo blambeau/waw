@@ -6,7 +6,7 @@ module Waw
       include Waw::Testing::HTMLAnalysis
       
       def browser_contents
-        yield(@contents ||= File.read(File.join(File.dirname(__FILE__), "html_analysis_test.html")))
+        @contents ||= File.read(File.join(File.dirname(__FILE__), "html_analysis_test.html"))
       end
       
       def test_has_tag

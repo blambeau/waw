@@ -6,17 +6,15 @@ module Waw
     class PublicPages < Waw::Controller
       
       # Service installation on a rack builder
-      def install_on_rack_builder(config, builder)
-        myself = self
+      def factor_service_map(config, map)
         public_dirs = []
         Dir["#{public_folder}/*"].each do |dir|
           public_dirs << "/#{File.basename(dir)}" if File.directory?(dir) and is_public?(dir)
         end
         Waw.logger.info("Starting public service on #{public_dirs.inspect}")
-        builder.use Rack::Static, :urls => public_dirs, :root => File.basename(public_folder)
-        builder.map('/') do 
-          run myself
-        end
+        map['/'] = Rack::Static.new(self, :urls => public_dirs, 
+                                          :root => File.basename(public_folder))
+        map
       end
       
       ##############################################################################################

@@ -18,13 +18,11 @@ module Waw
       end
       
       # Service installation on a rack builder
-      def install_on_rack_builder(config, builder)
+      def factor_service_map(config, map)
         @mapped.each_pair do |path,controller|
-          builder.map path do
-            use Waw::RackUtils::JSON
-            run controller
-          end
+          map[path] = Waw::RackUtils::JSON.new(controller)
         end
+        map
       end
       
     end # class JSONServices

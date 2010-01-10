@@ -22,6 +22,7 @@ module Waw
       def location(location)
         @browser.location = location
       end
+      alias :go :location
       
       # Follow some tag (typically a <a href="..."> or a <form action="...">)
       def follow(tag, attributes)

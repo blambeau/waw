@@ -31,19 +31,17 @@ module Waw
 
   # Loads the Rack architecture now
   def self.load_rack(config)
-    app = Rack::Builder.new do
-      use Rack::CommonLogger, Waw.logger
-      use Rack::ShowExceptions
-    end
     if Waw.resources.has_resource?(:services)
+      hash = {}
       Waw.resources.services.each do |name, service|
         logger.info("Loading waw service #{name} (#{service}) into Rack")
-        service.install_on_rack_builder(config, app)
+        service.factor_service_map(config, hash)
       end
+      app = Rack::URLMap.new(hash)
     else
       logger.warn("Waw installed without service (missing resources/services.cfg ?)")
     end
-    app = app.to_app
+    app = Rack::CommonLogger.new(app, Waw.logger)
     if config.rack_session
       app = Rack::Session::Pool.new(app, :domain       => config.web_domain,
                                          :expire_after => config.rack_session_expire)
