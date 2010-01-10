@@ -126,14 +126,26 @@ module Waw
         raise 'HTTP redirect too deep' if limit == 0
 
         location = ensure_uri(uri)
-        response = case method
-          when :get
-            Net::HTTP.get_response(location)
-          when :post
-            Net::HTTP.post_form(location, data)
-          else
-            raise ArgumentError, "Invalid fetch method #{method}"
+        
+        response = Net::HTTP.start(location.host, location.port) do |http|
+          headers = @cookie ? {'Cookie' => @cookie} : {}
+          case method
+            when :get
+              path = location.path
+              path += '?' + location.query if location.query
+              http.request_get(path, headers)
+            when :post
+              req = Net::HTTP::Post.new(location.path, headers)
+              req.form_data = data
+              http.request(req)
+            else
+              raise ArgumentError, "Invalid fetch method #{method}"
+          end
         end
+        
+        # If a cookie is requested
+        @cookie = response['set-cookie']
+        
         result = case response
           when Net::HTTPSuccess     
             [location, response]

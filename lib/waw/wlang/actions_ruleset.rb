@@ -30,8 +30,8 @@ module WLang
           parser.evaluate(service)
         else
           action_name = Waw::ActionController.extract_action_name(service)
-          app = Waw.find_rack_app(service){|app| Waw::ActionController===app}
-          raise "Unable to find action for service url #{service}" unless app
+          #app = Waw.find_rack_app(service){|app| Waw::ActionController===app}
+          #raise "Unable to find action for service url #{service}" unless app
           uri, action_id = service, action_name
         end
         result, reached = parser.parse_block(reached)
