@@ -28,12 +28,13 @@ module WLang
         end
         
         # Factors the ajax code for preparing a formulary
-        def ajax_form_preparer
+        def ajax_form_preparer(opts = {})
+          form_id = opts[:form_id] || @action_name
           <<-EOF
             <script type="text/javascript">
             	$(document).ready(function() {
-            	  $("form##{@action_name}").submit(function() {
-            	    #{id}($("form##{@action_name}").serialize(), "form##{@action_name}");
+            	  $("form##{form_id}").submit(function() {
+            	    #{id}($("form##{form_id}").serialize(), "form##{form_id}");
               	  return false;
             	  });
               });
