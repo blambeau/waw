@@ -3,6 +3,8 @@ module Waw
     # Helper to create json server services
     class JSONServices
       
+      attr_reader :mapped
+      
       # Creates a service instance with action controllers mapped
       # to given URLs
       def initialize(mapped)

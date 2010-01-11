@@ -15,6 +15,11 @@ module Waw
       def initialize(name, signature, routing, method)
         @name, @signature, @routing, @method = name, signature, routing, method
       end
+      
+      # Public identifier of the action
+      def public_id
+        name
+      end
     
       # Executes the action
       def execute(controller, params)

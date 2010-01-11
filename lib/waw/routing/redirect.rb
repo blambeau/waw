@@ -15,6 +15,10 @@ module Waw
         browser.location = @opts[:url]
       end
       
+      def generate_js_code(result, align=0)
+        " "*align + "window.location = \"#{@opts[:url]}\";"
+      end
+      
     end # class Redirect
   end # module Routing
 end # module Waw

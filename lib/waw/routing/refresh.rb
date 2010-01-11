@@ -8,6 +8,10 @@ module Waw
         browser.refresh
       end
       
+      def generate_js_code(result, align=0)
+        " "*align + "location.reload(true);"
+      end
+      
     end # class Refresh
   end # module Routing
 end # module Waw

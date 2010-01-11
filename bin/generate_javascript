@@ -1,0 +1,41 @@
+#!/usr/bin/env ruby
+$LOAD_PATH.unshift(File.join('vendor', 'waw', 'lib'))
+require 'rubygems'
+require 'waw'
+Waw.load_application('.')
+
+buffer = STDOUT
+
+def generate_js(action)
+<<-THEEND
+function #{action.public_id}() {
+  form = "form##{action.public_id}";
+  $.ajax({type: "POST", url: "/webserv/people/#{action.public_id}", data: $(form).serialize(), dataType: "json",
+    error: function(data) {
+		  window.location = '/feedback?mkey=server_error'
+		},
+		success: function(data) {
+#{action.routing.generate_js_routing(action, 6)}
+		}
+	});
+	return false;
+}  
+THEEND
+end
+
+if Waw.resources.has_resource?(:messages)
+  buffer << "var messages = new Array();\n"
+  Waw.resources.messages.each do |name, value|
+    buffer << "messages['#{name}'] = \"#{value}\";\n"    
+  end
+end
+
+Waw.resources.services.each do |name, srv|
+  next unless Waw::Services::JSONServices===srv
+  srv.mapped.each do |path, controller|
+    controller.actions.each_pair do |name, action|
+      buffer << generate_js(action).gsub(/\t/, "  ")
+    end
+  end
+end
+
