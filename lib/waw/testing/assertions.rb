@@ -6,12 +6,21 @@ module Waw
       
       #################################################################### Assertions about HTTP and browser
       
+      # Asserts that going to a given location leads to a 404 Not Found error
+      def assert_404(location, msg="Location #{location} is a 404")
+        go location
+        assert browser.is404?, msg
+      end
+      alias :assert_is_404 :assert_404
+      alias :assert_is404 :assert_404
+      
       # Asserts that going to a given location does not lead to a 404
       # Not found error
       def assert_not_404(location, msg="Location #{location} is not a 404")
         go location
         assert !browser.is404?, msg
       end
+      alias :assert_is_not_404 :assert_not_404
       
       #################################################################### Assertions about HTML contents
       

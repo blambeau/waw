@@ -55,8 +55,8 @@ module Waw
       ##############################################################################################
       
       # Default options of this service
-      DEFAULT_OPTIONS = {:templates_folder => 'templates',
-                         :public_folder    => 'public',
+      DEFAULT_OPTIONS = {:public_folder    => 'public',
+                         :templates_folder => File.join('public', 'templates'),
                          :pages_folder     => File.join('public', 'pages'),
                          :main_template    => 'layout.wtpl'}
       
