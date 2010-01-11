@@ -153,6 +153,8 @@ module Waw
             fetch(response['location'], limit - 1)
           when Net::HTTPNotFound
             [location, response]
+          when Net::HTTPInternalServerError
+            raise ServerError, "An error occured when fetching #{uri}"
           else
             raise "Unexpected response from web server #{response}"
         end
@@ -175,5 +177,6 @@ module Waw
       end
       
     end # class Browser
+    class ServerError < StandardError; end
   end # module Testing
 end # module Waw

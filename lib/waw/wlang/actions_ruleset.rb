@@ -2,40 +2,58 @@ module WLang
   class RuleSet
     module WawActionsRuleSet
       
+      class ActionInjected
+        
+        # Creates an injection instance
+        def initialize(action_name, uri)
+          @action_name, @uri = action_name, uri
+        end
+        
+        # Returns the unique id of the action
+        def id
+          @action_name
+        end
+        
+        # Returns the matched URL
+        def url
+          @uri
+        end
+        alias :uri :url
+        
+        # Factors the ajax link for invoking this action in a <a onclick="...">
+        def ajax_link(arguments = {})
+          buffer = ""
+          arguments.each_pair {|k, v| buffer << ", '#{k}' : '#{v}'"}
+          "javascript:#{@action_name}({#{buffer[2..-1]}}, 'form##{@action_name}')"
+        end
+        
+        # Factors the ajax code for preparing a formulary
+        def ajax_form_preparer
+          <<-EOF
+            <script type="text/javascript">
+            	$(document).ready(function() {
+            	  $("form##{@action_name}").submit(function() {
+            	    #{id}($("form##{@action_name}").serialize(), "form##{@action_name}");
+              	  return false;
+            	  });
+              });
+            </script>
+          EOF
+        end
+        
+      end
+      
       # Default mapping between tag symbols and methods
       DEFAULT_RULESET = {'@' => :action}
   
-      # Generates a bundle for form invocation
-      def self.server_invoke_form_helper(uri, id, form_contents)
-        <<-EOF
-          <form action="#{uri}" method="post" enctype="multipart/form-data" id="#{id}">
-            #{form_contents}
-          </form>
-          <script type="text/javascript">
-          	$(document).ready(function() {
-          	  $("form##{id}").submit(function() {
-          	    #{id}($("form##{id}").serialize(), "form##{id}");
-            	  return false;
-          	  });
-            });
-          </script>
-        EOF
-      end
-      
       # Rule implementation of <tt>@{wlang/active-string}{...}</tt>.
       def self.action(parser, offset)
         service, reached = parser.parse(offset, "wlang/active-string")
-        action = if /^services(\.[a-z_]+)+$/ =~ service.strip
-          raise "Unsupported so far"
-          parser.evaluate(service)
-        else
-          action_name = Waw::ActionController.extract_action_name(service)
-          #app = Waw.find_rack_app(service){|app| Waw::ActionController===app}
-          #raise "Unable to find action for service url #{service}" unless app
-          uri, action_id = service, action_name
-        end
-        result, reached = parser.parse_block(reached)
-        result = server_invoke_form_helper(uri, action_id, result)
+        action_name = Waw::ActionController.extract_action_name(service)
+        uri, action_id = service, action_name
+        parser.context_push('action' => ActionInjected.new(action_name, uri))
+          result, reached = parser.parse_block(reached)
+        parser.context_pop
         [result, reached]
       end
       
