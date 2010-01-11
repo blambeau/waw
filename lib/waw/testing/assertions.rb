@@ -29,6 +29,11 @@ module Waw
         assert i_see?(what), msg
       end
       
+      # Asserts that I dont see something
+      def assert_i_dont_see(what, msg = "User does not see |#{what}| on the current page")
+        assert !i_see?(what), msg
+      end
+      
       # Asserts that a tag can be found
       def assert_has_tag(name, opts, msg="Tag <#{name} #{opts.inspect}> can be found")
         assert has_tag?(name, opts), msg
