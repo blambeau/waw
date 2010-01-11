@@ -14,7 +14,7 @@ module WLang
           <script type="text/javascript">
           	$(document).ready(function() {
           	  $("form##{id}").submit(function() {
-          	    #{id}();
+          	    #{id}($("form##{id}").serialize(), "form##{id}");
             	  return false;
           	  });
             });

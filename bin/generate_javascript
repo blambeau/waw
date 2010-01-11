@@ -8,9 +8,8 @@ buffer = STDOUT
 
 def generate_js(path, action)
 <<-THEEND
-function #{action.public_id}() {
-  form = "form##{action.public_id}";
-  $.ajax({type: "POST", url: "#{path}/#{action.public_id}", data: $(form).serialize(), dataType: "json",
+function #{action.public_id}(request_data, form) {
+  $.ajax({type: "POST", url: "#{path}/#{action.public_id}", data: request_data, dataType: "json",
     error: function(data) {
 		  window.location = '/feedback?mkey=server_error'
 		},
