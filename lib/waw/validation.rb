@@ -9,6 +9,7 @@ require 'waw/validation/missing_validator'
 require 'waw/validation/default_validator'
 require 'waw/validation/integer_validator'
 require 'waw/validation/boolean_validator'
+require 'waw/validation/file_validator'
 require 'waw/validation/ext'
 require 'waw/validation/signature'
 module Waw
@@ -55,8 +56,8 @@ module Waw
     def directory() IsDirectory; end
 
     # Checks that the argument matches a folder
-    IsFile = Validation.validator{|*args| args.all?{|a| ::File.file?(a)}}
-    def file() IsFile; end
+    IsFile = FileValidator.new
+    def file(opts = nil) opts.nil? ? IsFile : FileValidator.new(opts); end
 
     # Alls passed arguments are equal
     Equal = validator{|*args| args.uniq.size==1}

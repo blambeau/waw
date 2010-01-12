@@ -2,7 +2,7 @@ module Waw
   module Services
     module PublicPages
       # Waw version of .htaccess files
-      class WawAccess
+      class WawAccess < Waw::Controller
         
         # The folder which is served
         attr_accessor :folder
@@ -70,7 +70,7 @@ module Waw
         
         # Installs some pattern services
         def add_serve(patterns, &block)
-          block = Kernel.lambda{|url, pagefile, app| app.static(pagefile) } unless block
+          block = Kernel.lambda{|url, realpath, wawaccess, env| app.static(realpath, env) } unless block
           patterns.each do |pattern|
             @serve << [pattern, block]
           end
@@ -181,8 +181,21 @@ module Waw
         
         ################################################### To be called on the tree root only!
         
+        # Normalizes a requested path, removing any .html, .htm suffix
+        def normalize_req_path(req_path)
+          # 1) Strip first
+          req_path = req_path.strip
+          # 2) Remove first slash 
+          req_path = req_path[1..-1] if req_path[0,1]=='/'
+          # 3) Remove last slash
+          req_path = req_path[0..-2] if req_path[req_path.length-1,1]=='/'
+          req_path
+        end
+    
         # Serves a path from a root waw access in the hierarchy
         def do_path_serve(path, env=nil)
+          path = normalize_req_path(path)
+          #puts "Making a do_path_server with #{path} and #{realpath(path)}"
           waw_access = (find_wawaccess_for(path) || self)
           waw_access.apply_rules(path, realpath(path), env)
         end
@@ -193,6 +206,7 @@ module Waw
         def static(realpath, env)
           if env
             @file_server ||= ::Rack::File.new(folder)
+            env["PATH_INFO"] = realpath
             @file_server.call(env)
           else
             [200, {'Content-Type' => 'text/plain'}, [File.read(realpath)]]
@@ -202,6 +216,17 @@ module Waw
         # Run a rewriting
         def apply(path, env)
           root.do_path_serve(path, env)
+        end
+        
+        # Service installation on a rack builder
+        def factor_service_map(config, map)
+          map['/'] = self
+          map
+        end
+        
+        # Rack application here
+        def execute(env, request, response)
+          do_path_serve(env["PATH_INFO"], env)
         end
         
       end # class WawAccess
