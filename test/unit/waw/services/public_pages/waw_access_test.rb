@@ -9,7 +9,7 @@ module Waw
         FIRST_WAW_ACCESS = <<-EOF
           wawaccess do 
             strategy :allow_all
-            match '.wtpl' do |url, realpath, wawaccess, env|
+            match '.wtpl' do
               {:message => 'serving .wtpl'}
             end
           end
@@ -17,10 +17,10 @@ module Waw
         
         SECOND_WAW_ACCESS = <<-EOF
           wawaccess do 
-            match '.html' do |url, realpath, wawaccess, env|
+            match '.html' do
               {:message => 'serving .html'}
             end
-            match '.brick' do |url, realpath, wawaccess, env|
+            match '.brick' do
               {:message => 'serving .brick'}
             end
           end
@@ -51,6 +51,7 @@ module Waw
           assert_equal 'css/.wawaccess', wawaccess.find_wawaccess_for('/css/example.css').identifier
           assert_equal 'js/.wawaccess', wawaccess.find_wawaccess_for('/js/example.js').identifier
           assert_equal 'pages/.wawaccess', wawaccess.find_wawaccess_for('/pages').identifier
+          assert_equal 'pages/.wawaccess', wawaccess.find_wawaccess_for('/pages/').identifier
           assert_equal 'pages/.wawaccess', wawaccess.find_wawaccess_for('/pages/hello.wtpl').identifier
         end
         
@@ -65,9 +66,10 @@ module Waw
         def test_on_example
           wawaccess = WawAccess.load_hierarchy(File.join(File.dirname(__FILE__), 'example'))
           assert WawAccess===wawaccess
-          assert_successfull_serve wawaccess.do_path_serve('/css/example.css'), "/* example.css */"
-          assert_successfull_serve wawaccess.do_path_serve('/pages/hello.wtpl'), "Hello blambeau"
-          assert_successfull_serve wawaccess.do_path_serve('/hello.wtpl'), "Hello blambeau"
+          # assert_successfull_serve wawaccess.do_path_serve('/css/example.css'), "/* example.css */"
+          assert_successfull_serve wawaccess.do_path_serve('/'), "Hello blambeau"
+          # assert_successfull_serve wawaccess.do_path_serve('/hello.wtpl'), "Hello blambeau"
+          # assert_successfull_serve wawaccess.do_path_serve('/pages/hello.wtpl'), "Hello blambeau"
         end
         
       end

@@ -16,6 +16,9 @@ module Waw
         # The parent wawaccess file
         attr_accessor :parent
         
+        # File currently served
+        attr_accessor :served_file
+        
         # Creates a default WawAccess file
         def initialize(read_file=nil)
           @strategy = :deny_all
@@ -99,6 +102,12 @@ module Waw
           File.expand_path(File.join(folder, file))
         end
         
+        # Locates the file that would be matched by a given normalized
+        # url.
+        def matching_file(path)
+          File.join(root.folder, path)
+        end
+        
         # Relativize a path against a given folder
         def relativize(file, folder = folder)
           file, folder = File.expand_path(file), File.expand_path(folder)
@@ -137,7 +146,7 @@ module Waw
         ################################################### .waw access rules application!
         
         # Finds the matching block inside this .wawaccess handler
-        def find_matching_block(path, realpath, env)
+        def find_matching_block(path)
           @serve.each do |pattern, block|
             case pattern
               when FalseClass
@@ -146,15 +155,13 @@ module Waw
               when '*'
                 return block
               when /^\*?\.[a-z]+$/
-                return block if File.extname(realpath)==pattern
+                return block if File.extname(realpath(path))==pattern
               when String
-                return block if File.basename(realpath)==pattern
+                return block if File.basename(realpath(path))==pattern
               when Regexp
-                # regular expression
                 return block if pattern =~ path
               when Waw::Validation::Validator
-                # a waw validator
-                return block if pattern.validate(realpath)
+                return block if pattern.validate(matching_file(path))
               else
                 raise WawError, "Unrecognized wawaccess pattern #{pattern}"
             end
@@ -163,11 +170,13 @@ module Waw
         end 
         
         # Applies the rules defined here or delegate to the parent if allowed
-        def apply_rules(path, realpath, env)
-          if block = find_matching_block(path, realpath, env)
-            block.call(path, realpath, self, env)
+        def apply_rules(path)
+          if block = find_matching_block(path)
+            duplicated = self.dup
+            duplicated.served_file = path
+            duplicated.instance_eval(&block)
           elsif (parent and inherits)
-            parent.apply_rules(path, realpath, env)
+            parent.apply_rules(path)
           else
             body = "File not found: #{path}\n"
             [404, {"Content-Type" => "text/plain",
@@ -191,30 +200,40 @@ module Waw
         end
     
         # Serves a path from a root waw access in the hierarchy
-        def do_path_serve(path, env=nil)
+        def do_path_serve(path)
+          #puts "Do path serve with #{identifier} on #{path}"
           path = normalize_req_path(path)
-          #puts "Making a do_path_server with #{path} and #{realpath(path)}"
           waw_access = (find_wawaccess_for(path) || self)
-          waw_access.apply_rules(path, realpath(path), env)
+          #puts "Found #{waw_access.identifier}"
+          waw_access.apply_rules(path)
         end
         
         ################################################### Callbacks proposed to .wawaccess rules
         
         # Serves a static file from a real path
-        def static(realpath, env)
-          if env
+        def static
+          if Waw.env
             @file_server ||= ::Rack::File.new(folder)
-            env["PATH_INFO"] = realpath
-            @file_server.call(env)
+            env["PATH_INFO"] = served_file
+            @file_server.call(Waw.env)
           else
-            [200, {'Content-Type' => 'text/plain'}, [File.read(realpath)]]
+            path = File.join(root.folder, served_file)
+            [200, {'Content-Type' => 'text/plain'}, [File.read(path)]]
           end
         end
         
         # Run a rewriting
-        def apply(path, env)
-          root.do_path_serve(path, env)
+        def apply(path)
+          root.do_path_serve(path)
         end
+        
+        # Instantiates wlang on the current file, with a given context
+        def wlang(context = {}, content_type = 'text/html')
+          path = File.join(root.folder, served_file)
+          [200, {'Content-Type' => content_type}, [WLang.file_instantiate(path, context).to_s]]
+        end
+        
+        ################################################### Methods for Rack application and Waw services
         
         # Service installation on a rack builder
         def factor_service_map(config, map)
@@ -224,7 +243,7 @@ module Waw
         
         # Rack application here
         def execute(env, request, response)
-          do_path_serve(env["PATH_INFO"], env)
+          do_path_serve(env["PATH_INFO"])
         end
         
       end # class WawAccess

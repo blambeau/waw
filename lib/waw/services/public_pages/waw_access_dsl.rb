@@ -14,8 +14,8 @@ module Waw
           
           # Checks some access block
           def self.check_waw_acccess_block(block, wawaccess, name)
-            raise WawError, "#{wawaccess.identifier}: #{name} expects a block of arity 4 (url, realpath, wawaccess, env)"\
-              if (block and (block.arity != 4))
+            raise WawError, "#{wawaccess.identifier}: #{name} expects a block of arity 0"\
+              if (block and (block.arity != -1))
           end
           
           # Starts a wawaccess file
