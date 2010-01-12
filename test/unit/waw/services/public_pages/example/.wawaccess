@@ -2,14 +2,13 @@ wawaccess do
   strategy :allow_all
 
   # We serve all as static file by default
-  serve '*' do |url, page, wawaccess|
-    wawaccess.static page
+  serve file do |url, realpath, wawaccess, env|
+    wawaccess.static realpath, env
   end
 
-  # When something is not found, we look in the pages
-  # wawaccess
-  notfound do |url, page, wawaccess|
-    wawaccess.delegate('pages').serve(url)
+  # When something is not found, we look in the pages wawaccess
+  notfound do |url, realpath, wawaccess, env|
+    wawaccess.apply "/pages/#{url}", env
   end
 
 end

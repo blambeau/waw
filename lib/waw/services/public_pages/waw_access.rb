@@ -79,7 +79,7 @@ module Waw
         # Merges a DSL string inside this waw access
         def dsl_merge(dsl_str, read_file=nil)
           begin
-            WawAccess::DSL.new(self, read_file).instance_eval(dsl_str)
+            WawAccess::DSL.new(self).instance_eval(dsl_str)
           rescue WawError => ex
             raise ex
           rescue Exception => ex
@@ -110,113 +110,98 @@ module Waw
         
         ################################################### Utilities about the hierarchy
         
-        
-        ################################################### Handlers provided for the user
-        
-        # Finds the wawaccess for a given path
-        def delegate(path)
-          return delegate(path.split('/')) if String===path
-          return self if path.empty?
-          mine = path.shift
-          raise WawError, "No .wawaccess found" unless @children[mine]
-          @children[mine].delegate(path)
-        end
-        
-        # Serves a static page
-        def static(page)
-          @static_server ||= ::Rack::File.new(folder)
-          if Waw.env
-            puts "Using the static server with #{Waw.env.inspect}"
-            result = @static_server.call(Waw.env)
-            puts "Got static server result #{result.inspect}"
-            result
+        # Returns an identifier for this wawaccess
+        def identifier(append = true)
+          if parent
+            parent.identifier(false) + (append ? "#{File.basename(@folder)}/.wawaccess" : File.basename(@folder))
           else
-            [200, {'Content-Type' => 'text/plain'}, File.read(page)]
+            (append ? ".wawaccess" : "")
           end
         end
         
-        ################################################### About wawaccess itself
+        # Returns the root waw access in the hierarchy
+        def root
+          @root ||= (parent ? parent.root : self)
+        end
         
-        # Finds the block used for serving a given file
-        def find_serve_block(file, use_hierarchy = true)
-          ext = File.extname(file)
+        # Finds the wawaccess instance for a given url
+        def find_wawaccess_for(url, url_array = url.split('/').reject{|k| k.empty?})
+          if url_array.empty?
+            self
+          else
+            if @children.has_key?(nextfolder = url_array.shift)
+              @children[nextfolder].find_wawaccess_for(url, url_array)
+            else
+              self
+            end
+          end
+        end
+        
+        ################################################### .waw access rules application!
+        
+        # Finds the matching block inside this .wawaccess handler
+        def find_matching_block(path, realpath, env)
           @serve.each do |pattern, block|
             case pattern
               when '*'
                 return block
               when /^\*?\.[a-z]+$/
-                # file extension
-                return block if File.extname(file)==pattern
+                return block if File.extname(realpath)==pattern
+              when String
+                return block if File.basename(realpath)==pattern
               when Regexp
                 # regular expression
-                return block if pattern =~ file
+                return block if pattern =~ path
               when Waw::Validation::Validator
                 # a waw validator
-                return block if pattern.validate(file)
+                return block if pattern.validate(realpath)
               else
                 raise WawError, "Unrecognized wawaccess pattern #{pattern}"
             end
           end
-          (use_hierarchy and @parent) ? parent.find_serve_block(file, true) : nil
-        end
+          nil
+        end 
         
-        # Checks if this wawaccess file allows serving a given file
-        def may_serve?(file, use_hierarchy = true)
-          not(find_serve_block(file).nil?)
-        end
-        
-        # Prepare the context for instantiating a given file
-        def prepare_serve(url, file)
-          (block = find_serve_block(file)) and block.call(url, file, self)
-        end
-        
-        # Handles a not found strategy
-        def handle_not_found(url)
-          if notfound
-            notfound.call(url, nil, self)
+        # Applies the rules defined here or delegate to the parent if allowed
+        def apply_rules(path, realpath, env)
+          if block = find_matching_block(path, realpath, env)
+            block.call(path, realpath, self, env)
+          elsif notfound
+            notfound.call(path, realpath, self, env)
+          elsif (parent and inherits)
+            parent.apply_rules(path, realpath, env)
           else
-            [404, {'Content-Type' => 'text/plain'}, ['Page not found']]
+            body = "File not found: #{path}\n"
+            [404, {"Content-Type" => "text/plain",
+               "Content-Length" => body.size.to_s,
+               "X-Cascade" => "pass"},
+             [body]]
           end
         end
         
-        # Serves from an url array
-        def serve_url_array(url, url_array = url.split('/').reject{|k| k.empty?})
-          if url_array.size <= 1
-            # End of recursion, serve this file
-            if url_array.empty?
-              file, real_path = url_array[0], folder
-            else
-              file, real_path = url_array[0], realpath(url_array[0])
-            end
-            
-            # Take the preparation block
-            if File.exists?(real_path) and (block = find_serve_block(real_path, inherits))
-              block.call(url, real_path, self)
-            else
-              handle_not_found(url)
-            end
+        ################################################### To be called on the tree root only!
+        
+        # Serves a path from a root waw access in the hierarchy
+        def do_path_serve(path, env=nil)
+          waw_access = (find_wawaccess_for(path) || self)
+          waw_access.apply_rules(path, realpath(path), env)
+        end
+        
+        ################################################### Callbacks proposed to .wawaccess rules
+        
+        # Serves a static file from a real path
+        def static(realpath, env)
+          if env
+            @file_server ||= ::Rack::File.new(folder)
+            @file_server.call(env)
           else
-            # For a child
-            mine = url_array.shift
-            if @children[mine]
-              @children[mine].serve_url_array(url, url_array)
-            else
-              handle_not_found(url)
-            end
+            [200, {'Content-Type' => 'text/plain'}, [File.read(realpath)]]
           end
         end
         
-        # Serves an URL
-        def serve(url)
-          result = serve_url_array(url.strip)
-          raise WawError, "invalid .wawaccess file #{self}: serving #{url} led an invalid result #{result.inspect}"\
-            unless result and Array===result
-          result
-        end
-        
-        # Returns the path of this .wawaccess file
-        def to_s
-          @read_file
+        # Run a rewriting
+        def apply(path, env)
+          root.do_path_serve(path, env)
         end
         
       end # class WawAccess
