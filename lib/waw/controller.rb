@@ -13,7 +13,7 @@ module Waw
     # Handler for Rack calls to the controller
     def call(env)
       req, res = Rack::Request.new(env), Rack::Response.new(env)
-      Waw.logger.debug("Starting Waw::Controller.call with #{req.cookies.inspect}")
+      #Waw.logger.debug("Starting Waw::Controller.call with #{req.cookies.inspect}")
       
       # Save thread local variables
       Thread.current[:rack_env] = env
@@ -24,8 +24,8 @@ module Waw
       result = execute(env, req, res)
       raise WawError, "Controller #{self.class} returned an empty result" unless result
       raise WawError, "Controller #{self.class} returned an invalid result #{result.inspect}" unless Array===result
-      Waw.logger.debug("Waw::Controller serving #{result[0]} with headers #{result[1].inspect}")
-      Waw.logger.debug("Session is now #{session.inspect}")
+      #Waw.logger.debug("Waw::Controller serving #{result[0]} with headers #{result[1].inspect}")
+      #Waw.logger.debug("Session is now #{session.inspect}")
       result
     rescue Exception => ex
       # On exception, returns a 500 with a message
