@@ -28,10 +28,15 @@ buffer << <<-EOF
 
 EOF
 
-buffer << "/* Messages, from waw.resources.messages */\n"
 if Waw.resources.has_resource?(:messages)
-  buffer << "var messages = new Array();\n"
+  buffer << "/* Messages, from waw.resources.messages */\n"
+  messages = {}
   Waw.resources.messages.each do |name, value|
+    messages[name] = value 
+  end  
+  buffer << "var messages = new Array();\n"
+  messages.keys.sort{|k1, k2| k1.to_s <=> k2.to_s}.each do |name|
+    value = messages[name]
     buffer << "messages['#{name}'] = \"#{value}\";\n"    
   end
 end
