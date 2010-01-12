@@ -21,19 +21,10 @@ module Waw
       Thread.current[:rack_response] = res
 
       # Execute controller
-      kind, result = execute(env, req, res)
-      case kind
-        when :bypass
-          Waw.logger.debug("Session is now #{session.inspect}")
-          result
-        when :no_bypass
-          Waw.logger.debug("Returning 200 with #{result.inspect}")
-          Waw.logger.debug("Session is now #{session.inspect}")
-          [200, {'Content-Type' => content_type}, result]
-        else
-          Waw.logger.fatal("Unexpected controller result #{kind}")
-          raise "Unexpected result #{kind}"
-      end
+      result = execute(env, req, res)
+      Waw.logger.debug("Waw::Controller serving #{result[0]} with headers #{result[1].inspect}")
+      Waw.logger.debug("Session is now #{session.inspect}")
+      result
     rescue Exception => ex
       # On exception, returns a 500 with a message
       Waw.logger.error("Fatal error #{ex.message}")

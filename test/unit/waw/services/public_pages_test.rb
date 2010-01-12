@@ -63,9 +63,8 @@ module Waw
           # on index
           %w{/ /index /index.html /index.htm}.each do |thepath|
             req.set_path(thepath)
-            result, rack = controller.execute(nil, req, nil)
-            assert_equal :bypass, result
-            status, content_type, contents = rack
+            result = controller.execute(nil, req, nil)
+            status, content_type, contents = result
             assert_equal 200, status
             assert_equal ['index'], contents
           end
@@ -73,9 +72,8 @@ module Waw
           # on subfolder
           %w{/subfolder /subfolder/index.html}.each do |thepath|
             req.set_path(thepath)
-            result, rack = controller.execute(nil, req, nil)
-            assert_equal :bypass, result
-            status, content_type, contents = rack
+            result = controller.execute(nil, req, nil)
+            status, content_type, contents = result
             assert_equal 200, status
             assert_equal ['subfolder/index'], contents
           end
@@ -83,9 +81,8 @@ module Waw
           # on subfolder/hello
           %w{/subfolder/hello /subfolder/hello.html}.each do |thepath|
             req.set_path(thepath)
-            result, rack = controller.execute(nil, req, nil)
-            assert_equal :bypass, result
-            status, content_type, contents = rack
+            result = controller.execute(nil, req, nil)
+            status, content_type, contents = result
             assert_equal 200, status
             assert_equal ['subfolder/hello'], contents
           end
@@ -93,9 +90,8 @@ module Waw
           # on nonexists
           %w{/notexists /subfolder/notexists}.each do |thepath|
             req.set_path(thepath)
-            result, rack = controller.execute(nil, req, nil)
-            assert_equal :bypass, result
-            status, content_type, contents = rack
+            result = controller.execute(nil, req, nil)
+            status, content_type, contents = result
             assert_equal 404, status
           end
         

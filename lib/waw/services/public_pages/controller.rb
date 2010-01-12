@@ -190,7 +190,7 @@ module Waw
           composed = WLang.file_instantiate(layout, context).to_s
       
           # send result
-          [:bypass, [is404 ? 404 : 200, {'Content-Type' => 'text/html'}, [composed]]]
+          [is404 ? 404 : 200, {'Content-Type' => 'text/html'}, [composed]]
         end
     
       end # class Controller
