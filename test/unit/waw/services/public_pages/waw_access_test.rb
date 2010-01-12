@@ -12,7 +12,6 @@ module Waw
             serve '.wtpl' do |url, page, app|
               {:message => 'serving .wtpl'}
             end
-            serve '.html'
           end
         EOF
         
@@ -32,10 +31,8 @@ module Waw
             wawaccess = WawAccess.new.dsl_merge(FIRST_WAW_ACCESS)
             assert_equal :allow_all, wawaccess.strategy
             assert wawaccess.may_serve?('test.wtpl')
-            assert wawaccess.may_serve?('test.html')
             assert !wawaccess.may_serve?('test.brick')
-            assert_equal 'serving .wtpl', wawaccess.prepare_serve('/test', 'test.wtpl', self)[:message]
-            assert Array===wawaccess.prepare_serve('/test', 'test.html', self)
+            assert_equal 'serving .wtpl', wawaccess.prepare_serve('/test', 'test.wtpl')[:message]
           end
         end
         
@@ -46,8 +43,8 @@ module Waw
             assert !wawaccess.may_serve?('test.wtpl')
             assert wawaccess.may_serve?('test.html')
             assert wawaccess.may_serve?('test.brick')
-            assert_equal 'serving .html', wawaccess.prepare_serve('/test', 'test.html', self)[:message]
-            assert_equal 'serving .brick', wawaccess.prepare_serve('/test', 'test.brick', self)[:message]
+            assert_equal 'serving .html', wawaccess.prepare_serve('/test', 'test.html')[:message]
+            assert_equal 'serving .brick', wawaccess.prepare_serve('/test', 'test.brick')[:message]
           end
         end
         
@@ -57,7 +54,7 @@ module Waw
           assert !second.may_serve?('test.wtpl')
           second.parent = first
           assert_equal true, second.may_serve?('test.wtpl', true)
-          assert_equal 'serving .wtpl', second.prepare_serve('/test', 'test.wtpl', self)[:message]
+          assert_equal 'serving .wtpl', second.prepare_serve('/test', 'test.wtpl')[:message]
         end
         
         def assert_successfull_serve(what, content_type=nil, msg = "#{what} is sucessfully served")
@@ -73,7 +70,6 @@ module Waw
           assert_successfull_serve wawaccess.serve('/css/example.css'), 'text/plain'
           assert_successfull_serve wawaccess.serve('/pages/hello.wtpl'), 'text/html'
           assert_successfull_serve wawaccess.serve('/hello.wtpl'), 'text/html'
-          puts wawaccess.serve('/hello.wtpl').inspect
         end
         
       end

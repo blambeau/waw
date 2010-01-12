@@ -51,8 +51,12 @@ module Waw
     def self.weburl() WebUrl; end
 
     # Checks that the argument matches a folder
-    Directory = Validation.validator{|*args| args.all?{|a| File.directory?(a)}}
-    def directory() Directory; end
+    IsDirectory = Validation.validator{|*args| args.all?{|a| ::File.directory?(a)}}
+    def directory() IsDirectory; end
+
+    # Checks that the argument matches a folder
+    IsFile = Validation.validator{|*args| args.all?{|a| ::File.file?(a)}}
+    def file() IsFile; end
 
     # Alls passed arguments are equal
     Equal = validator{|*args| args.uniq.size==1}

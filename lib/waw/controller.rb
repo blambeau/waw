@@ -22,6 +22,8 @@ module Waw
 
       # Execute controller
       result = execute(env, req, res)
+      raise WawError, "Controller #{self.class} returned an empty result" unless result
+      raise WawError, "Controller #{self.class} returned an invalid result #{result.inspect}" unless Array===result
       Waw.logger.debug("Waw::Controller serving #{result[0]} with headers #{result[1].inspect}")
       Waw.logger.debug("Session is now #{session.inspect}")
       result

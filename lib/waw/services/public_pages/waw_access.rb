@@ -33,7 +33,7 @@ module Waw
         
         # Returns a wawaccess tree for a given folder
         def self.load_hierarchy(root_folder, parent = nil)
-          raise ArgumentError, "Invalid folder #{root_folder}" unless File.directory?(root_folder)
+          raise ArgumentError, "Invalid folder #{root_folder}" unless (root_folder and File.directory?(root_folder))
 
           # Locate and load the .wawaccess file or provide a default one
           wawaccess_file = File.join(root_folder, '.wawaccess')
@@ -99,8 +99,17 @@ module Waw
         
         # Returns the real path of a file
         def realpath(file)
-          File.join(@folder, file)
+          File.expand_path(File.join(folder, file))
         end
+        
+        # Relativize a path against a given folder
+        def relativize(file, folder = folder)
+          file, folder = File.expand_path(file), File.expand_path(folder)
+          file[(folder.length+1)..-1]
+        end
+        
+        ################################################### Utilities about the hierarchy
+        
         
         ################################################### Handlers provided for the user
         
@@ -115,7 +124,15 @@ module Waw
         
         # Serves a static page
         def static(page)
-          [200, {'Content-Type' => 'text/plain'}, [page]]
+          @static_server ||= ::Rack::File.new(folder)
+          if Waw.env
+            puts "Using the static server with #{Waw.env.inspect}"
+            result = @static_server.call(Waw.env)
+            puts "Got static server result #{result.inspect}"
+            result
+          else
+            [200, {'Content-Type' => 'text/plain'}, File.read(page)]
+          end
         end
         
         ################################################### About wawaccess itself
@@ -149,7 +166,7 @@ module Waw
         end
         
         # Prepare the context for instantiating a given file
-        def prepare_serve(url, file, app)
+        def prepare_serve(url, file)
           (block = find_serve_block(file)) and block.call(url, file, self)
         end
         
@@ -163,18 +180,18 @@ module Waw
         end
         
         # Serves from an url array
-        def serve_url_array(url, url_array = url.split('/'))
-          if url_array.size == 1
+        def serve_url_array(url, url_array = url.split('/').reject{|k| k.empty?})
+          if url_array.size <= 1
             # End of recursion, serve this file
-            file = url_array[0]
+            if url_array.empty?
+              file, real_path = url_array[0], folder
+            else
+              file, real_path = url_array[0], realpath(url_array[0])
+            end
             
             # Take the preparation block
-            if File.exists?(realpath = realpath(file))
-              if (block = find_serve_block(file, inherits))
-                block.call(url, realpath(file), self)
-              else
-                handle_not_found(url)
-              end
+            if File.exists?(real_path) and (block = find_serve_block(real_path, inherits))
+              block.call(url, real_path, self)
             else
               handle_not_found(url)
             end
@@ -191,9 +208,10 @@ module Waw
         
         # Serves an URL
         def serve(url)
-          url = url.strip
-          url = url[1..-1] if url[0...1]=='/'
-          serve_url_array(url)
+          result = serve_url_array(url.strip)
+          raise WawError, "invalid .wawaccess file #{self}: serving #{url} led an invalid result #{result.inspect}"\
+            unless result and Array===result
+          result
         end
         
         # Returns the path of this .wawaccess file
