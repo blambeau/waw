@@ -1,3 +1,4 @@
 module Waw
-  class ConfigurationError < StandardError; end
+  class WawError < StandardError; end
+  class ConfigurationError < WawError; end
 end
