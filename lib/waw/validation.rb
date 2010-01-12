@@ -50,6 +50,10 @@ module Waw
     WebUrl = /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ix.to_validator
     def self.weburl() WebUrl; end
 
+    # Checks that the argument matches a folder
+    Directory = Validation.validator{|*args| args.all?{|a| File.directory?(a)}}
+    def directory() Directory; end
+
     # Alls passed arguments are equal
     Equal = validator{|*args| args.uniq.size==1}
     def self.equal() Equal; end

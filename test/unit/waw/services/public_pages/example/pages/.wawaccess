@@ -1,0 +1,21 @@
+wawaccess do
+  
+  # We don't inherits static configuration
+  inherits false
+  
+  # By default, we deny the call
+  strategy :deny_all
+  
+  # When a folder is requested, find the associated index file
+  serve directory do |url, pagefile, wawaccess|
+    wawaccess.fileserve(File.join(pagefile, 'index.wtpl'))
+  end
+
+  # We serve .wtpl files using wlang
+  serve '.wtpl' do |url, pagefile, wawaccess|
+    context = {"who" => "blambeau"}
+    contents = WLang.file_instantiate(pagefile, context)
+    [200, {'Content-Type' => 'text/html'}, [contents]]
+  end
+  
+end
