@@ -2,12 +2,12 @@ wawaccess do
   strategy :allow_all
 
   # We serve all as static file by default
-  serve file do |url, realpath, wawaccess, env|
+  match file do |url, realpath, wawaccess, env|
     wawaccess.static realpath, env
   end
 
   # When something is not found, we look in the pages wawaccess
-  notfound do |url, realpath, wawaccess, env|
+  match true do |url, realpath, wawaccess, env|
     wawaccess.apply "/pages/#{url}", env
   end
 

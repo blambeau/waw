@@ -7,12 +7,12 @@ wawaccess do
   strategy :deny_all
   
   # When a folder is requested, find the associated index file
-  serve directory do |url, realpath, wawaccess, env|
+  match directory do |url, realpath, wawaccess, env|
     wawaccess.apply "#{url}/index.wtpl", env
   end
 
   # We serve .wtpl files using wlang
-  serve '.wtpl' do |url, realpath, wawaccess, env|
+  match '.wtpl' do |url, realpath, wawaccess, env|
     context = {"who" => "blambeau"}
     contents = WLang.file_instantiate(realpath, context)
     [200, {'Content-Type' => 'text/html'}, [contents]]

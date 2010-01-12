@@ -13,9 +13,6 @@ module Waw
         # Does it inherits its parent configuration?
         attr_accessor :inherits
         
-        # Handler when the file cannot be found
-        attr_accessor :notfound
-        
         # The parent wawaccess file
         attr_accessor :parent
         
@@ -143,6 +140,9 @@ module Waw
         def find_matching_block(path, realpath, env)
           @serve.each do |pattern, block|
             case pattern
+              when FalseClass
+              when TrueClass
+                return block
               when '*'
                 return block
               when /^\*?\.[a-z]+$/
@@ -166,8 +166,6 @@ module Waw
         def apply_rules(path, realpath, env)
           if block = find_matching_block(path, realpath, env)
             block.call(path, realpath, self, env)
-          elsif notfound
-            notfound.call(path, realpath, self, env)
           elsif (parent and inherits)
             parent.apply_rules(path, realpath, env)
           else

@@ -37,16 +37,10 @@ module Waw
           end
           
           # Serve some patterns
-          def serve(*patterns, &block)
+          def match(*patterns, &block)
             raise WawError, "#{@wawaccess.identifier}: missing patterns in wawaccess.serve call" if patterns.empty?
             DSL.check_waw_acccess_block(block, @wawaccess, 'serve')
             @wawaccess.add_serve(patterns, &block)
-          end
-          
-          # Installs a find not found handler
-          def notfound(&block)
-            DSL.check_waw_acccess_block(block, @wawaccess, 'notfound')
-            @wawaccess.notfound = block
           end
           
         end

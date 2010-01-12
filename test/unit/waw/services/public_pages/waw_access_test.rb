@@ -9,7 +9,7 @@ module Waw
         FIRST_WAW_ACCESS = <<-EOF
           wawaccess do 
             strategy :allow_all
-            serve '.wtpl' do |url, realpath, wawaccess, env|
+            match '.wtpl' do |url, realpath, wawaccess, env|
               {:message => 'serving .wtpl'}
             end
           end
@@ -17,10 +17,10 @@ module Waw
         
         SECOND_WAW_ACCESS = <<-EOF
           wawaccess do 
-            serve '.html' do |url, realpath, wawaccess, env|
+            match '.html' do |url, realpath, wawaccess, env|
               {:message => 'serving .html'}
             end
-            serve '.brick' do |url, realpath, wawaccess, env|
+            match '.brick' do |url, realpath, wawaccess, env|
               {:message => 'serving .brick'}
             end
           end
