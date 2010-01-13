@@ -1,0 +1,4 @@
+wawaccess do
+  strategy :deny_all
+  inherits false
+end
