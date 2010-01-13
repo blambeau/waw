@@ -1,0 +1,26 @@
+require "rake/rdoctask"
+require "rake/testtask"
+require "rubygems"
+require "waw"
+
+# Some information about the project
+dir     = File.dirname(__FILE__)
+lib     = File.join(dir, "lib", "+{project.lowname}.rb")
+version = File.read(lib)[/^\s*VERSION\s*=\s*(['"])(\d\.\d\.\d)\1/, 2]
+
+task :default => [:test]
+
+desc "Lauches all unit tests"
+Rake::TestTask.new(:unit_test) do |test|
+  test.libs       << [ "lib", "test/unit"]
+  test.test_files = ['test/unit/test_all.rb']
+  test.verbose    =  true
+end
+
+desc "Launches all wawspec test"
+task :wawspec do
+  require('test/wawspec/test_all.rb')
+end
+
+desc "Launches both unit and wawspec test"
+task :test => [:unit_test, :wawspec]
