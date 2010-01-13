@@ -22,7 +22,7 @@ module Waw
   extend Waw::EnvironmentUtils
   
   # Waw version
-  VERSION = "0.0.1".freeze
+  VERSION = "0.1.0".freeze
 
   # Finds the Rack application that matches a given path
   def self.find_rack_app(path, &block)
