@@ -84,7 +84,7 @@ module Waw
         end
 
         # Locate the template folder
-        template_folder = File.join(File.dirname(__FILE__), '..', '..', '..', 'templates', template)
+        template_folder = File.join(File.dirname(__FILE__), '..', '..', '..', 'layouts', template)
         exit("Unknown template #{template}") unless File.exists?(template_folder)
         
         # Generate files now
