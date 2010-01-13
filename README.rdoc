@@ -9,7 +9,7 @@ bit too heavy) and Rack (not really a framework, sometimes too low-level).
 Waw basically provides an overall architecture for web sites and/or applications. Its main 
 features are
 
-- It tend to propose the development of secure web applications, avoiding code injection as much 
+- It proposes the development of secure web applications, avoiding code injection as much 
   as possible and enforcing validation of both input data (coming from formularies, for example) 
   and application state (user authentification or administration level for invoking specific 
   services or to access specific pages)
