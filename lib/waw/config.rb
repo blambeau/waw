@@ -48,9 +48,9 @@ module Waw
           value.each{|f| require(f)}
         when :log_dir
           config_error(name, "log_dir is expected to be a string") unless String===value
-          config_error(name, "Unable to access log_dir #{value}") unless File.exists?(value) and 
-                                                                         File.directory?(value) and
-                                                                         File.writable?(value)
+          # config_error(name, "Unable to access log_dir #{value}") unless File.exists?(value) and 
+          #                                                                File.directory?(value) and
+          #                                                                File.writable?(value)
         when :log_file
           config_error(name, "log_file is expected to be a string") unless String===value
         when :log_level

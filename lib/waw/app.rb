@@ -6,10 +6,15 @@ module Waw
     attr_accessor :config
     
     # Logger, when loaded
-    attr_accessor :logger
+    attr_writer :logger
     
     # Resources, when loaded
     attr_accessor :resources
+    
+    # Returns installed logger, or a default one
+    def logger
+      @logger || Logger.new(STDOUT)
+    end
     
     # Loads waw configuration and deployment
     def load_config(root_folder = '')
