@@ -3,7 +3,7 @@ top  = File.join(File.dirname(__FILE__), '..', '..')
 $LOAD_PATH.unshift(File.join(top, 'lib'), File.join(top, 'test', 'unit'))
 
 # Requires
-require '+{project.lowname}'
+require '+[project.lowname]'
 require 'test/unit'
 
 # Load the waw application for having configuration

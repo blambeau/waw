@@ -13,15 +13,15 @@ wawaccess do
 
   # We match .wtpl files using wlang
   match file(:extension => '.wtpl') do
-    context = {"title"       => AcmScW.title_of(served_file),
-               "pagerequest" => served_file,
-               "theclass"    => (served_file == 'pages/index.wtpl' ? 'index' : 'other'),
+    here = File.dirname(__FILE__)
+    context = {"css_files"   => Dir[File.join(here, 'css', '*.css')],
+               "js_files"    => Dir[File.join(here, 'js', '*.js')],
+               "page"        => served_file,
                "env"         => Waw.env,
                "request"     => Waw.request, 
                "response"    => Waw.response,
                "session"     => Waw.session}
     Waw.resources.each {|k, v| context[k.to_s] = v}
-    
     template = File.join(folder, '../templates/layout.wtpl')
     contents = WLang.file_instantiate(template, context)
     [200, {'Content-Type' => 'text/html'}, [contents]]

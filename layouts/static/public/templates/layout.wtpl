@@ -3,7 +3,7 @@
 	<head>
 		<meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
     <base href="{Waw.config.web_base}"/>
-		<title>+{project.upname}</title>
+		<title>+[project.upname]</title>
 		*{css_files as css}{
   		<link rel="stylesheet" type="text/css" href="{css}" />
   	}
@@ -12,6 +12,6 @@
   	}
 	</head>
 	<body>
-	  <<+{page using self}
+	  <<+{../${page} using self}
 	</body>
 </html>

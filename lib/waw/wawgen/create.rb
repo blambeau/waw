@@ -7,10 +7,14 @@ module Waw
       
       # Which layout
       attr_reader :layout
+      
+      # Force overrides?
+      attr_reader :force
 
       # Creates a command instance
       def initialize
         @layout = 'empty'
+        @force = false
       end
 
       # Parses commandline options provided as an array of Strings.
@@ -30,6 +34,14 @@ module Waw
           opt.separator nil
           opt.separator "Options:"
     
+          opt.on("--force", "-f", "Erase any exsting file on conflict") do |value|
+            @force = true
+          end
+
+          opt.on("--layout=LAYOUT", "-l", "Use a specific waw layout (default empty)") do |value|
+            @layout = value
+          end
+
           opt.on("--verbose", "-v", "Display extra progress as we parse.") do |value|
             @verbosity = 2
           end
@@ -71,40 +83,63 @@ module Waw
         Kernel.exit(-1)
       end
 
+      def generate_recursively(project, layout_folder, target_folder)
+        # Generate files now
+        Dir.new(layout_folder).each do |file|
+          next if ['.', '..'].include?(file)
+          next if 'dependencies'==file
+          target = File.join(target_folder, file.gsub('project', project.lowname))
+          puts "Generating #{target} from #{layout}/#{file}"
+
+          if File.directory?(source=File.join(layout_folder, file))
+            FileUtils.mkdir_p target unless File.exists?(target)
+            generate_recursively(project, source, target)
+          else
+            File.open(target, 'w') do |io|
+              context = {"project" => project}
+              WLang.file_instantiate(File.join(layout_folder, file), context, io, 'wlang/active-string', :brackets)
+            end
+          end
+        end
+      end
+
+      # Generates a given layout for a specific project
+      def generate_layout(project, layout)
+        # Locate the layout folder
+        layout_folder = File.join(File.dirname(__FILE__), '..', '..', '..', 'layouts', layout)
+        exit("Unknown layout #{layout}") unless File.exists?(layout_folder)
+        
+        # Handle dependencies
+        dependencies_file = File.join(layout_folder, 'dependencies')
+        if File.exists?(dependencies_file)
+          File.readlines(dependencies_file).each do |line|
+            next if /^#/ =~ (line = line.strip)
+            line.split(/\s/).each do |word| 
+              generate_layout(project, word)
+            end
+          end
+        end
+        
+        # Let recursive generation occur
+        puts "Generating recursively project, #{layout_folder}, #{project.folder}"
+        generate_recursively(project, layout_folder, project.folder)
+      end
+
       # Generates the project
       def generate(project)
         # A small debug message and we start
         puts "Generating project with names #{project.upname} inside #{project.lowname} using layout #{layout}"
         
         # 1) Create the output folder if it not exists
-        if File.exists?(project.folder)
+        if File.exists?(project.folder) and not(force)
           exit("The project folder #{project.lowname} already exists. Remove it first")
         else
+          FileUtils.rm_rf project.folder if File.exists?(project.folder)
           FileUtils.mkdir_p project.folder
         end
 
-        # Locate the layout folder
-        layout_folder = File.join(File.dirname(__FILE__), '..', '..', '..', 'layouts', layout)
-        exit("Unknown layout #{layout}") unless File.exists?(layout_folder)
-        
-        # Generate files now
-        Dir["#{layout_folder}/**/*"].each do |file|
-          file = file[layout_folder.length+1..-1]
-          next if 'install.rb'==file
-          target = File.join(project.root, file.gsub('project', project.lowname))
-          puts "Generating #{target}..."
-
-          if File.directory?(File.join(layout_folder, file))
-            FileUtils.mkdir_p target
-          else
-            File.open(target, 'w') do |io|
-              context = {"project" => project}
-              WLang.file_instantiate(File.join(layout_folder, file), context, io, 'wlang/active-string')
-            end
-          end
-        end
+        generate_layout(project, layout)
         FileUtils.chmod 0755, File.join(project.root, 'config.ru')
-        
       end
       
     end # class Create

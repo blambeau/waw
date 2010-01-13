@@ -1,3 +1,4 @@
+#!/usr/bin/env rackup
 require 'rubygems'
 require 'waw'
 if app = Waw.load_application(File.dirname(__FILE__))
