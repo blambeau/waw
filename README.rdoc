@@ -23,3 +23,10 @@ features are
 - When things become too restrictive for you (you don't fit the architecture exactly) you can 
   access lower stages ... edit the underlying Rack configuration and install your own services
   in a few minutes, bypassing waw when needed!
+  
+== Dependencies
+
+Waw requires the following ruby gems
+
+- rack >= 1.1.0 (provided through <code>gem install rack</code>)
+- wlang >= 0.8.4 (provided in the vendors folder)
