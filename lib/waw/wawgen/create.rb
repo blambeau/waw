@@ -5,12 +5,12 @@ module Waw
     # Implementation of 'waw create'
     class Create
       
-      # Which template
-      attr_reader :template
+      # Which layout
+      attr_reader :layout
 
       # Creates a command instance
       def initialize
-        @template = 'empty'
+        @layout = 'empty'
       end
 
       # Parses commandline options provided as an array of Strings.
@@ -74,7 +74,7 @@ module Waw
       # Generates the project
       def generate(project)
         # A small debug message and we start
-        puts "Generating project with names #{project.upname} inside #{project.lowname} using template #{template}"
+        puts "Generating project with names #{project.upname} inside #{project.lowname} using layout #{layout}"
         
         # 1) Create the output folder if it not exists
         if File.exists?(project.folder)
@@ -83,23 +83,23 @@ module Waw
           FileUtils.mkdir_p project.folder
         end
 
-        # Locate the template folder
-        template_folder = File.join(File.dirname(__FILE__), '..', '..', '..', 'layouts', template)
-        exit("Unknown template #{template}") unless File.exists?(template_folder)
+        # Locate the layout folder
+        layout_folder = File.join(File.dirname(__FILE__), '..', '..', '..', 'layouts', layout)
+        exit("Unknown layout #{layout}") unless File.exists?(layout_folder)
         
         # Generate files now
-        Dir["#{template_folder}/**/*"].each do |file|
-          file = file[template_folder.length+1..-1]
+        Dir["#{layout_folder}/**/*"].each do |file|
+          file = file[layout_folder.length+1..-1]
           next if 'install.rb'==file
           target = File.join(project.root, file.gsub('project', project.lowname))
           puts "Generating #{target}..."
 
-          if File.directory?(File.join(template_folder, file))
+          if File.directory?(File.join(layout_folder, file))
             FileUtils.mkdir_p target
           else
             File.open(target, 'w') do |io|
               context = {"project" => project}
-              WLang.file_instantiate(File.join(template_folder, file), context, io, 'wlang/active-string')
+              WLang.file_instantiate(File.join(layout_folder, file), context, io, 'wlang/active-string')
             end
           end
         end
