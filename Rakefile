@@ -30,9 +30,6 @@ gemspec = Gem::Specification.new do |s|
   s.summary = "Waw - making web applications simple"
   s.description = %{A web application framework written in Ruby}
   s.files = Dir['lib/**/*'] + Dir['test/**/*'] + Dir['bin/*'] + Dir.glob('layouts/**/*', File::FNM_DOTMATCH)
-  s.files.each do |f|
-    puts f
-  end
   s.require_path = 'lib'
   s.has_rdoc = true
   s.extra_rdoc_files = ["README.rdoc", "LICENCE.rdoc"]

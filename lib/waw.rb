@@ -3,19 +3,23 @@ require 'rack'
 require 'wlang'
 
 require 'waw/errors'
-require 'waw/ext'
+require 'waw/ext/rack'
+require 'waw/ext/ruby'
+
 require 'waw/resource_collection'
 require 'waw/config'
 require 'waw/validation'
-require 'waw/rack_utils'
-require 'waw/environment_utils'
-require 'waw/controller'
-require 'waw/routing'
-require 'waw/action'
-require 'waw/action_controller'
-require 'waw/services'
-require 'waw/testing'
 require 'waw/app'
+require 'waw/environment_utils'
+
+require 'waw/controller'
+require 'waw/controllers/action'
+require 'waw/controllers/action_controller'
+require 'waw/controllers/static_controller'
+
+require 'waw/rack_utils'
+require 'waw/routing'
+require 'waw/testing'
 require 'waw/wlang/waw_dialects'
 module Waw
   extend Waw::App

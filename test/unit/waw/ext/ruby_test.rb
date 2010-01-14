@@ -1,7 +1,7 @@
 require 'waw'
 require 'test/unit'
 module Waw
-  class ExtensionTest < Test::Unit::TestCase
+  class RubyExtensionTest < Test::Unit::TestCase
     
     def test_hash_keep
       hash = {:name => "blambeau", :age => 20}

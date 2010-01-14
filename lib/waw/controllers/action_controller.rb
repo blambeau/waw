@@ -91,10 +91,10 @@ module Waw
         result = encapsulate(action, actual_params) do 
           action.execute(self, actual_params)
         end
-        [200, {'Content-Type' => 'application/json'}, result]
+        [200, {}, result]
       else
         Waw.logger.warn("Action #{action_name} has not been found")
-        [200, {'Content-Type' => 'application/json'}, [:error, :action_not_found]]
+        [200, {}, [:error, :action_not_found]]
       end
     end
   
