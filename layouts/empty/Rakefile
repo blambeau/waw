@@ -12,7 +12,7 @@ task :default => [:test]
 
 desc "Lauches all unit tests"
 Rake::TestTask.new(:unit_test) do |test|
-  test.libs       << [ "lib", "test/unit"]
+  test.libs       = [ "lib", "test/unit"]
   test.test_files = ['test/unit/test_all.rb']
   test.verbose    =  true
 end
