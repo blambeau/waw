@@ -8,6 +8,11 @@ class Hash
     self.each_pair {|k,v| copy[k.to_s.to_sym] = v}
     copy
   end
+  def unsymbolize_keys
+    copy = Hash.new
+    self.each_pair {|k,v| copy[k.to_s] = v}
+    copy
+  end
 end
 class Logger
   

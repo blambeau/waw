@@ -136,7 +136,7 @@ module Waw
               http.request_get(path, headers)
             when :post
               req = Net::HTTP::Post.new(location.path, headers)
-              req.form_data = data
+              req.form_data = data.unsymbolize_keys
               http.request(req)
             else
               raise ArgumentError, "Invalid fetch method #{method}"
