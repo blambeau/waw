@@ -12,12 +12,6 @@ module Waw
             @wawaccess = wawaccess
           end
           
-          # Checks some access block
-          def self.check_waw_acccess_block(block, wawaccess, name)
-            raise WawError, "#{wawaccess.identifier}: #{name} expects a block of arity 0"\
-              if (block and (block.arity != -1))
-          end
-          
           # Starts a wawaccess file
           def wawaccess(&block)
             raise WawError, "#{@wawaccess.identifier}: missing block in wawaccess call" unless block
@@ -39,7 +33,6 @@ module Waw
           # Serve some patterns
           def match(*patterns, &block)
             raise WawError, "#{@wawaccess.identifier}: missing patterns in wawaccess.serve call" if patterns.empty?
-            DSL.check_waw_acccess_block(block, @wawaccess, 'serve')
             @wawaccess.add_serve(patterns, &block)
           end
           
