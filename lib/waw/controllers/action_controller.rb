@@ -1,3 +1,4 @@
+require 'waw/controllers/action/action'
 module Waw
   
   # 

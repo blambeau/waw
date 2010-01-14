@@ -14,7 +14,6 @@ require 'waw/environment_utils'
 
 require 'waw/controller'
 require 'waw/controllers/json_controller'
-require 'waw/controllers/action'
 require 'waw/controllers/action_controller'
 require 'waw/controllers/static_controller'
 
