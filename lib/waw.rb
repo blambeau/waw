@@ -27,6 +27,11 @@ module Waw
   # Waw version
   VERSION = "0.1.0".freeze
   
+  # The root folder of the deployed application
+  def self.root_folder
+    @root_folder
+  end
+  
   # Sets the application
   def self.app=(app)
     @app = app
@@ -34,10 +39,9 @@ module Waw
   
   # Autoloads waw from a given file
   def self.autoload(file)
-    root_folder = File.expand_path(File.dirname(file))
+    @root_folder = File.expand_path(File.dirname(file))
     puts "Autoloading waw web application from #{root_folder}"
     load_application(root_folder)
-    Kernel.load(File.join(root_folder, 'waw.routing'))
     @app
   rescue ConfigurationError => ex
     raise ex

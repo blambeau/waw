@@ -11,6 +11,16 @@ module Waw
     # Resources, when loaded
     attr_accessor :resources
     
+    # Installed start hooks
+    def start_hooks
+      @start_hooks ||= []
+    end
+    
+    # Adds a start hook
+    def add_start_hook(hook)
+      start_hooks << hook
+    end
+    
     # Returns installed logger, or a default one
     def logger
       @logger || Logger.new(STDOUT)
@@ -70,6 +80,12 @@ module Waw
   
     # Executes the start hooks
     def execute_start_hooks(app)
+      # the API ones
+      start_hooks.each do |h|
+        h.run
+      end
+      
+      # the file ones now
       start_hooks_dir = File.join(app.config.root_folder, 'hooks', 'start')
       Dir[File.join(start_hooks_dir, '*.rb')].sort{|f1, f2| File.basename(f1) <=> File.basename(f2)}.each do |file|
         logger.info("Running waw start hook #{file}...")
@@ -90,8 +106,11 @@ module Waw
       # 3) Load stage 3: resources
       logger.info("#{self.class.name}: configuration and logger loaded successfuly, reaching load stage 3")
       self.resources = load_resources(self)
+      
+      # 4) Load stage 4: rack application
+      Kernel.load(File.join(root_folder, 'waw.routing'))
     
-      # 4) start hooks now
+      # 4) Load stage 5: start hooks
       logger.info("#{self.class.name}: resources successfuly loaded, reaching load stage 4")
       execute_start_hooks(self)
     
