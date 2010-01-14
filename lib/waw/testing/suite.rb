@@ -28,6 +28,7 @@ module Waw
         @scenarios.each do |sc|
           begin
             STDOUT.write('.')
+            STDOUT.flush
             sc.run
             self.assertion_count += sc.assertion_count
           rescue Test::Unit::AssertionFailedError => ex
