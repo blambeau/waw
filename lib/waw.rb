@@ -13,6 +13,7 @@ require 'waw/app'
 require 'waw/environment_utils'
 
 require 'waw/controller'
+require 'waw/controllers/json_controller'
 require 'waw/controllers/action'
 require 'waw/controllers/action_controller'
 require 'waw/controllers/static_controller'
@@ -26,6 +27,11 @@ module Waw
   
   # Waw version
   VERSION = "0.1.0".freeze
+  
+  # Sets the application
+  def self.app=(app)
+    @app = app
+  end
   
   # Autoloads waw from a given file
   def self.autoload(file)
@@ -56,8 +62,7 @@ module Waw
 
   # Finds the Rack application that matches a given path
   def self.find_rack_app(path, &block)
-    found = @app.find_rack_app(path)
-    (found and block_given?) ? found.find_rack_app(nil, &block) : found
+    @app.find_rack_app(path, &block)
   end
 
 end

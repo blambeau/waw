@@ -14,15 +14,17 @@ module Waw
     end
 
     # Calls the delegation controller and encode its result in JSON
-    def call env
-      @status, @headers, @body = @app.call(env)
-      @body = ::JSON.generate(@body) if json_response?
-      [@status, @headers, @body]
+    def call(env)
+      status, headers, body = @app.call(env)
+      header = {} if headers.nil?
+      headers['Content-Type'] = 'application/json' if headers['Content-Type'].nil? 
+      body = ::JSON.generate(body) if json_response?(headers)
+      [status, headers, body]
     end
 
     # Do i need to encode as JSON?
-    def json_response?
-      @header['Content-Type'].nil? or (@headers['Content-Type'] == 'application/json')
+    def json_response?(headers)
+      (headers['Content-Type'] == 'application/json')
     end
 
   end # class JSONController

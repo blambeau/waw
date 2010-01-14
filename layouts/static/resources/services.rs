@@ -1,1 +1,0 @@
-static     Waw::StaticController.new
