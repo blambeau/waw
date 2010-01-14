@@ -86,7 +86,7 @@ module Waw
       def generate_recursively(project, layout_folder, target_folder)
         # Generate files now
         Dir.new(layout_folder).each do |file|
-          next if ['.', '..'].include?(file)
+          next if ['.', '..', 'dontforgetme'].include?(file)
           next if 'dependencies'==file
           target = File.join(target_folder, file.gsub('project', project.lowname))
           puts "Generating #{target} from #{layout}/#{file}"
@@ -107,6 +107,7 @@ module Waw
       def generate_layout(project, layout)
         # Locate the layout folder
         layout_folder = File.join(File.dirname(__FILE__), '..', '..', '..', 'layouts', layout)
+        puts File.expand_path(layout_folder)
         exit("Unknown layout #{layout}") unless File.exists?(layout_folder)
         
         # Handle dependencies
