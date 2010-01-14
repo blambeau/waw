@@ -1,3 +1,4 @@
 doc/api
 pkg
 coverage
+install.sh

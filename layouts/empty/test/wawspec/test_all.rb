@@ -3,11 +3,13 @@ top  = File.join(File.dirname(__FILE__), '..', '..')
 $LOAD_PATH.unshift(File.join(top, 'lib'), File.join(top, 'test', 'unit'))
 
 # Requires
+require 'rubygems'
+require 'waw'
 require '+(project.lowname)'
 require 'waw/testing/wawspec'
 
 # Load the waw application for having configuration
-Waw.load_application(top)
+Waw.autoload(File.join(top, 'config.ru'))
 raise "Tests cannot be run in production mode, to avoid modifying real database "\
       "or sending spam mails to real users." unless Waw.config.deploy_mode=='devel'
 

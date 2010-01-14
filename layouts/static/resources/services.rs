@@ -1,1 +1,1 @@
-static     Waw::Services::PublicPages::Controller.new
+static     Waw::StaticController.new
