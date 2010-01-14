@@ -72,8 +72,16 @@ module Waw
           exit(-1)
         end
         
+        # check project name
+        project_name = rest[0]
+        exit("Invalid project name #{project_name}, must start with [a-zA-Z]") unless /^[a-zA-Z]/ =~ project_name
+        if project_name =~ /^[a-z]/
+          project_name = (project_name[0...1].upcase + project_name[1..-1]) 
+          puts "Warning: using #{project_name} as project name for ruby needs..."
+        end
+        
         # create project
-        project = ::Waw::Wawgen::Project.new(rest[0])
+        project = ::Waw::Wawgen::Project.new(project_name)
         generate(project)
       end
       

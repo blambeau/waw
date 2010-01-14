@@ -13,9 +13,8 @@ wawaccess do
 
   # We match .wtpl files using wlang
   match file(:extension => '.wtpl') do
-    here = File.dirname(__FILE__)
-    context = {"css_files"   => Dir[File.join(here, 'css', '*.css')],
-               "js_files"    => Dir[File.join(here, 'js', '*.js')],
+    context = {"css_files"   => Dir[File.join('public', 'css', '*.css')].collect{|s| File.join('css', File.basename(s))},
+               "js_files"    => Dir[File.join('public', 'js', '*.js')].collect{|s| File.join('js', File.basename(s))},
                "page"        => served_file,
                "env"         => Waw.env,
                "request"     => Waw.request, 
