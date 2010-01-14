@@ -152,12 +152,14 @@ module Waw
               when FalseClass
               when TrueClass
                 return block
-              when '*'
-                return block
-              when /^\*?\.[a-z]+$/
-                return block if File.extname(realpath(path))==pattern
               when String
-                return block if File.basename(realpath(path))==pattern
+                if pattern=='*'
+                  return block
+                elsif /^\*?\.[a-z]+$/ =~ pattern
+                  return block if File.extname(realpath(path))==pattern
+                else
+                  return block if File.basename(realpath(path))==pattern
+                end
               when Regexp
                 return block if pattern =~ path
               when Waw::Validation::Validator
@@ -210,6 +212,15 @@ module Waw
         
         ################################################### Callbacks proposed to .wawaccess rules
         
+        # Deny access to the file
+        def deny
+          body = "Forbidden\n"
+          [403, {"Content-Type" => "text/plain",
+                 "Content-Length" => body.size.to_s,
+                 "X-Cascade" => "pass"},
+           [body]]
+        end
+        
         # Serves a static file from a real path
         def static
           if Waw.env
@@ -223,8 +234,11 @@ module Waw
         end
         
         # Run a rewriting
-        def apply(path)
-          root.do_path_serve(path)
+        def apply(path, result_override = nil, headers_override = {})
+          result = root.do_path_serve(path)
+          [result_override || result[0], 
+           result[1].merge(headers_override),
+           result[2]]
         end
         
         # Instantiates wlang on the current file, with a given context

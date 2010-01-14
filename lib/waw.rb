@@ -23,6 +23,11 @@ module Waw
   
   # Waw version
   VERSION = "0.1.0".freeze
+  
+  # Runned application
+  def self.app
+    @app
+  end
 
   # Finds the Rack application that matches a given path
   def self.find_rack_app(path, &block)

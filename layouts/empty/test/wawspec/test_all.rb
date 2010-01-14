@@ -3,7 +3,7 @@ top  = File.join(File.dirname(__FILE__), '..', '..')
 $LOAD_PATH.unshift(File.join(top, 'lib'), File.join(top, 'test', 'unit'))
 
 # Requires
-require '+[project.lowname]'
+require '+(project.lowname)'
 require 'waw/testing/wawspec'
 
 # Load the waw application for having configuration
@@ -13,5 +13,5 @@ raise "Tests cannot be run in production mode, to avoid modifying real database 
 
 # Load all tests now
 test_files = Dir[File.join(File.dirname(__FILE__), '**/*.wawspec')]
-test_files.each { |file| require(file) }
+test_files.each { |file| load(file) }
 

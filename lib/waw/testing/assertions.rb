@@ -22,6 +22,21 @@ module Waw
       end
       alias :assert_is_not_404 :assert_not_404
       
+      # Asserts that going to a given location leads to a 200 OK response
+      def assert_200(location, msg="Location #{location} is a 200 OK")
+        go location
+        assert browser.is200?, msg
+      end
+      alias :assert_is_200 :assert_200
+      alias :assert_is200 :assert_200
+      
+      # Asserts that going to a given location does not lead to a 200 response
+      def assert_not_200(location, msg="Location #{location} is not a 200 OK")
+        go location
+        assert !browser.is200?, msg
+      end
+      alias :assert_is_not_200 :assert_not_200
+      
       #################################################################### Assertions about HTML contents
       
       # Asserts that I see something

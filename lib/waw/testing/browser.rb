@@ -60,6 +60,12 @@ module Waw
       end
       alias :is404? :is404
       
+      # Checks if the last request waw answered by a 200 OK
+      def is200
+        (Net::HTTPSuccess === response)
+      end
+      alias :is200? :is200
+      
       # Returns the current shown contents
       def contents
         response ? response.read_body : nil
@@ -155,6 +161,8 @@ module Waw
             [location, response]
           when Net::HTTPInternalServerError
             raise ServerError, "An error occured when fetching #{uri}"
+          when Net::HTTPForbidden
+            [location, response]
           else
             raise "Unexpected response from web server #{response}"
         end
