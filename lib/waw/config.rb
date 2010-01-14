@@ -11,10 +11,14 @@ module Waw
       end
       
       # When a method is missing, install config parameter
-      def method_missing(name, *args)
-        if args.length == 0
+      def method_missing(name, *args, &block)
+        if args.length==0 and block.nil?
           @config.send(name)
-        else          
+        elsif args.length==0
+          @config.install_configuration_property(name, block)
+        elsif block
+          raise WawConfigurationError, "Bad config usage on #{name}"
+        else
           @config.install_configuration_property(name, args.size==1 ? args[0] : args)
         end
       end
@@ -68,7 +72,11 @@ module Waw
       instance_eval <<-EOF
         def #{name}(force_array = false)
           value = @#{name}
-          force_array ? (Array===value ? value : [value]) : value
+          if Proc===value
+            self.instance_eval &value
+          else
+            force_array ? (Array===value ? value : [value]) : value
+          end
         end
       EOF
     end

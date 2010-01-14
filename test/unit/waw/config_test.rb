@@ -24,5 +24,27 @@ module Waw
       assert_equal 12, c.second
     end
     
+    def test_config_allows_block
+      c = Config.new(false)
+      c.merge <<-EOF
+        help           12
+        jsgeneration   { true }
+      EOF
+      assert_equal 12, c.help
+      assert_equal true, c.jsgeneration
+    end
+
+    def test_config_allows_block_referencing_others
+      c = Config.new(false)
+      c.merge <<-EOF
+        mode           'devel'
+        jsgeneration   { mode=='devel' }
+        sendmails      { mode=='production' }
+      EOF
+      assert_equal 'devel', c.mode
+      assert_equal true, c.jsgeneration
+      assert_equal false, c.sendmails
+    end
+    
   end
 end
