@@ -13,6 +13,10 @@ at_exit {
   
       FileUtils.rm_rf layout
       `ruby -I#{File.join(top, 'lib')} #{File.join(top, 'bin', 'waw')} create --force --layout #{layout} #{layout}`
+      
+      # Waw.unload
+      # Kernel.load(File.join(layout, 'test', 'unit', 'test_all.rb'))
+      # Kernel.load(File.join(layout, 'test', 'wawspec', 'test_all.rb'))
       FileUtils.cd layout do |dir|
         `ruby -I#{File.join(top, 'lib')} test/unit/test_all.rb`
         `ruby -I#{File.join(top, 'lib')} test/wawspec/test_all.rb`

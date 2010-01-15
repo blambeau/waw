@@ -27,11 +27,6 @@ module Waw
   # Waw version
   VERSION = "0.1.0".freeze
   
-  # Sets the application
-  def self.app=(app)
-    @app = app
-  end
-  
   # Autoloads waw from a given file
   def self.autoload(file)
     @root_folder = File.expand_path(File.dirname(file))
@@ -58,6 +53,11 @@ module Waw
     @app
   end
 
+  # Sets the application
+  def self.app=(app)
+    @app = app
+  end
+  
   # Finds the Rack application that matches a given path/block pair.
   def self.find_rack_app(path = nil, &block)
     @app.find_rack_app(path, &block)
