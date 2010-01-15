@@ -3,8 +3,8 @@ require 'rack'
 require 'wlang'
 
 require 'waw/errors'
-require 'waw/ext/rack'
-require 'waw/ext/ruby'
+require 'waw/ext/rack_ext'
+require 'waw/ext/ruby_ext'
 
 require 'waw/resource_collection'
 require 'waw/config'
