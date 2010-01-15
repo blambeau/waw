@@ -10,6 +10,6 @@ Dir[File.join(here, '+(project.lowname)', '**/', '*.rb')].each {|f| require(f)}
 module +(project.upname)
   
   # Version number of +(project.upname)
-  VERSION = "0.0.4".freeze
+  VERSION = "0.0.1".freeze
   
 end # module +(project.upname)
