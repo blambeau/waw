@@ -1,3 +1,4 @@
+require 'fileutils'
 module Waw
   #
   # Contains the loadstage kernel used by Waw.
@@ -34,37 +35,41 @@ module Waw
       @logger || Logger.new(STDOUT)
     end
     
-    #
-    # Implements load stage #1: waw configuration and deployment.
     # 
-    # - Looks for wawdeploy file in the root folder
-    # - For each word in this wawdeploy file, merge config/#{word}.cfg inside
-    #   a fresh new Config instance.
+    # Implements load stage #0: waw.deploy
     #
-    # Raises a ConfigurationError if one of these files is missing.
-    #
-    def load_config(root_folder = '')
-      # create an default configuration
-      config = Waw::Config.new(true)
-      config.install_configuration_property(:root_folder, root_folder)
-    
-      # Locates the wawdeploy file
-      deploy_file = File.join(root_folder, 'wawdeploy')
+    def load_deploy
+      # Locates the waw.deploy file
+      deploy_file = File.join(root_folder, 'waw.deploy')
+      unless File.exists?(deploy_file)
+        puts "wawdeploy is deprecated, use waw.deploy instead!"
+        deploy_file = File.join(root_folder, 'wawdeploy')
+      end
       raise ConfigurationError, "Missing deploy file #{deploy_file}" unless File.exists?(deploy_file)
-    
-      # Read it and analyse merged configurations
-      @deploy_words = []
-      conf_file = deploy_file
+      
+      words = []
       File.readlines(deploy_file).each do |line|
         next if /^#/ =~ (line = line.strip)
         next if line.empty?
         raise "Waw deploy file corrupted on line #{i} (#{line})" unless /^[a-z_]+(\s+[a-z_]+)*$/ =~ line
-        line.split(/\s+/).each do |conf|
-          conf_file = File.join(root_folder, 'config', "#{conf}.cfg")
-          raise ConfigurationError, "Missing config file config/#{conf}.cfg" unless File.exists?(conf_file)
-          config.merge_file(conf_file)
-          @deploy_words.unshift(conf)
-        end
+        words += line.split(/\s+/)
+      end
+      words
+    end
+    
+    #
+    # Implements load stage #1: waw configuration
+    # 
+    def load_config
+      # create a default configuration
+      config = Waw::Config.new(true)
+      config.install_configuration_property(:root_folder, root_folder)
+    
+      # Read it and analyse merged configurations
+      deploy_words.each do |conf|
+        conf_file = File.join(root_folder, 'config', "#{conf}.cfg")
+        raise ConfigurationError, "Missing config file config/#{conf}.cfg" unless File.exists?(conf_file)
+        config.merge_file(conf_file)
       end
     
       config
@@ -77,9 +82,7 @@ module Waw
     #
     # Implements load stage #2: logger
     # 
-    def load_logger(app)
-      config = app.config
-      
+    def load_logger
       # default parameters
       appname = config.ensure(:application_name, 'webapp')
       log_frequency = config.ensure(:log_frequency, 'weekly')
@@ -93,7 +96,7 @@ module Waw
         log_file = config.ensure(:log_file, "#{appname}.log")
         
         # Check it now
-        File.makedirs(log_dir) unless File.exists?(log_dir)
+        FileUtils.mkdir_p(log_dir) unless File.exists?(log_dir)
         raise ConfigurationError, "Unable to use #{log_dir} for logs, it's a file..." unless File.directory?(log_dir)
         raise ConfigurationError, "Unable to use #{log_dir} for logs, not writable" unless File.writable?(log_dir)
         
@@ -108,17 +111,17 @@ module Waw
     #
     # Implements load stage #3: resources
     # 
-    def load_resources(app)
+    def load_resources
       resources = ResourceCollection.new
-      resource_dir = File.join(app.config.root_folder, 'resources')
+      resource_dir = File.join(root_folder, 'resources')
       if File.directory?(resource_dir) and File.readable?(resource_dir)
         Dir[File.join(resource_dir, '*.rs')].each do |file|
           name = File.basename(file, '.rs')
           resources.send(:add_resource, name, ResourceCollection.parse_resource_file(file))
-          app.logger.debug("Resources #{name} loaded successfully")
+          logger.debug("Resources #{name} loaded successfully")
         end
       elsif not(File.readable?(resource_dir))
-        app.logger.warn("Ignoring the resources folder (not readable)... something will probably fail later!")
+        logger.warn("Ignoring the resources folder (not readable)... something will probably fail later!")
       end
       resources
     end
@@ -126,8 +129,8 @@ module Waw
     #
     # Implements load stage #4: routing
     #
-    def load_routing(app)
-      deploy_words.each do |word|
+    def load_routing
+      deploy_words.reverse.each do |word|
         file = File.join(root_folder, "waw.#{word}.routing")
         if File.exists?(file)
           Kernel.load(file) 
@@ -139,20 +142,20 @@ module Waw
         Kernel.load(file)
         'waw.routing'
       else
-        app.logger.warn("Ignoring load stage #4, no waw.routing file found")
+        logger.warn("Ignoring load stage #4, no waw.routing file found")
         "none"
       end
     end
   
     # Executes the start hooks
-    def execute_start_hooks(app)
+    def execute_start_hooks
       # the API ones
       start_hooks.each do |h|
         h.run
       end
       
       # the file ones now
-      start_hooks_dir = File.join(app.config.root_folder, 'hooks', 'start')
+      start_hooks_dir = File.join(root_folder, 'hooks', 'start')
       Dir[File.join(start_hooks_dir, '*.rb')].sort{|f1, f2| File.basename(f1) <=> File.basename(f2)}.each do |file|
         logger.info("Running waw start hook #{file}...")
         Kernel.load(file)
@@ -165,28 +168,31 @@ module Waw
     def load_application(root_folder, &block)
       self.root_folder = root_folder
       
+      # 0) Load stage 0: waw.deploy
+      self.deploy_words = load_deploy
+      
       # 1) Load stage 1: config
-      self.config = load_config(root_folder)
+      self.config = load_config
     
       # 2) Load stage 2: logger
-      self.logger = load_logger(self)
+      self.logger = load_logger
       logger.info("#{self.class.name}: load stage 1 sucessfull (#{deploy_words.join(', ')})")
       logger.info("#{self.class.name}: load stage 2 sucessfull")
     
       # 3) Load stage 3: resources
-      self.resources = load_resources(self)
+      self.resources = load_resources
       logger.info("#{self.class.name}: load stage 3 sucessfull")
       
       # 4) Load stage 4: rack application
-      routing = load_routing(self)
+      routing = load_routing
       logger.info("#{self.class.name}: load stage 4 sucessfull (using #{routing})")
     
       # 4) Load stage 5: start hooks
-      execute_start_hooks(self)
+      execute_start_hooks
       logger.info("#{self.class.name}: load stage 5 sucessfull (start hooks executed)")
     
       # 5) yield next application loading if exists
-      result = block_given? ? yield(self) : self
+      result = block_given? ? yield : self
       
       logger.info("#{self.class.name}: application loaded successfully, enjoy!")
       result
