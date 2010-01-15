@@ -23,6 +23,7 @@ module Waw
         return nil unless name
         actions[name]
       end
+      alias :[] :find_action
       
     end # module ActionUtils
   end # class ActionController

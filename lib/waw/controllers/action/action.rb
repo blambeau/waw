@@ -5,6 +5,9 @@ module Waw
     # 
     class Action
     
+      # Action controller
+      attr_reader :controller
+    
       # Action name
       attr_reader :name
       
@@ -15,8 +18,9 @@ module Waw
       attr_reader :routing
     
       # Creates an action instance
-      def initialize(name, signature, routing, method)
-        @name, @signature, @routing, @method = name, signature, routing, method
+      def initialize(name, signature, routing, controller, method)
+        @name, @signature, @routing = name, signature, routing
+        @controller, @method = controller, method
         @routing = ::Waw::Routing::ActionRouting.new unless @routing
       end
       
@@ -26,11 +30,11 @@ module Waw
       end
       
       # Executes the action inside a controller and using parameters
-      def execute(controller, params)
+      def execute(params = {})
         ok, values = @signature.apply(params)
         if ok
           # validation is ok, merge params and continue
-          [:success, @method.bind(controller).call(params.merge!(values))]
+          [:success, @method.bind(controller.instance).call(params.merge!(values))]
         else
           # validation is ko
           [:"validation-ko", values]

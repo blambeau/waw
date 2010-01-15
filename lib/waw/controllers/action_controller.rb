@@ -9,11 +9,14 @@ module Waw
   class ActionController < Waw::Controller
     include ActionUtils
     
+    # All subclasses
+    @@controllers = []
+    
     class << self
 
       # Returns known controllers
       def controllers
-        @controllers ||= []
+        @@controllers
       end
         
       # When this class is inherited we track the new controller, it becomes a 
@@ -57,12 +60,12 @@ module Waw
           @critical = true
       
           # Create the action instance
-          action = Waw::ActionController::Action.new(name, @signature, @routing, instance_method(name))
+          action = Waw::ActionController::Action.new(name, @signature, @routing, self, instance_method(name))
           actions[name] = action
           
           # Define the secure method
           define_method name do |params|
-            action.execute(self, params)
+            action.execute(params)
           end 
         end
         @signature, @routing, @critical = nil, nil, false
