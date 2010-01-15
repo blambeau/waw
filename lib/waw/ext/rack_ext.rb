@@ -32,13 +32,13 @@ module Rack
     # one is an array containing url components, the second is the 
     # visited application.
     def visit(&block)
-      _visit([], block)
+      _visit("/", block)
     end
     
     # Internal implementation of visit.
     def _visit(path, block)
-      block.call(path, block)
-      delegate.visit(path, block) if has_delegate?
+      block.call(path, self)
+      delegate._visit(path, block) if has_delegate?
     end
     
   end # module FindRackAppDelegator
@@ -51,9 +51,10 @@ module Rack
      EOF
    end
   
+  # Some overridings of FindRackAppDelegator
   class URLMap
-    # Finds a rack application that matches a given path and block
-    # checking for matching
+    
+    # Overrides FindRackAppDelegator.find_rack_app
     def find_rack_app(path, &block)
       return self if (block && block.call(self))
       the_app, the_rest = nil, nil
@@ -74,5 +75,16 @@ module Rack
         nil
       end
     end
-  end
+    
+    # Overrides FindRackAppDelegator._visit
+    def _visit(path, block)
+      block.call(path, self)
+      @mapping.each do |host, location, match, app|
+        next unless FindRackAppDelegator===app
+        app._visit((location.empty? ? path : path.chomp('/') + location), block)
+      end
+    end
+
+  end # class URLMap
+  
 end # module Rack
