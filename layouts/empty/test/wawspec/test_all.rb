@@ -17,3 +17,5 @@ raise "Tests cannot be run in production mode, to avoid modifying real database 
 test_files = Dir[File.join(File.dirname(__FILE__), '**/*.wawspec')]
 test_files.each { |file| load(file) }
 
+# Unload waw after all
+at_exit { Waw.unload }

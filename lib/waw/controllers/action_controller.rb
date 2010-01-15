@@ -28,7 +28,12 @@ module Waw
         # Let it become a singleton
         child.instance_eval { include Singleton }
         # And install start hook for code generation
-        Waw.add_start_hook(JSGeneration.new) if controllers.size==1
+        if controllers.size==1
+          Waw.add_start_hook(JSGeneration.new) 
+          Waw.add_unload_hook Kernel.lambda {
+            @@controllers = []
+          }
+        end
       end
 
     end
