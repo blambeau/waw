@@ -63,9 +63,14 @@ module Waw
     @app
   end
 
-  # Finds the Rack application that matches a given path
-  def self.find_rack_app(path, &block)
+  # Finds the Rack application that matches a given path/block pair.
+  def self.find_rack_app(path = nil, &block)
     @app.find_rack_app(path, &block)
+  end
+  
+  # Finds the URL of a given controller.
+  def self.find_url_of(controller)
+    @app.find_url_for(controller)
   end
 
 end

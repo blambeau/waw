@@ -41,6 +41,8 @@ module Waw
       assert_equal @app2, app.find_rack_app('/webserv/event/and_an_action_name'){|theapp| AnApp===theapp}
       assert_equal @app3, app.find_rack_app('/webserv/people'){|theapp| AnApp===theapp}
       assert_equal @app3, app.find_rack_app('/webserv/people/and_an_action_name'){|theapp| AnApp===theapp}
+      assert_equal @logger, app.find_rack_app{|theapp| ::Rack::CommonLogger===theapp}
+      assert_equal @json, app.find_rack_app{|theapp| ::Waw::JSONController===theapp}
       
       Waw.app = app
       assert_equal @app1, Waw.find_rack_app('/')
@@ -50,6 +52,16 @@ module Waw
       assert_equal @app2, Waw.find_rack_app('/webserv/event/and_an_action_name'){|theapp| AnApp===theapp}
       assert_equal @app3, Waw.find_rack_app('/webserv/people'){|theapp| AnApp===theapp}
       assert_equal @app3, Waw.find_rack_app('/webserv/people/and_an_action_name'){|theapp| AnApp===theapp}
+      assert_equal @logger, Waw.find_rack_app{|theapp| ::Rack::CommonLogger===theapp}
+      assert_equal @json, Waw.find_rack_app{|theapp| ::Waw::JSONController===theapp}
+    end
+    
+    def test_find_url_of
+      assert_equal '/', @app.find_url_of(@app)
+      [@logger, @session, @urlmap1, @app1].each {|app| assert_equal '/', @app.find_url_of(app)}
+      [@json, @urlmap2].each{|app| assert_equal '/webserv', @app.find_url_of(app)}
+      [@app2].each{|app| assert_equal '/webserv/event', @app.find_url_of(app)}
+      [@app3].each{|app| assert_equal '/webserv/people', @app.find_url_of(app)}
     end
     
     def test_visit
