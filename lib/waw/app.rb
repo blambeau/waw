@@ -20,14 +20,38 @@ module Waw
     # Resources (see ResourceCollection)
     attr_accessor :resources
     
-    # Installed start hooks
-    def start_hooks
-      @start_hooks ||= []
+    # Installed hooks
+    def hooks(which)
+      @hooks = Hash.new{|h,k| h[k] = []} if @hooks.nil?
+      @hooks[which]
     end
     
     # Adds a start hook
     def add_start_hook(hook)
-      start_hooks << hook
+      hooks(:start) << hook
+    end
+    
+    # Adds a start hook
+    def add_unload_hook(hook)
+      hooks(:unload) << hook
+    end
+    
+    # Execute an array of hooks
+    def execute_hooks(which)
+      # API installed hooks
+      hooks(which).each do |hook|
+        if hook.respond_to?(:run)
+          hook.run
+        elsif hook.respond_to?(:call)
+          hook.call
+        end
+      end
+      # the file ones now
+      hooks_dir = File.join(root_folder, 'hooks', which.to_s)
+      Dir[File.join(hooks_dir, '*.rb')].sort{|f1, f2| File.basename(f1) <=> File.basename(f2)}.each do |file|
+        logger.info("Running waw #{which} hook #{file}...")
+        Kernel.load(file)
+      end
     end
     
     # Returns installed logger, or a default one on STDOUT
@@ -147,21 +171,6 @@ module Waw
       end
     end
   
-    # Executes the start hooks
-    def execute_start_hooks
-      # the API ones
-      start_hooks.each do |h|
-        h.run
-      end
-      
-      # the file ones now
-      start_hooks_dir = File.join(root_folder, 'hooks', 'start')
-      Dir[File.join(start_hooks_dir, '*.rb')].sort{|f1, f2| File.basename(f1) <=> File.basename(f2)}.each do |file|
-        logger.info("Running waw start hook #{file}...")
-        Kernel.load(file)
-      end
-    end
-    
     # Loads the entire application from a given root folder.
     # If a block is given, yields it before considering the application
     # fully loaded.
@@ -188,7 +197,7 @@ module Waw
       logger.info("#{self.class.name}: load stage 4 sucessfull (using #{routing})")
     
       # 4) Load stage 5: start hooks
-      execute_start_hooks
+      execute_hooks(:start)
       logger.info("#{self.class.name}: load stage 5 sucessfull (start hooks executed)")
     
       # 5) yield next application loading if exists
@@ -196,6 +205,18 @@ module Waw
       
       logger.info("#{self.class.name}: application loaded successfully, enjoy!")
       result
+    end
+    
+    # Unloads the entire application
+    def unload
+      execute_hooks(:unload)
+      self.root_folder = nil
+      self.deploy_words = nil
+      self.config = nil
+      self.resources = nil
+      self.app = nil
+      logger.info("#{self.class.name}: application unloaded successfully, ciao!")
+      self.logger = nil
     end
     
   end # module App
