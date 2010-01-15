@@ -18,4 +18,4 @@ test_files = Dir[File.join(File.dirname(__FILE__), '**/*_test.rb')]
 test_files.each { |file| require(file) }
 
 # Unload waw after all
-at_exit { Waw.unload }
+#at_exit { Waw.unload }
