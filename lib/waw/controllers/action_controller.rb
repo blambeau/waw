@@ -96,7 +96,7 @@ module Waw
       if action
         actual_params = request.params.symbolize_keys
         result = encapsulate(action, actual_params) do 
-          action.execute(self, actual_params)
+          action.execute(actual_params)
         end
         [200, {}, result]
       else
