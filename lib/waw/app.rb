@@ -69,7 +69,7 @@ module Waw
         puts "wawdeploy is deprecated, use waw.deploy instead!"
         deploy_file = File.join(root_folder, 'wawdeploy')
       end
-      raise ConfigurationError, "Missing deploy file #{deploy_file}" unless File.exists?(deploy_file)
+      raise ConfigurationError, "Missing waw.deploy file" unless File.exists?(deploy_file)
       
       words = []
       File.readlines(deploy_file).each do |line|
