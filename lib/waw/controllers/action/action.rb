@@ -34,6 +34,7 @@ module Waw
         "#{controller.url}/#{name}" << (params ? "?#{params.to_url_query}" : "")
       end
       alias :url :href
+      alias :uri :href
       
       # Factors the ajax link for invoking this action in a <a onclick="...">
       def ajax_link(arguments = {})

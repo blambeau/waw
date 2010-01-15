@@ -89,8 +89,10 @@ module Waw
                              "#{opts.keys.inspect} received."\
           unless [:service, :arguments, :result].all?{|k| opts.has_key?(k)}
         if opts[:check_form].nil? or opts[:check_form]
-          form_id = Waw::ActionController.extract_action_name(opts[:service])
-          assert_has_tag "form", :id => form_id.to_s, :action => opts[:service]
+          app = Waw.find_rack_app(opts[:service]) {|app| ::Waw::ActionController===app}
+          action_name = Waw::ActionController.extract_action_name(opts[:service])
+          action = app.find_action(action_name)
+          assert_has_tag "form", :id => action.id
         end
         assert_service_invoke msg, opts
       end

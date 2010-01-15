@@ -25,7 +25,7 @@ module Waw
   extend Waw::EnvironmentUtils
   
   # Waw version
-  VERSION = "0.1.0".freeze
+  VERSION = "0.1.1".freeze
   
   # Autoloads waw from a given file
   def self.autoload(file)
