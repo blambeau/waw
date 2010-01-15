@@ -1,3 +1,5 @@
+require 'waw/controllers/action/action'
+require 'waw/controllers/action/js_generation'
 module Waw
   
   # 
