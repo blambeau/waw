@@ -90,6 +90,7 @@ module Waw
       config.install_configuration_property(:root_folder, root_folder)
     
       # Read it and analyse merged configurations
+      conf_file = nil
       deploy_words.each do |conf|
         conf_file = File.join(root_folder, 'config', "#{conf}.cfg")
         raise ConfigurationError, "Missing config file config/#{conf}.cfg" unless File.exists?(conf_file)
