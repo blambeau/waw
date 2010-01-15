@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'rack'
 require 'wlang'
+require 'singleton'
 
 require 'waw/errors'
 require 'waw/ext/rack_ext'

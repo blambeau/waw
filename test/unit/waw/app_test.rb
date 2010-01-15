@@ -5,6 +5,11 @@ module Waw
   class AppTest < Test::Unit::TestCase
     include Waw::App
     
+    class Trash
+      def self.write(*args) end
+      def self.close(*args) end
+    end
+    
     def self.app
       @app
     end

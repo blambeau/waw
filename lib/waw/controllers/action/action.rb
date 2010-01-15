@@ -1,16 +1,23 @@
 module Waw
   class ActionController < Waw::Controller
     # 
-    # A Web action
+    # A Web action, inside an ActionController.
     # 
     class Action
     
-      # The action name
+      # Action name
       attr_reader :name
+      
+      # Action signature (pre-conditions and validation)
+      attr_reader :signature
+      
+      # Action routing
+      attr_reader :routing
     
       # Creates an action instance
       def initialize(name, signature, routing, method)
         @name, @signature, @routing, @method = name, signature, routing, method
+        @routing = ::Waw::Routing::ActionRouting.new unless @routing
       end
       
       # Public identifier of the action
@@ -18,11 +25,6 @@ module Waw
         name
       end
       
-      # Returns the underlying action routing 
-      def routing
-        @routing ||= ::Waw::Routing::ActionRouting.new
-      end
-    
       # Executes the action
       def execute(controller, params)
         ok, values = @signature.apply(params)

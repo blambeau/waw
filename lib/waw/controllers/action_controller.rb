@@ -1,3 +1,4 @@
+require 'waw/controllers/action/action_utils'
 require 'waw/controllers/action/action'
 require 'waw/controllers/action/js_generation'
 module Waw
@@ -6,36 +7,19 @@ module Waw
   # Defines a specific application controller for executing actions.
   #
   class ActionController < Waw::Controller
-  
-    # Common utilities about actions  
-    module ActionUtils
-      
-      # Extracts the action name from a given path
-      def extract_action_name(path)
-        return $1.to_sym if path =~ /([a-zA-Z_]+)$/
-        nil
-      end
+    include ActionUtils
     
-      # Checks if an action exists
-      def has_action?(name)
-        name = extract_action_name(name) unless Symbol===name
-        return false unless name
-        actions.has_key?(name)
+    class << self
+      # When this class is inherited, it becomes a Singleton
+      def inherited(child)
+        child.instance_eval { include Singleton }
       end
-      
-      def find_action(name)
-        name = extract_action_name(name) unless Symbol===name
-        return nil unless name
-        actions[name]
-      end
-      
-    end # module ActionUtils
+    end
     
-    # Class methods
     class << self
       include ActionUtils
       
-      # Returns the actions
+      # Returns installed actions
       def actions
         @actions ||= {}
       end
@@ -72,8 +56,7 @@ module Waw
       
     end # end of class methods
     
-    include ActionUtils
-    
+    # Returns the actions installed on this controller
     def actions
       self.class.actions
     end
