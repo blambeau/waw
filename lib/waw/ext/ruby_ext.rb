@@ -13,6 +13,9 @@ class Hash
     self.each_pair {|k,v| copy[k.to_s] = v}
     copy
   end
+  def to_url_query
+    ::Rack::Utils.build_query(self)
+  end
 end
 class Logger
   

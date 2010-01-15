@@ -20,7 +20,6 @@ require 'waw/controllers/static_controller'
 
 require 'waw/routing'
 require 'waw/testing'
-require 'waw/wlang/waw_dialects'
 module Waw
   extend Waw::App
   extend Waw::EnvironmentUtils
@@ -61,12 +60,12 @@ module Waw
   
   # Finds the Rack application that matches a given path/block pair.
   def self.find_rack_app(path = nil, &block)
-    @app.find_rack_app(path, &block)
+    app ? app.find_rack_app(path, &block) : nil
   end
   
   # Finds the URL of a given controller.
   def self.find_url_of(controller)
-    @app.find_url_of(controller)
+    app ? app.find_url_of(controller) : nil
   end
 
 end

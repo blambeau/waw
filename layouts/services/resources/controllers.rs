@@ -1,1 +1,1 @@
-services ::+(project.upname)::ServicesController.instance
+services ::+(project.upname)::ServicesController

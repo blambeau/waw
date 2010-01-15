@@ -24,9 +24,37 @@ module Waw
         @routing = ::Waw::Routing::ActionRouting.new unless @routing
       end
       
-      # Public identifier of the action
-      def public_id
-        name
+      # Returns a unique id for this action in the architecture
+      def id
+        "#{controller.url}/#{name}"[1..-1].gsub('/', '_')
+      end
+      
+      # Builds a href for this action, with optional parameters
+      def href(params = nil)
+        "#{controller.url}/#{name}" << (params ? "?#{params.to_url_query}" : "")
+      end
+      alias :url :href
+      
+      # Factors the ajax link for invoking this action in a <a onclick="...">
+      def ajax_link(arguments = {})
+        buffer = ""
+        arguments.each_pair {|k, v| buffer << ", '#{k}' : '#{v}'"}
+        "javascript:#{id}({#{buffer[2..-1]}}, '##{id}')"
+      end
+      
+      # Factors the ajax code for preparing a formulary
+      def ajax_form_preparer(opts = {})
+        form_id = opts[:form_id] || id
+        <<-EOF
+          <script type="text/javascript">
+          	$(document).ready(function() {
+          	  $("form##{form_id}").submit(function() {
+          	    #{id}($("form##{form_id}").serialize(), "form##{form_id}");
+            	  return false;
+          	  });
+            });
+          </script>
+        EOF
       end
       
       # Executes the action inside a controller and using parameters

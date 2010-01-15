@@ -1,6 +1,6 @@
-<p>Hello ${controllers.services.who}!</p>
+<p>Hello ! Your name is ${controllers.services.instance.who}</p>
 
-@{controllers.services.say_hello}{
+={controllers.services.say_hello as action}{
   <form id="{action.id}">
     <p class="feedback">Please enter your name</p>
     <input name="who" type="input"/>

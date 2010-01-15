@@ -41,6 +41,11 @@ module Waw
     class << self
       include ActionUtils
       
+      # Returns the url on which this controller is mapped
+      def url
+        Waw.find_url_of(self.instance)
+      end
+    
       # Returns installed actions
       def actions
         @actions ||= {}
@@ -86,6 +91,11 @@ module Waw
       end
       
     end # end of class methods
+    
+    # Returns the url on which this controller is mapped
+    def url
+      Waw.find_url_of(self)
+    end
     
     # Returns the actions installed on this controller
     def actions
