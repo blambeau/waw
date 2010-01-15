@@ -70,7 +70,7 @@ module Waw
   
   # Finds the URL of a given controller.
   def self.find_url_of(controller)
-    @app.find_url_for(controller)
+    @app.find_url_of(controller)
   end
 
 end

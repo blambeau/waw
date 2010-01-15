@@ -62,6 +62,7 @@ module Waw
       [@json, @urlmap2].each{|app| assert_equal '/webserv', @app.find_url_of(app)}
       [@app2].each{|app| assert_equal '/webserv/event', @app.find_url_of(app)}
       [@app3].each{|app| assert_equal '/webserv/people', @app.find_url_of(app)}
+      assert_equal nil, @app.find_url_of(self)
     end
     
     def test_visit

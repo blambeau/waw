@@ -35,6 +35,7 @@ module Rack
     # Recursively finds the URL on which a given application is installed.
     def find_url_of(app)
       visit{|path, visited| return path if app==visited}
+      nil
     end
     
     # Visits the Rack application tree recursively by calling the block.
