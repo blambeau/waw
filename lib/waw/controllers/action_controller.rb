@@ -1,3 +1,4 @@
+require 'waw/controllers/action/action_utils'
 require 'waw/controllers/action/action'
 require 'waw/controllers/action/js_generation'
 module Waw
@@ -6,36 +7,46 @@ module Waw
   # Defines a specific application controller for executing actions.
   #
   class ActionController < Waw::Controller
-  
-    # Common utilities about actions  
-    module ActionUtils
-      
-      # Extracts the action name from a given path
-      def extract_action_name(path)
-        return $1.to_sym if path =~ /([a-zA-Z_]+)$/
-        nil
-      end
+    include ActionUtils
     
-      # Checks if an action exists
-      def has_action?(name)
-        name = extract_action_name(name) unless Symbol===name
-        return false unless name
-        actions.has_key?(name)
-      end
-      
-      def find_action(name)
-        name = extract_action_name(name) unless Symbol===name
-        return nil unless name
-        actions[name]
-      end
-      
-    end # module ActionUtils
+    # All subclasses
+    @@controllers = []
     
-    # Class methods
+    class << self
+
+      # Returns known controllers
+      def controllers
+        @@controllers
+      end
+        
+      # When this class is inherited we track the new controller, it becomes a 
+      # Singleton and we install code generation as start hook if not already done.
+      def inherited(child)
+        super(child)
+        # Adds the controller as a child
+        controllers << child
+        # Let it become a singleton
+        child.instance_eval { include Singleton }
+        # And install start hook for code generation
+        if controllers.size==1
+          Waw.add_start_hook(JSGeneration.new) 
+          Waw.add_unload_hook Kernel.lambda {
+            @@controllers = []
+          }
+        end
+      end
+
+    end
+    
     class << self
       include ActionUtils
       
-      # Returns the actions
+      # Returns the url on which this controller is mapped
+      def url
+        Waw.find_url_of(self.instance)
+      end
+    
+      # Returns installed actions
       def actions
         @actions ||= {}
       end
@@ -59,12 +70,21 @@ module Waw
           @critical = true
       
           # Create the action instance
-          action = Waw::ActionController::Action.new(name, @signature, @routing, instance_method(name))
+          action = Waw::ActionController::Action.new(name, @signature, @routing, self, instance_method(name))
           actions[name] = action
           
-          # Define the secure method
+          # Installs the class method that returns the action
+          instance_eval <<-EOF
+            class << self
+              def #{name}
+                actions[:#{name}]
+              end
+            end
+          EOF
+          
+          # Installs the instance method that execute the action
           define_method name do |params|
-            action.execute(self, params)
+            action.execute(params)
           end 
         end
         @signature, @routing, @critical = nil, nil, false
@@ -72,8 +92,12 @@ module Waw
       
     end # end of class methods
     
-    include ActionUtils
+    # Returns the url on which this controller is mapped
+    def url
+      Waw.find_url_of(self)
+    end
     
+    # Returns the actions installed on this controller
     def actions
       self.class.actions
     end
@@ -91,7 +115,7 @@ module Waw
       if action
         actual_params = request.params.symbolize_keys
         result = encapsulate(action, actual_params) do 
-          action.execute(self, actual_params)
+          action.execute(actual_params)
         end
         [200, {}, result]
       else

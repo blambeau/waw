@@ -16,7 +16,7 @@ module Waw
     # Creates a service instance
     def initialize(opts = {})
       @options = DEFAULT_OPTIONS.merge(opts)
-      @wawaccess = ::Waw::StaticController::WawAccess.load_hierarchy(root_folder)
+      @wawaccess = ::Waw::StaticController::WawAccess.load_hierarchy(File.join(Waw.root_folder, root_folder))
     end
   
     # Returns the template folder

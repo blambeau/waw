@@ -1,7 +1,7 @@
 scenario __FILE__ do
   because("The root website URL is correctly served") {
     i_reach Waw.config.web_base
-    i_see "Hello!"
+    i_see "Hello !"
   }
   because("Static files (css, js, images, ...) are correctly served") {
     i_reach Waw.config.web_base + 'css/style.css'

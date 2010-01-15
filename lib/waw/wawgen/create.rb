@@ -104,8 +104,12 @@ module Waw
             generate_recursively(project, source, target)
           else
             File.open(target, 'w') do |io|
-              context = {"project" => project}
-              WLang.file_instantiate(File.join(layout_folder, file), context, io, 'wlang/active-string', :parentheses)
+              if /jquery/ =~ file
+                io << File.read(File.join(layout_folder, file))
+              else
+                context = {"project" => project}
+                WLang.file_instantiate(File.join(layout_folder, file), context, io, 'wlang/active-string', :parentheses)
+              end
             end
           end
         end

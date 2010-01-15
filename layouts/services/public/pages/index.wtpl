@@ -1,0 +1,10 @@
+<p>Hello ! Your name is ${controllers.services.instance.who}</p>
+
+={controllers.services.say_hello as action}{
+  <form id="{action.id}">
+    <p class="feedback">Please enter your name</p>
+    <input name="who" type="input"/>
+    <input type="submit" value="Say hello!"/>
+    +{action.ajax_form_preparer}
+  </form>
+}

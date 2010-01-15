@@ -1,23 +1,5 @@
 module Waw
   class ActionController < ::Waw::Controller
-    
-    # Eigen-class methods
-    class << self
-
-      # Returns known controllers
-      def controllers
-        @controllers ||= []
-      end
-        
-      # When ActionController is inherited, we keep a reference
-      # for later code generation and add a start hook
-      def inherited(child)
-        controllers << child
-        Waw.add_start_hook(JSGeneration.new) if controllers.size==1
-      end
-
-    end # class << self
-    
     class JSGeneration
       
       # Header of the generated javascript file
@@ -103,17 +85,17 @@ module Waw
             buffer << strip(header, 14)
             controller.actions.keys.sort{|k1, k2| k1.to_s <=> k2.to_s}.each do |name|
               action = controller.actions[name]
-              generate_js_for_action(url, action, buffer)
+              generate_js_for_action(action, buffer)
             end
           end
         end
       end
     
       # Generates the javascript code for a given action
-      def generate_js_for_action(path, action, buffer)
+      def generate_js_for_action(action, buffer)
         action_js = <<-THEEND
-          function #{action.public_id}(request_data, form) {
-            $.ajax({type: "POST", url: "#{path}/#{action.public_id}", data: request_data, dataType: "json",
+          function #{action.id}(request_data, form) {
+            $.ajax({type: "POST", url: "#{action.url}", data: request_data, dataType: "json",
               error: function(data) {
           		  window.location = '/feedback?mkey=server_error';
           		},

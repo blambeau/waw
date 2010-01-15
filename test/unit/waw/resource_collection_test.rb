@@ -3,6 +3,14 @@ require 'test/unit'
 module Waw
   class ResourceCollectionTest < Test::Unit::TestCase
     
+    class Trash
+      def self.write(*args) end
+      def self.close(*args) end
+    end
+    def setup
+      Waw.logger = Logger.new(Trash)
+    end
+    
     def test_resources_on_string
       r = ResourceCollection.parse_resources <<-EOF
         first_one  "Hello world"

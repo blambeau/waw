@@ -1,0 +1,14 @@
+scenario __FILE__ do
+  # We test the say_hello action now
+  action = Waw.resources.controllers.services.say_hello
+
+  because("The configuration is ok") {
+    i_reach Waw.config.web_base
+    i_see_tag "form", :id => action.id
+  }
+    
+  because("The controller is correctly implemented") {
+    i_can_invoke action, with(:who => "blambeau")
+    i_see "Hello ! Your name is blambeau"
+  }
+end
