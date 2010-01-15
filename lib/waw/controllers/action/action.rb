@@ -8,9 +8,6 @@ module Waw
       # The action name
       attr_reader :name
     
-      # Action routing
-      attr_reader :routing
-      
       # Creates an action instance
       def initialize(name, signature, routing, method)
         @name, @signature, @routing, @method = name, signature, routing, method
@@ -19,6 +16,11 @@ module Waw
       # Public identifier of the action
       def public_id
         name
+      end
+      
+      # Returns the underlying action routing 
+      def routing
+        @routing ||= ::Waw::Routing::ActionRouting.new
       end
     
       # Executes the action
