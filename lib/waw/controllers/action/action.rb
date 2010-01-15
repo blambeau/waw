@@ -25,7 +25,7 @@ module Waw
         name
       end
       
-      # Executes the action
+      # Executes the action inside a controller and using parameters
       def execute(controller, params)
         ok, values = @signature.apply(params)
         if ok
@@ -33,7 +33,7 @@ module Waw
           [:success, @method.bind(controller).call(params.merge!(values))]
         else
           # validation is ko
-          [:validation_ko, values]
+          [:"validation-ko", values]
         end
       end
     

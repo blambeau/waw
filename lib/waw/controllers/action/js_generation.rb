@@ -1,29 +1,5 @@
 module Waw
   class ActionController < ::Waw::Controller
-    
-    # Eigen-class methods
-    class << self
-
-      # Returns known controllers
-      def controllers
-        @controllers ||= []
-      end
-        
-      # When ActionController is inherited, we keep a reference
-      # for later code generation and add a start hook
-      def inherited(child)
-        # dont forget the Singleton pattern installed previously
-        super(child)
-        
-        # Adds the controller as a child
-        controllers << child
-        
-        # And install start hook for code generation
-        Waw.add_start_hook(JSGeneration.new) if controllers.size==1
-      end
-
-    end # class << self
-    
     class JSGeneration
       
       # Header of the generated javascript file

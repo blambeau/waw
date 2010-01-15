@@ -10,10 +10,24 @@ module Waw
     include ActionUtils
     
     class << self
-      # When this class is inherited, it becomes a Singleton
-      def inherited(child)
-        child.instance_eval { include Singleton }
+
+      # Returns known controllers
+      def controllers
+        @controllers ||= []
       end
+        
+      # When this class is inherited we track the new controller, it becomes a 
+      # Singleton and we install code generation as start hook if not already done.
+      def inherited(child)
+        super(child)
+        # Adds the controller as a child
+        controllers << child
+        # Let it become a singleton
+        child.instance_eval { include Singleton }
+        # And install start hook for code generation
+        Waw.add_start_hook(JSGeneration.new) if controllers.size==1
+      end
+
     end
     
     class << self
