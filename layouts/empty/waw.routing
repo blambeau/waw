@@ -1,11 +1,6 @@
-class MyApp
-  def call(env)
-    [200, {'Content-Type' => 'text/plain'}, 'OK']
-  end
-end
 Waw.rack do
   use ::Rack::CommonLogger,  Waw.logger
   use ::Rack::Session::Pool, :domain       => Waw.config.web_domain,
                              :expire_after => Waw.config.rack_session_expire
-  run MyApp.new
+  run lambda {|env| [200, {'Content-Type' => 'text/plain'}, 'OK']}
 end

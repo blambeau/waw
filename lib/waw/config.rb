@@ -41,6 +41,12 @@ module Waw
       self.respond_to?(name.to_s.to_sym)
     end
     
+    # Returns the configuration property under name, 
+    # or returns default if the config does not know that name
+    def ensure(name, default)
+      knows?(name) ? self.send(name) : default
+    end
+    
     # Installs a configuration parameter
     def install_configuration_property(name, value)
       case name

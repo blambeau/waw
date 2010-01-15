@@ -27,11 +27,6 @@ module Waw
   # Waw version
   VERSION = "0.1.0".freeze
   
-  # The root folder of the deployed application
-  def self.root_folder
-    @root_folder
-  end
-  
   # Sets the application
   def self.app=(app)
     @app = app
