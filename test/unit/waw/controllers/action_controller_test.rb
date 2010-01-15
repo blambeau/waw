@@ -38,6 +38,15 @@ module Waw
       assert_equal true, MyMailController.respond_to?(:instance)
     end
     
+    def test_installed_method_on_instance
+      assert MyMailController.instance.respond_to?(:subscribe)
+    end
+    
+    def test_installed_method_on_class
+      assert MyMailController.respond_to?(:subscribe)
+      assert ::Waw::ActionController::Action===MyMailController.subscribe
+    end
+    
     def test_js_generation_has_seen_new_controller
       assert ::Waw::ActionController.controllers.include?(MyMailController)
     end

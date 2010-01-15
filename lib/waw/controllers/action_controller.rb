@@ -68,7 +68,16 @@ module Waw
           action = Waw::ActionController::Action.new(name, @signature, @routing, self, instance_method(name))
           actions[name] = action
           
-          # Define the secure method
+          # Installs the class method that returns the action
+          instance_eval <<-EOF
+            class << self
+              def #{name}
+                actions[:#{name}]
+              end
+            end
+          EOF
+          
+          # Installs the instance method that execute the action
           define_method name do |params|
             action.execute(params)
           end 
