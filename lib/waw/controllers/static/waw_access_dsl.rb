@@ -14,7 +14,7 @@ module Waw
         # Starts a wawaccess file
         def wawaccess(&block)
           raise WawError, "#{@wawaccess.identifier}: missing block in wawaccess call" unless block
-          self.instance_eval &block
+          self.instance_eval(&block)
         end
         
         # Installs the default strategy
