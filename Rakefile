@@ -26,7 +26,7 @@ end
 
 desc "Run all rspec test"
 Spec::Rake::SpecTask.new(:spec) do |t|
-  t.spec_files = FileList['test/spec/**/*.rb']
+  t.spec_files = FileList['test/spec/test_all.rb']
 end
 
 desc "Lauches all tests"
