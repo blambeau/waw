@@ -12,6 +12,14 @@ module Waw
         def initialize(signature)
           @signature = signature
         end
+        
+        # Executes a block as this DSL
+        def execute(&block)
+          DSLHelper.new(Class => [:&, :|, :not]) do
+            Kernel.load(File.join(File.dirname(__FILE__), 'dsl_ruby_extensions.rb'))
+            self.instance_eval(&block)
+          end
+        end
       
         # Adds a validation
         def validation(args, validator, onfailure)
@@ -73,13 +81,13 @@ module Waw
       # Creates an empty signature
       def initialize(&block)
         @rules = []
-        DSL.new(self).instance_eval(&block) unless block.nil?
+        DSL.new(self).execute(&block) unless block.nil?
       end
     
       # Merges this signature with additional definition
       def merge(&block)
         signature = self.dup
-        DSL.new(signature).instance_eval(&block) unless block.nil?
+        DSL.new(signature).execute(&block) unless block.nil?
         signature
       end
     

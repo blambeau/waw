@@ -96,4 +96,46 @@ describe ::Waw::Validation::Signature do
     signature.blocks?().should be_true
   end
   
+  it "should allow ruby classes as left part of a disjunction" do
+    signature = signature {
+      validation :age, missing | Integer, :bad_age
+    }
+    signature.allows?(:age => 12).should be_true
+    signature.allows?(:age => "").should be_true
+    signature.allows?(:age => nil).should be_true
+    signature.blocks?(:age => "hello").should be_true
+  end
+  
+  it "should allow ruby classes as right part of a disjunction" do
+    signature = signature {
+      validation :age, Integer | missing, :bad_age
+    }
+    signature.allows?(:age => 12).should be_true
+    signature.allows?(:age => "").should be_true
+    signature.allows?(:age => nil).should be_true
+    signature.blocks?(:age => "hello").should be_true
+  end
+  
+  it "should allow ruby classes as left part of a conjunction" do
+    signature = signature {
+      validation :age, (is > 10) & Integer, :bad_age
+    }
+    signature.allows?(:age => 12).should be_true
+    signature.allows?(:age => "").should be_false
+    signature.allows?(:age => nil).should be_false
+    signature.blocks?(:age => 7).should be_true
+    signature.blocks?(:age => "hello").should be_true
+  end
+  
+  it "should allow ruby classes as right part of a conjunction" do
+    signature = signature {
+      validation :age, Integer & (is > 10), :bad_age
+    }
+    signature.allows?(:age => 12).should be_true
+    signature.allows?(:age => "").should be_false
+    signature.allows?(:age => nil).should be_false
+    signature.blocks?(:age => 7).should be_true
+    signature.blocks?(:age => "hello").should be_true
+  end
+  
 end
