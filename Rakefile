@@ -1,30 +1,36 @@
 require "rake/rdoctask"
 require "rake/testtask"
 require "rake/gempackagetask"
+require 'spec/rake/spectask'
 require "rubygems"
 
 dir     = File.dirname(__FILE__)
 lib     = File.join(dir, "lib", "waw.rb")
 version = File.read(lib)[/^\s*VERSION\s*=\s*(['"])(\d\.\d\.\d)\1/, 2]
 
-task :default => [:test]
+task :default => [:unit]
 
 desc "Lauches all unit tests"
-Rake::TestTask.new(:unit_test) do |test|
+Rake::TestTask.new(:unit) do |test|
   test.libs       = [ "lib", "test/unit" ]
   test.test_files = [ 'test/unit/test_all.rb']
   test.verbose    =  true
 end
 
 desc "Lauches all integration tests"
-Rake::TestTask.new(:integration_test) do |test|
+Rake::TestTask.new(:integration) do |test|
   test.libs       = [ "lib", "test/unit" ]
   test.test_files = [ 'test/integration/**/*.rb']
   test.verbose    =  true
 end
 
+desc "Run all rspec test"
+Spec::Rake::SpecTask.new(:spec) do |t|
+  t.spec_files = FileList['test/spec/**/*.rb']
+end
+
 desc "Lauches all tests"
-task :test => [:unit_test, :integration_test]
+task :test => [:unit, :integration, :spec]
 
 desc "Generates rdoc documentation"
 Rake::RDocTask.new do |rdoc|
