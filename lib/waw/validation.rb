@@ -8,6 +8,7 @@ require 'waw/validation/missing_validator'
 require 'waw/validation/mandatory_validator'
 require 'waw/validation/default_validator'
 require 'waw/validation/same_validator'
+require 'waw/validation/isin_validator'
 
 require 'waw/validation/boolean_validator'
 require 'waw/validation/integer_validator'
@@ -89,6 +90,7 @@ module Waw
     validator :mandatory, ::Waw::Validation::MandatoryValidator.new
     validator :default,   ::Waw::Validation::DefaultValidator
     validator :same,      ::Waw::Validation::SameValidator.new
+    validator :isin,      ::Waw::Validation::IsInValidator
     
     # Type-based validators
     Integer             = ::Waw::Validation::IntegerValidator.new

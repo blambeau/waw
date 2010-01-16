@@ -98,6 +98,19 @@ module Waw
       assert_equal [false, [12, nil]], same.=~(12, nil)
     end
     
+    def test_isin
+      assert ::Waw::Validation::Validator === isin
+      MIX.each do |val|
+        assert_equal false, isin(101, "not present", /^$/)===val
+        assert_equal true, isin(val)===val
+      end
+      assert_equal true, isin(nil)===nil
+      assert_equal true, isin("hello", "world")==="hello"
+      assert_equal true, isin("hello", "world")==="world"
+      assert_equal [true, ["hello", "world"]], isin("hello", "world", "happy").=~("hello", "world")
+      assert_equal [false, ["hello", "world"]], isin("hell", "world", "happy").=~("hello", "world")
+    end
+    
     def test_boolean
       assert [true, false].all?{|v| boolean===v}
       assert !MISSING.any?{|v| boolean === v}
@@ -242,6 +255,9 @@ module Waw
       assert_equal [true, [3]], (is < 10) =~ 3
       assert_equal [false, ["hello"]], (is < 10) =~ "hello"
       assert_equal [false, ["3"]], (is < 10) =~ "3"
+      assert_equal true, is.in(1, 2, 3)===3
+      assert_equal false, is.in(1, 2, 3)===4
+      assert_equal [true, [1, 2]], is.in(1, 2, 3).=~(1, 2) 
     end
         
     def test_historical_first
