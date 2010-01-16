@@ -30,7 +30,7 @@ Spec::Rake::SpecTask.new(:spec) do |t|
 end
 
 desc "Lauches all tests"
-task :test => [:unit, :integration, :spec]
+task :test => [:unit, :spec]
 
 desc "Generates rdoc documentation"
 Rake::RDocTask.new do |rdoc|
