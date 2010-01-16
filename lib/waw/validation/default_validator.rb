@@ -10,12 +10,12 @@ module Waw
     
       # Always returns true
       def validate(*values)
-        true
+        all_missing?(values)
       end
     
       # Converts missing values by the default one
       def convert_and_validate(*values)
-        [true, values.collect{|v| is_missing?(v) ? @default_value : v}]
+        validate(*values) ? [true, values.collect{|v| @default_value}] : [false, values]
       end
     
     end # class DefaultValidator

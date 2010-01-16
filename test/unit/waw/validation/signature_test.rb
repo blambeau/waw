@@ -55,7 +55,7 @@ module Waw
           validation :mail, mail, :bad_email
           validation [:password, :confirm], same, :passwords_dont_match
           validation :age, (integer & (is >= 18)) | missing, :bad_age
-          validation :newsletter, (boolean | (missing & default(false))), :bad_newsletter
+          validation :newsletter, (boolean | default(false)), :bad_newsletter
         end
     
         ok, values = signature.apply(:mail => "blambeau@gmail.com", :password => "pass", :confirm => "pass", :age => 29)

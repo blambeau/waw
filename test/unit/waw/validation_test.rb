@@ -71,15 +71,16 @@ module Waw
         ::Waw::Validation.default
       end
       assert ::Waw::Validation::Validator === default(12)
-      assert (MISSING + NOT_MISSING).all?{|v| default("ok")===v} 
+      assert MISSING.all?{|v| default("ok")===v} 
+      assert !NOT_MISSING.any?{|v| default("ok")===v} 
       NOT_MISSING.each do |val|
-        assert_equal [true, [val]], default("ok") =~ val
+        assert_equal [false, [val]], default("ok") =~ val
       end
       MISSING.each do |val|
         assert_equal [true, ["ok"]], default("ok") =~ val
       end
-      assert_equal [true, ["ok", 12]], default("ok").=~(nil, 12)
-      assert_equal [true, ["ok", 12]], default("ok").=~("", 12)
+      assert_equal [false, [nil, 12]], default("ok").=~(nil, 12)
+      assert_equal [false, ["", 12]], default("ok").=~("", 12)
     end
     
     def test_same
