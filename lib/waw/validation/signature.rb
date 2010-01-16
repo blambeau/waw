@@ -21,6 +21,8 @@ module Waw
         # When a methos is missing
         def method_missing(name, *args, &block)
           Waw::Validation.send(name, *args, &block)
+        rescue Exception => ex
+          raise ex.class, ex.message, caller
         end
       
       end # class DSL

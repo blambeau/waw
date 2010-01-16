@@ -24,7 +24,6 @@ module Waw
       def validate(*values)
         values.all?{|f| seems_a_file?(f)}
       end
-      alias :=== :validate
     
     end # class NotValidator
   end # module Validation

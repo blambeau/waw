@@ -4,13 +4,12 @@ module Waw
     
       # Calls the block installed at initialization time    
       def validate(*values)
-        values.all?{|value| Waw::Validation.is_missing?(value)}
+        values.all?{|value| is_missing?(value)}
       end
-      alias :=== :validate
     
       # Converts and validate
       def convert_and_validate(*values)
-        validate(*values) ? [true, values.collect{|v| nil}] : [false, values]
+        validate(*values) ? [true, missings_to_nil(values)] : [false, values]
       end
     
     end # class MissingValidator

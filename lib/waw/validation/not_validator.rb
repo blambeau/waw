@@ -9,7 +9,6 @@ module Waw
       def validate(*values)
         not(@negated.validate(*values))
       end
-      alias :=== :validate
     
       def convert_and_validate(*values)
         ok, converted = @negated.convert_and_validate(*values)

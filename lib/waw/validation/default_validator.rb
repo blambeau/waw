@@ -2,23 +2,20 @@ module Waw
   module Validation
     class DefaultValidator < Validator
     
-      def initialize(default_value)
-        @default_value = default_value
+      # Creates a validator instance
+      def initialize(*args)
+        error("Validator default expects one argument (only): default(19) for example", caller) unless args.size==1
+        @default_value = args[0]
       end
     
+      # Always returns true
       def validate(*values)
         true
       end
-      alias :=== :validate
     
+      # Converts missing values by the default one
       def convert_and_validate(*values)
-        raise "Default does not support multiple values" if values.size > 1
-        value = values[0]
-        if Waw::Validation.is_missing?(value)
-          [true, [@default_value]]
-        else
-          [false, values]
-        end
+        [true, values.collect{|v| is_missing?(v) ? @default_value : v}]
       end
     
     end # class DefaultValidator

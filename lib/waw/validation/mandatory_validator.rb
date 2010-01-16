@@ -4,9 +4,8 @@ module Waw
     
       # Calls the block installed at initialization time    
       def validate(*values)
-        values.all?{|value| not(Waw::Validation.is_missing?(value))}
+        no_missing?(values)
       end
-      alias :=== :validate
     
       # Converts and validate
       def convert_and_validate(*values)

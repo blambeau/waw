@@ -11,7 +11,6 @@ module Waw
       def validate(*values)
         @validators.any?{|validator| validator.validate(*values)}
       end
-      alias :=== :validate
     
       # Converts and validate
       def convert_and_validate(*values)

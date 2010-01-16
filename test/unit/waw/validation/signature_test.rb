@@ -25,7 +25,7 @@ module Waw
       def test_typical_web_scenario
         signature = Waw::Validation.signature do
           validation :mail, Waw::Validation.mail, :bad_email
-          validation [:password, :confirm], Waw::Validation.equal, :passwords_dont_match
+          validation [:password, :confirm], Waw::Validation.same, :passwords_dont_match
           validation :age, Waw::Validation.missing | (Waw::Validation::Integer & (Waw::Validation.is >= 18)), :bad_age
         end
     
@@ -53,9 +53,9 @@ module Waw
       def test_typical_web_scenario_sc2
         signature = Waw::Validation.signature do
           validation :mail, mail, :bad_email
-          validation [:password, :confirm], equal, :passwords_dont_match
-          validation :age, missing | (integer & (is >= 18)), :bad_age
-          validation :newsletter, (default(false) | boolean), :bad_newsletter
+          validation [:password, :confirm], same, :passwords_dont_match
+          validation :age, (integer & (is >= 18)) | missing, :bad_age
+          validation :newsletter, (boolean | (missing & default(false))), :bad_newsletter
         end
     
         ok, values = signature.apply(:mail => "blambeau@gmail.com", :password => "pass", :confirm => "pass", :age => 29)
@@ -82,7 +82,7 @@ module Waw
       def test_typical_web_scenario_sc3
         signature = Waw::Validation.signature do
           validation :mail, mandatory & mail, :bad_email
-          validation [:password, :confirm], mandatory & equal, :passwords_dont_match
+          validation [:password, :confirm], mandatory & same, :passwords_dont_match
         end
         ok, values = signature.apply(:mail => "blambeau@gmail.com", :password => "pass", :confirm => "pass")
         assert_equal true, ok
