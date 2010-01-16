@@ -4,36 +4,40 @@ module Waw
   class ValidationTest < Test::Unit::TestCase
     
     def test_historical_first
-      assert Waw::Validation::Mandatory===false, "Waw::Validation::Mandatory===false"
-      assert Waw::Validation::Mandatory===true, "Waw::Validation::Mandatory===true"
-      assert Waw::Validation::Mandatory===0, "Waw::Validation::Mandatory===0"
-      assert Waw::Validation::Mandatory===1, "Waw::Validation::Mandatory===1"
-      assert Waw::Validation::Mandatory.not===nil, "Waw::Validation::Mandatory.not===nil"
+      assert Waw::Validation.mandatory===false, "Waw::Validation.mandatory===false"
+      assert Waw::Validation.mandatory===true, "Waw::Validation.mandatory===true"
+      assert Waw::Validation.mandatory===0, "Waw::Validation.mandatory===0"
+      assert Waw::Validation.mandatory===1, "Waw::Validation.mandatory===1"
+      assert Waw::Validation.mandatory.not===nil, "Waw::Validation.mandatory.not===nil"
     
-      assert (Waw::Validation::Size > 0)==="12", "(Waw::Validation::Size > 0)==='12'"
-      assert (Waw::Validation::Size > 0).not==="", "(Waw::Validation::Size > 0).not==="
-      assert (Waw::Validation::Size >= 0)==="12", "(Waw::Validation::Size >= 0)==='12'"
-      assert (Waw::Validation::Size >= 0)==="", "(Waw::Validation::Size >= 0)==="
+      assert (Waw::Validation.size > 0)==="12", "(Waw::Validation.size > 0)==='12'"
+      assert (Waw::Validation.size > 0).not==="", "(Waw::Validation.size > 0).not==="
+      assert (Waw::Validation.size >= 0)==="12", "(Waw::Validation.size >= 0)==='12'"
+      assert (Waw::Validation.size >= 0)==="", "(Waw::Validation.size >= 0)==="
     
-      assert (Waw::Validation::Size > 0)===[:hello], "(Waw::Validation::Size > 0)===[:hello]"
-      assert (Waw::Validation::Size > 0).not===[], "(Waw::Validation::Size > 0).not===[]"
+      assert (Waw::Validation.size > 0)===[:hello], "(Waw::Validation.size > 0)===[:hello]"
+      assert (Waw::Validation.size > 0).not===[], "(Waw::Validation.size > 0).not===[]"
     
-      assert (Waw::Validation::Size == 0)===[]
-      assert !((Waw::Validation::Size == 10)===[])
+      assert (Waw::Validation.size == 0)===[]
+      assert !((Waw::Validation.size == 10)===[])
     
       assert Waw::Validation::Array[String] === []
       assert Waw::Validation::Array[String] === ["coucou", "hello"]
       assert !(Waw::Validation::Array[String] === [12])
       assert !(Waw::Validation::Array[String] === ["coucou", 12])
-      assert Waw::Validation::Array[Waw::Validation::Size>2] === ["coucou", "hello"]
-      assert !(Waw::Validation::Array[Waw::Validation::Size>2] === ["coucou", "h"])
+      assert Waw::Validation::Array[Waw::Validation.size>2] === ["coucou", "hello"]
+      assert !(Waw::Validation::Array[Waw::Validation.size>2] === ["coucou", "h"])
     end
     
     def test_equal
-      assert_equal true, Waw::Validation::Equal.validate(1, 1, 1, 1)
-      assert_equal false, Waw::Validation::Equal.validate(1, 1, 1, false)
-      assert_equal true, Waw::Validation::Equal.validate("pass", "pass")
-      assert_equal false, Waw::Validation::Equal.validate("pass", "pass2")
+      assert_equal true, Waw::Validation.equal.validate(1, 1, 1, 1)
+      assert_equal false, Waw::Validation.equal.validate(1, 1, 1, false)
+      assert_equal true, Waw::Validation.equal.validate("pass", "pass")
+      assert_equal false, Waw::Validation.equal.validate("pass", "pass2")
+    end
+    
+    def test_missing
+      assert ::Waw::Validation::Validator === Waw::Validation.missing
     end
     
     def test_validator
@@ -52,7 +56,7 @@ module Waw
     end
     
     def test_validator_conjunction
-      val = (Waw::Validation::Mandatory & Waw::Validation.validator{|v| v>10})
+      val = (Waw::Validation.mandatory & Waw::Validation.validator{|v| v>10})
       assert_equal true, val===11
       assert_equal false, val===10
       assert_equal false, val===nil

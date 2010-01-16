@@ -9,6 +9,7 @@ module Waw
       # Seems a valid file
       def seems_a_file?(f)
         return false unless File.file?(f)
+        return true unless @options
         @options.each_pair do |key, value|
           case key
             when :extension
@@ -17,6 +18,7 @@ module Waw
               Waw.logger.warn("Unexpected FileValidator option #{key} : #{value}")
           end
         end
+        true
       end
     
       def validate(*values)

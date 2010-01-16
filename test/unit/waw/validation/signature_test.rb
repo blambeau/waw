@@ -6,7 +6,7 @@ module Waw
     
       def test_simple_case
         signature = Signature.new do 
-          validation :name, Waw::Validation::Mandatory, :missing_name
+          validation :name, Waw::Validation.mandatory, :missing_name
         end
         assert_equal [false, [:missing_name]], signature.apply(:name => nil)
         assert_equal [true, {:name => "blambeau"}], signature.apply(:name => "blambeau")
@@ -14,8 +14,8 @@ module Waw
     
       def test_supports_multiple_rules
         signature = Signature.new do 
-          validation :name, Waw::Validation::Mandatory, :missing_name
-          validation :age, (Waw::Validation::Mandatory & Waw::Validation.validator{|v| v>18}), :bad_age
+          validation :name, Waw::Validation.mandatory, :missing_name
+          validation :age, (Waw::Validation.mandatory & Waw::Validation.validator{|v| v>18}), :bad_age
         end
         assert_equal [false, [:missing_name, :bad_age]], signature.apply(:name => nil)
         assert_equal [false, [:bad_age]], signature.apply(:name => "blambeau", :age => nil)
@@ -24,9 +24,9 @@ module Waw
     
       def test_typical_web_scenario
         signature = Waw::Validation.signature do
-          validation :mail, Waw::Validation::Mail, :bad_email
-          validation [:password, :confirm], Waw::Validation::Equal, :passwords_dont_match
-          validation :age, Waw::Validation::Missing | (Waw::Validation::Integer & (Waw::Validation.is >= 18)), :bad_age
+          validation :mail, Waw::Validation.mail, :bad_email
+          validation [:password, :confirm], Waw::Validation.equal, :passwords_dont_match
+          validation :age, Waw::Validation.missing | (Waw::Validation::Integer & (Waw::Validation.is >= 18)), :bad_age
         end
     
         ok, values = signature.apply(:mail => "blambeau@gmail.com", :password => "pass", :confirm => "pass", :age => 29)

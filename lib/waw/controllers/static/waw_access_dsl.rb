@@ -3,12 +3,16 @@ module Waw
     class WawAccess
       # Domain specific language for .wawaccess language
       class DSL
-        include Waw::Validation
         
         # Creates a new DSL instance
         def initialize(wawaccess)
           raise ArgumentError, "wawaccess cannot be nil" unless WawAccess===wawaccess
           @wawaccess = wawaccess
+        end
+        
+        # We delegate everything to Waw::Validation
+        def method_missing(name, *args, &block)
+          Waw::Validation.send(name, *args, &block)
         end
         
         # Starts a wawaccess file
