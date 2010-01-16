@@ -40,6 +40,10 @@ module Waw
       assert ::Waw::Validation::Validator === Waw::Validation.missing
     end
     
+    def test_default
+      assert ::Waw::Validation::Validator === ::Waw::Validation.default(12)
+    end
+    
     def test_validator
       validator = Waw::Validation.validator{|val| Integer===val and val>10}
       assert_equal true, validator===11

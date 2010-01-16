@@ -66,20 +66,25 @@ module Waw
       def method_missing(name, *args, &block)
         # We only accept self.something= for validator installation
         return super(name, *args, &block) unless /\=$/ =~ name.to_s
+        return super(name, *args, &block) unless (args.size==1 or block)
         
         # The, different cases
-        name = name.to_s[0...-1].to_sym
-        if (args.size==1) and (::Waw::Validation::Validator===args[0]) and block.nil?
-          # first case: explicit validator
-          the_validator = args[0]
-        elsif (args.size==1) and block.nil?
-          # second case: auto conversion
-          the_validator = to_validator(args[0])
+        name, validator = name.to_s[0...-1].to_sym, args[0]
+        if ::Waw::Validation::Validator===validator and block.nil?
+          # first case: explicit validator, nothing to do
+        elsif ::Class===validator and block.nil?
+          # second case: class, for defered creation
+          raise "Unsupported"
+        elsif ::Module===validator and block.nil?
+          # third case: module of validation rules, nothing to do
+        elsif block.nil?
+          # fifth case: auto conversion
+          validator = to_validator(args[0])
         end
 
-        if the_validator
+        if validator
           # Install the validator in the collection
-          @@validators[name] = the_validator
+          @@validators[name] = validator
 
           # Installs the class method that returns the validator
           instance_eval <<-EOF
@@ -97,23 +102,22 @@ module Waw
     end # Helpers for extensions
   
     # Validators typically used for parameter validation
-    def self.default(default_value) DefaultValidator.new(default_value); end
+    #self.default    =  DefaultValidator
     self.missing    =  ::Waw::Validation::MissingValidator.new
     self.mandatory  =  ::Waw::Validation::MandatoryValidator.new
     self.mail       =  /^[a-zA-Z][\w\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$/
     self.weburl     =  /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ix
     self.equal      =  validator{|*args| args.uniq.size==1}
-
+    
+    # Validators from other modules
+    self.size       = SizeValidations
+    self.is         = ComparisonValidations
+    
+    def self.default(*args) DefaultValidator.new(*args) end
+    
     # Validators normally used elsewhere
     self.directory  =  validator{|*args| args.all?{|a| ::File.directory?(a)}}
     def self.file(opts = nil) FileValidator.new(opts); end
-
-    # Validators about size
-    def self.size() SizeValidations; end
-
-    # Validators about comparisons
-    Comparison = ComparisonValidations.new
-    def self.is() Comparison; end
 
     # Validators about size
     Array = ArrayValidations.new

@@ -1,4 +1,4 @@
-require 'waw/validation'
+require 'waw'
 require 'test/unit'
 module Waw
   module Validation
