@@ -90,6 +90,7 @@ module Waw
     validator :mandatory, ::Waw::Validation::MandatoryValidator.new
     validator :default,   ::Waw::Validation::DefaultValidator
     validator :same,      ::Waw::Validation::SameValidator.new
+    validator :equal,     ::Waw::Validation::SameValidator.new
     validator :isin,      ::Waw::Validation::IsInValidator
     
     # Type-based validators
