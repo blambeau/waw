@@ -315,16 +315,5 @@ module Waw
       assert_equal true, val===9
     end
     
-    # def test_to_validator_on_module
-    #   assert_equal true, String.to_validator==="blambeau"
-    #   assert_equal false, Integer.to_validator==="blambeau"
-    #   assert_equal true, Integer.to_validator===10
-    # end
-    
-    def test_to_validator_on_regexp
-      assert_equal true, /[a-z]+/.to_validator==="blambeau"
-      assert_equal false, /[a-z]+/.to_validator==="12339"
-    end
-    
   end
 end

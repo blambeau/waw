@@ -48,13 +48,17 @@ module Waw
       # Automatically converts specials guys as validators (regular 
       # expressions, some ruby classes, etc.)
       def to_validator(who)
-        case who
-          when ::Waw::Validation::Validator
-            who
-          when Regexp
-            RegexpValidator.new(who, true)
-          else
-            raise "Unable to convert #{who} to a validator"
+        if who.is_a?(Class)
+          Waw::Validation.validator_for_ruby_class(who, true)
+        else
+          case who
+            when ::Waw::Validation::Validator
+              who
+            when Regexp
+              RegexpValidator.new(who, true)
+            else
+              raise "Unable to convert #{who} to a validator"
+          end
         end
       end
 

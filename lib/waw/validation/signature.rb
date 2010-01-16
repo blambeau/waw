@@ -15,7 +15,7 @@ module Waw
       
         # Adds a validation
         def validation(args, validator, onfailure)
-          @signature.add_validation(args, validator, onfailure)
+          @signature.add_validation(args, ::Waw::Validation.to_validator(validator), onfailure)
         end
       
         # When a methos is missing

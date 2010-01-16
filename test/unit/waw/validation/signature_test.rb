@@ -26,7 +26,7 @@ module Waw
         signature = Waw::Validation.signature do
           validation :mail, Waw::Validation.mail, :bad_email
           validation [:password, :confirm], Waw::Validation.same, :passwords_dont_match
-          validation :age, Waw::Validation.missing | (Waw::Validation::Integer & (Waw::Validation.is >= 18)), :bad_age
+          validation :age, Waw::Validation.missing | (Waw::Validation.integer & (Waw::Validation.is >= 18)), :bad_age
         end
     
         ok, values = signature.apply(:mail => "blambeau@gmail.com", :password => "pass", :confirm => "pass", :age => 29)

@@ -11,6 +11,7 @@ require 'waw/validation/same_validator'
 require 'waw/validation/isin_validator'
 
 require 'waw/validation/boolean_validator'
+require 'waw/validation/string_validator'
 require 'waw/validation/integer_validator'
 require 'waw/validation/float_validator'
 require 'waw/validation/regexp_validator'
@@ -31,6 +32,8 @@ module Waw
     # Validators, by name
     @@validators = {}
     
+    # Ruby classes => validators
+    @@ruby_classes_to_validators = {}
     
     # Helpers for extensions
     class << self
@@ -38,6 +41,18 @@ module Waw
       # Builds a signature with a given block as definition
       def signature(&block)
         Signature.new(&block)
+      end
+      
+      # Adds a ruby class => validator mapping
+      def ruby_class_to_validator(ruby_class, validator)
+        @@ruby_classes_to_validators[ruby_class] = validator
+      end
+      
+      # Returns a validator to use for a given ruby class
+      def validator_for_ruby_class(ruby_class, raise_if_not_found=true)
+        val = @@ruby_classes_to_validators[ruby_class]
+        return val unless val.nil?
+        raise "Unable to find a validator for #{ruby_class}" if raise_if_not_found
       end
 
       # Automatically builds the validator and installs a method returning
@@ -50,8 +65,9 @@ module Waw
           validator = Validator.new(&block)
         elsif ::Waw::Validation::Validator===validator and block.nil?
           # first case: explicit validator, nothing to do
-        elsif ::Class===validator and block.nil?
+        elsif validator.is_a?(::Class) and block.nil?
           # second case: class, for defered creation
+          validator = to_validator(validator) unless validator.ancestors.include?(::Waw::Validation::Validator)
         elsif ::Module===validator and block.nil?
           # third case: module of validation rules, nothing to do
         elsif block.nil?
@@ -86,6 +102,7 @@ module Waw
     end # Helpers for extensions
   
     # General validators typically used for parameter validation
+    validator :always_accept, validator{|*args| true}
     validator :missing,   ::Waw::Validation::MissingValidator.new
     validator :mandatory, ::Waw::Validation::MandatoryValidator.new
     validator :default,   ::Waw::Validation::DefaultValidator
@@ -94,12 +111,14 @@ module Waw
     validator :isin,      ::Waw::Validation::IsInValidator
     
     # Type-based validators
-    Integer             = ::Waw::Validation::IntegerValidator.new
-    validator :integer,   Integer
-    Boolean             = ::Waw::Validation::BooleanValidator.new
-    validator :boolean,   Boolean    
-    Float               = ::Waw::Validation::FloatValidator.new
-    validator :float,     Float
+    validator :boolean,   ::Waw::Validation::BooleanValidator.new    
+    validator :string,    ::Waw::Validation::StringValidator.new
+    validator :integer,   ::Waw::Validation::IntegerValidator.new
+    validator :float,     ::Waw::Validation::FloatValidator.new
+    ruby_class_to_validator(::Boolean, boolean)
+    ruby_class_to_validator(::String, string)
+    ruby_class_to_validator(::Integer, integer)
+    ruby_class_to_validator(::Float, float)
     
     # Regexp-based validators
     validator :mail,      /^[a-zA-Z][\w\.-]*[a-zA-Z0-9]?@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$/

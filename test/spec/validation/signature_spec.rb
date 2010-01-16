@@ -54,4 +54,46 @@ describe ::Waw::Validation::Signature do
     signature.allows?(:mail => nil).should be_true
   end
   
+  it "should allow Boolean to be like a ruby class" do
+    signature = signature {
+      validation :newsletter, Boolean, :bad_newsletter
+    }
+    signature.allows?(:newsletter => true).should be_true
+    signature.allows?(:newsletter => false).should be_true
+    signature.allows?(:newsletter => "true").should be_true
+    signature.allows?(:newsletter => "false").should be_true
+  end
+  
+  it "should allow String ruby class as validator" do
+    signature = signature {
+      validation :name, String, :bad_name
+    }
+    signature.allows?(:name => "blambeau").should be_true
+    signature.allows?(:name => "").should be_true
+    signature.blocks?(:name => nil).should be_true
+    signature.blocks?().should be_true
+  end
+  
+  it "should allow Integer ruby class as validator" do
+    signature = signature {
+      validation :age, Integer, :bad_age
+    }
+    signature.allows?(:age => 12).should be_true
+    signature.allows?(:age => "12").should be_true
+    signature.blocks?(:age => "hello").should be_true
+    signature.blocks?().should be_true
+  end
+  
+  it "should allow Float ruby class as validator" do
+    signature = signature {
+      validation :temperature, Float, :bad_temperature
+    }
+    signature.allows?(:temperature => 12).should be_true
+    signature.allows?(:temperature => 12.0).should be_true
+    signature.allows?(:temperature => "12").should be_true
+    signature.allows?(:temperature => "12.0").should be_true
+    signature.blocks?(:temperature => "hello").should be_true
+    signature.blocks?().should be_true
+  end
+  
 end
