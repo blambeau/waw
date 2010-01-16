@@ -117,6 +117,7 @@ module Waw
         result = encapsulate(action, actual_params) do 
           action.execute(actual_params)
         end
+        Waw.logger.debug("ActionResult is #{result.inspect}")
         [200, {}, result]
       else
         Waw.logger.warn("Action #{action_name} has not been found")
