@@ -96,6 +96,97 @@ module Waw
         assert_equal false, ok
         assert_equal [:passwords_dont_match], values
       end
+      
+      def assert_signature_passes(expected, signature=nil, &block)
+        signature = Waw::Validation.signature(&block) unless signature
+        ok, converted = signature.apply(expected)
+        assert_equal true, ok
+        converted
+      end
+      
+      def assert_signature_does_not_pass(expected, signature=nil, &block)
+        signature = Waw::Validation.signature(&block) unless signature
+        ok, converted = signature.apply(expected)
+        assert_equal false, ok
+        converted
+      end
+      
+      def test_missing_and_default_intuition
+        # mandatory mail
+        get = assert_signature_passes(:mail => "blambeau@gmail.com") {
+          validation :mail, mail, :bad_mail
+        }
+        assert_equal "blambeau@gmail.com", get[:mail]
+        get = assert_signature_does_not_pass(:mail => nil) {
+          validation :mail, mail, :bad_mail
+        }
+        assert_equal [:bad_mail], get
+        get = assert_signature_does_not_pass(:mail => "") {
+          validation :mail, mail, :bad_mail
+        }
+        assert_equal [:bad_mail], get
+        get = assert_signature_does_not_pass(:mail => "blambeaugmail.com") {
+          validation :mail, mail, :bad_mail
+        }
+        assert_equal [:bad_mail], get
+        
+        # optional valid mail
+        get = assert_signature_passes(:mail => "blambeau@gmail.com") {
+          validation :mail, mail | missing, :bad_mail
+        }
+        assert_equal "blambeau@gmail.com", get[:mail]
+        get = assert_signature_passes(:mail => "blambeau@gmail.com") {
+          validation :mail, missing | mail, :bad_mail
+        }
+        assert_equal "blambeau@gmail.com", get[:mail]
+        get = assert_signature_passes(:mail => "") {
+          validation :mail, mail | missing, :bad_mail
+        }
+        assert_equal nil, get[:mail]
+        get = assert_signature_passes(:mail => nil) {
+          validation :mail, missing | mail, :bad_mail
+        }
+        assert_equal nil, get[:mail]
+        get = assert_signature_passes(:mail => nil) {
+          validation :mail, mail | missing, :bad_mail
+        }
+        assert_equal nil, get[:mail]
+        get = assert_signature_does_not_pass(:mail => "blambeaugmail.com") {
+          validation :mail, mail | missing, :bad_mail
+        }
+        assert_equal [:bad_mail], get
+        
+        # optional valid mail, with default
+        get = assert_signature_passes(:mail => "blambeau@gmail.com") {
+          validation :mail, mail | default("info@gmail.com"), :bad_mail
+        }
+        assert_equal "blambeau@gmail.com", get[:mail]
+
+        get = assert_signature_passes(:mail => "blambeau@gmail.com") {
+          validation :mail, default("info@gmail.com") | mail, :bad_mail
+        }
+        assert_equal "blambeau@gmail.com", get[:mail]
+
+        get = assert_signature_passes(:mail => nil) {
+          validation :mail, mail | default("info@gmail.com"), :bad_mail
+        }
+        assert_equal "info@gmail.com", get[:mail]
+
+        get = assert_signature_passes(:mail => nil) {
+          validation :mail, default("info@gmail.com") | mail, :bad_mail
+        }
+        assert_equal "info@gmail.com", get[:mail]
+
+        get = assert_signature_passes(:mail => "    ") {
+          validation :mail, mail | default("info@gmail.com"), :bad_mail
+        }
+        assert_equal "info@gmail.com", get[:mail]
+
+        get = assert_signature_does_not_pass(:mail => "blambeaugmail.com") {
+          validation :mail, mail | default("info@gmail.com"), :bad_mail
+        }
+        assert_equal [:bad_mail], get
+      end
     
     end
   end
