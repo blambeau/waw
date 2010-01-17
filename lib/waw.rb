@@ -29,11 +29,17 @@ module Waw
   
   # Autoloads waw from a given file
   def self.autoload(file)
-    @root_folder = File.expand_path(File.dirname(file))
+    if File.file?(file)
+      @root_folder = File.expand_path(File.dirname(file))
+    elsif File.directory?(file)
+      @root_folder = File.expand_path(file)
+    else
+      raise WawError, "Invalid root folder #{file}, inexisting!", caller
+    end
     puts "Autoloading waw web application from #{root_folder}"
     load_application(root_folder)
     @app
-  rescue ConfigurationError => ex
+  rescue ConfigurationError, WawError => ex
     raise ex
   rescue Exception => ex
     if logger
