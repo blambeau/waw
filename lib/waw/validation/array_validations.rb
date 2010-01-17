@@ -5,12 +5,12 @@ module Waw
         
         # Creates a validator instance with a delegator
         def initialize(subvalidator)
-          @subvalidator = subvalidator
+          @subvalidator = Waw::Validation.to_validator(subvalidator)
         end
         
         # Validation method
         def validate(*values)
-          values.all?{|val| Array===val and subvalidator.validate(*val)}
+          values.all?{|val| val.is_a?(::Array) and @subvalidator.validate(*val) }
         end
         
         # Convert and validate method
@@ -29,7 +29,7 @@ module Waw
       module Methods
         # Checks that all values of the array are validated by a subvalidator
         def [](subvalidator)
-          ArrayValidator.new(Waw::Validation.to_validator(subvalidator))
+          ArrayValidator.new(subvalidator)
         end
       end
       extend Methods
