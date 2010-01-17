@@ -87,6 +87,16 @@ module Waw
         failures = @rules.collect{|rule| rule.convert_and_validate(converted)}.compact
         failures.empty? ? [true, converted] : [false, failures]
       end
+      
+      # Checks if the signature allows passing with some values 
+      def allows?(hash)
+        apply(hash)[0]
+      end
+      
+      # Checks if the signature blocks with some values 
+      def blocks?(hash)
+        not(allows?(hash))
+      end
     
       # Duplicates this validation
       def dup
