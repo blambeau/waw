@@ -10,6 +10,14 @@ module Waw
           @wawaccess = wawaccess
         end
         
+        def file(opts = {})
+          Waw::Validation.file(opts)
+        end
+        
+        def directory
+          Waw::Validation.directory
+        end
+        
         # We delegate everything to Waw::Validation
         def method_missing(name, *args, &block)
           Waw::Validation.send(name, *args, &block)

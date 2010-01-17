@@ -63,6 +63,11 @@ module Waw
       
       ################################################### About installation through DSL
       
+      def recognized_pattern?(pattern)
+        [FalseClass, TrueClass, String, 
+         Regexp, Waw::Validation::Validator].any?{|c| c===pattern}
+      end
+      
       # Adds a child in the hierarchy
       def add_child(folder, wawaccess)
         @children[folder] = wawaccess
@@ -72,6 +77,8 @@ module Waw
       def add_serve(patterns, &block)
         block = Kernel.lambda{|url, realpath, wawaccess, env| app.static(realpath, env) } unless block
         patterns.each do |pattern|
+          raise WawError, "Invalid serving pattern #{pattern} (#{pattern.class})"\
+            unless recognized_pattern?(pattern)
           @serve << [pattern, block]
         end
       end
@@ -79,9 +86,10 @@ module Waw
       # Merges a DSL string inside this waw access
       def dsl_merge(dsl_str, read_file=nil)
         begin
-          WawAccess::DSL.new(self).instance_eval(dsl_str)
+          dsl = WawAccess::DSL.new(self)
+          dsl.instance_eval(dsl_str)
         rescue WawError => ex
-          raise ex
+          raise WawError, "Corrupted .wawaccess file #{read_file}: #{ex.message}", ex.backtrace
         rescue Exception => ex
           raise WawError, "Corrupted .wawaccess file #{read_file}: #{ex.message}", ex.backtrace
         end
