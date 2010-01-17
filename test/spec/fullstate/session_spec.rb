@@ -2,7 +2,7 @@ require 'waw'
 describe ::Waw::Session do
   
   def session
-    ::Waw::Session 
+    ::Waw::Session.instance
   end
   
   before(:each) do

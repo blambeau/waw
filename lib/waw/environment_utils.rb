@@ -21,8 +21,13 @@ module Waw
     end
     
     # Returns the current Rack session
-    def session
+    def real_session
       env['rack.session'] ||= {}
+    end
+    
+    # Returns the waw session decorator
+    def session
+      Waw::Session.instance
     end
     
     # Checks if a session has a given key
