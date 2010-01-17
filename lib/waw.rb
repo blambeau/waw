@@ -12,7 +12,7 @@ require 'waw/config'
 require 'waw/validation'
 require 'waw/app'
 require 'waw/environment_utils'
-require 'waw/fullstate/on_instance'
+require 'waw/fullstate'
 
 require 'waw/controller'
 require 'waw/controllers/json_controller'

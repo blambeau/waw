@@ -1,9 +1,5 @@
 module Waw
-  #
-  # Provides utilities to get state on controllers and other tools
-  #
   module FullState
-    
     # Provides the introspection methods for installing fullstate
     # utilities on instances.
     module OnInstance
@@ -28,9 +24,5 @@ module Waw
       end
       
     end # module OnInstances
-    
-    module OnClass
-    end # module OnClass
-    
   end # module FullState
 end # module Waw
