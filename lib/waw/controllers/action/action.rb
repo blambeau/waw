@@ -58,6 +58,12 @@ module Waw
         EOF
       end
       
+      # Factors the ajax code to submit the formulary
+      def ajax_form_submit(opts = {})
+        form_id = opts[:form_id] || id
+        "javascript:$('form##{form_id}').submit()"
+      end
+      
       # Executes the action inside a controller and using parameters
       def execute(params = {})
         ok, values = @signature.apply(params)
