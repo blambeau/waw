@@ -9,16 +9,24 @@ module Waw
     
       # Calls the block installed at initialization time    
       def validate(*values)
-        @validators.any?{|validator| validator.validate(*values)}
+        @values.all?{|val| @validators.any?{|validator| validator.validate(val)}}
       end
     
       # Converts and validate
       def convert_and_validate(*values)
-        @validators.each do |validator|
-          ok, new_values = validator.convert_and_validate(*values)
-          return [ok, new_values] if ok
+        converted = []
+        values.each do |value|
+          found = false
+          @validators.each do |validator|
+            found, val_converted = validator.convert_and_validate(value)
+            if found
+              converted << val_converted[0]
+              break
+            end
+          end
+          return [false, values] unless found
         end
-        [false, values]
+        [true, converted]
       end
     
     end # class OrValidator
