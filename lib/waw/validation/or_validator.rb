@@ -9,7 +9,7 @@ module Waw
     
       # Calls the block installed at initialization time    
       def validate(*values)
-        @values.all?{|val| @validators.any?{|validator| validator.validate(val)}}
+        values.all?{|val| @validators.any?{|validator| validator.validate(val)}}
       end
     
       # Converts and validate

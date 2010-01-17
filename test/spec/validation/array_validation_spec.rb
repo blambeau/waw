@@ -25,6 +25,11 @@ describe ::Waw::Validation::ArrayValidations do
     signature.allows?(:id => ["1", "hello"]).should be_false
     signature.allows?(:id => ["1", nil]).should be_false
     signature.allows?(:id => ["1", ""]).should be_false
+
+    signature = Waw::Validation.signature {
+      validation :id, array[String], :bad_array
+    }
+    signature.allows?(:id => []).should be_true
   end
   
   it "should get converted sub values" do

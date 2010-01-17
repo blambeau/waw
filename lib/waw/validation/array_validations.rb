@@ -10,7 +10,7 @@ module Waw
         
         # Validation method
         def validate(*values)
-          values.all?{|val| Array===val and subvalidator.validate(val)}
+          values.all?{|val| Array===val and subvalidator.validate(*val)}
         end
         
         # Convert and validate method
