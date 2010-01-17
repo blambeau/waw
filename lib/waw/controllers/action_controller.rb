@@ -8,7 +8,8 @@ module Waw
   #
   class ActionController < Waw::Controller
     include ActionUtils
-    extend FullState::ClassMethods
+    extend FullState::OnClass
+    extend FullState::OnInstance
     
     # All subclasses
     @@controllers = []

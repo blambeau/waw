@@ -3,7 +3,10 @@ module Waw
   # Provides utilities to get state on controllers and other tools
   #
   module FullState
-    module ClassMethods
+    
+    # Provides the introspection methods for installing fullstate
+    # utilities on instances.
+    module OnInstance
       
       # Installs a friendly session variable on the controller
       def session_var(name, default_value=nil, &block)
@@ -24,6 +27,10 @@ module Waw
         end
       end
       
-    end # module ClassMethods
+    end # module OnInstances
+    
+    module OnClass
+    end # module OnClass
+    
   end # module FullState
 end # module Waw
