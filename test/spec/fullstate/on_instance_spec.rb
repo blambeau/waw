@@ -1,5 +1,5 @@
 require "waw"
-describe ::Waw::FullState do
+describe ::Waw::FullState::OnInstance do
   
   it "should allow session variable creation on classes" do
     class A
