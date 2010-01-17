@@ -7,7 +7,7 @@ module Waw
     
     # Returns the current Rack env instance
     def env
-      Thread.current[:rack_env]
+      Thread.current[:rack_env] ||= {}
     end
     
     # Returns the current Rack request instance
@@ -22,12 +22,12 @@ module Waw
     
     # Returns the current Rack session
     def session
-      env['rack.session']
+      env['rack.session'] ||= {}
     end
     
     # Checks if a session has a given key
     def session_has_key?(key)
-      session_get(key)
+      session.has_key?(key)
     end
 
     # Sets a pair inside the session. Returns the value.

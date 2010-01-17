@@ -8,6 +8,7 @@ module Waw
   #
   class ActionController < Waw::Controller
     include ActionUtils
+    extend FullState::ClassMethods
     
     # All subclasses
     @@controllers = []
@@ -37,7 +38,8 @@ module Waw
       end
 
     end
-    
+
+    # This is all about actions 
     class << self
       include ActionUtils
       
