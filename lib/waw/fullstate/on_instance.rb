@@ -6,21 +6,20 @@ module Waw
       
       # Installs a friendly session variable on the controller
       def session_var(name, default_value=nil, &block)
-        # define the getter first
+        var = Waw::FullState::Variable.new(name, default_value, &block)
         define_method name do
-          if Waw.session_has_key?(name)
-            Waw.session_get(name)
-          elsif block
-            block.call
-          else
-            default_value
-          end
+          var.value(self)
         end
-        
-        # define the setter now
         define_method :"#{name}=" do |arg|
-          Waw.session_set(name, arg)
+          var.value = arg
         end
+      rescue ArgumentError => ex
+        raise ex, ex.message, ex.backtrace[1..-1]
+      end
+      
+      # Installs a query variable with a given block
+      def query_var(name, &block)
+        session_var(name, nil, &block)
       end
       
     end # module OnInstances

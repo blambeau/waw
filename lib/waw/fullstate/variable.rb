@@ -15,11 +15,11 @@ module Waw
       end
       
       # Returns the current value of the variable
-      def value
+      def value(*args)
         if Waw.session_has_key?(@name)
           Waw.session_get(@name)
         elsif @default_value.is_a?(Proc)
-          @default_value.call
+          @default_value.call(*args)
         else
           @default_value
         end
