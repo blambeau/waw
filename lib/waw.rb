@@ -29,6 +29,6 @@ module Waw
   extend Waw::EnvironmentUtils
   
   # Waw version
-  VERSION = "0.1.1".freeze
+  VERSION = "0.1.2".freeze
   
 end
