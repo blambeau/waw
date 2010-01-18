@@ -12,6 +12,8 @@ require 'waw/config'
 require 'waw/validation'
 require 'waw/app'
 require 'waw/environment_utils'
+require 'waw/fullstate'
+require 'waw/session'
 
 require 'waw/controller'
 require 'waw/controllers/json_controller'
