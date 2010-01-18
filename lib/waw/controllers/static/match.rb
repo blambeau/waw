@@ -62,7 +62,7 @@ module Waw
                      "params"      => Waw.params,
                      "response"    => Waw.response,
                      "session"     => Waw.session}
-          Waw.resources.each {|k, v| context[k.to_s] = v} if Waw.respond_to?(:ressources) and Waw.ressources
+          Waw.resources.each {|k, v| context[k.to_s] = v} if Waw.respond_to?(:resources) and Waw.resources
           context
         end
       
