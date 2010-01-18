@@ -116,7 +116,7 @@ module Waw
       
       # Helper to locate css and js files
       def find_files(pattern)
-        Dir[File.join(folder, pattern)].sort{|f1, f1|
+        Dir[File.join(folder, pattern)].sort{|f1, f2|
           File.basename(f1) <=> File.basename(f2)
         }
       end
