@@ -74,6 +74,10 @@ module Waw
           # validation is ko
           [:"validation-ko", values]
         end
+      rescue ::Waw::Validation::KO => ex
+        [:"validation-ko", ex.failed]
+      rescue ::Waw::Validation::Error => ex
+        [:"validation-error", ex.failed]
       end
     
     end # class Action

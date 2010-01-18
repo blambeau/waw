@@ -1,3 +1,4 @@
+require 'waw/validation/errors'
 require 'waw/validation/helpers'
 require 'waw/validation/validator'
 require 'waw/validation/not_validator'
