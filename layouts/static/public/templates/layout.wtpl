@@ -12,6 +12,6 @@
   	}
 	</head>
 	<body>
-	  <<+{../${page} using self}
+	  <<+{../${served_file} using self}
 	</body>
 </html>

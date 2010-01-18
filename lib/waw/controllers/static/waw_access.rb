@@ -1,3 +1,4 @@
+require 'waw/controllers/static/match'
 module Waw
   class StaticController < ::Waw::Controller
     # Waw version of .htaccess files
@@ -15,16 +16,20 @@ module Waw
       # The parent wawaccess file
       attr_accessor :parent
       
-      # File currently served
-      attr_accessor :served_file
+      # Fake accessor that go to the top of the hierarchy
+      def file_server
+        @file_server || (parent && parent.file_server)
+      end
       
       # Creates a default WawAccess file
-      def initialize(read_file=nil)
+      def initialize(parent = nil, folder = nil, read_file = nil)
+        @parent = parent
+        @folder = folder
         @strategy = :deny_all
         @inherits = true
         @serve = []
         @children = {}
-        @read_file = read_file
+        @file_server = ::Rack::File.new(folder) if parent.nil?
         dsl_merge_file(read_file) if read_file
       end
       
@@ -37,16 +42,12 @@ module Waw
         # Locate and load the .wawaccess file or provide a default one
         wawaccess_file = File.join(root_folder, '.wawaccess')
         if File.exists?(wawaccess_file)
-          wawaccess = WawAccess.new(wawaccess_file)
+          wawaccess = WawAccess.new(parent, root_folder, wawaccess_file)
         else
-          wawaccess = WawAccess.new
+          wawaccess = WawAccess.new(parent, root_folder)
           wawaccess.strategy = :deny_all
           wawaccess.inherits = true
         end
-        
-        # Set its parent
-        wawaccess.folder = File.expand_path(root_folder)
-        wawaccess.parent = parent
         
         # Install its children
         Dir.new(root_folder).each do |file|
@@ -113,6 +114,13 @@ module Waw
         file[(folder.length+1)..-1]
       end
       
+      # Helper to locate css and js files
+      def find_files(pattern)
+        Dir[File.join(folder, pattern)].sort{|f1, f1|
+          File.basename(f1) <=> File.basename(f2)
+        }
+      end
+        
       ################################################### Utilities about the hierarchy
       
       # Returns an identifier for this wawaccess
@@ -145,24 +153,28 @@ module Waw
       ################################################### .waw access rules application!
       
       # Finds the matching block inside this .wawaccess handler
-      def find_matching_block(path)
+      def find_match(path)
         @serve.each do |pattern, block|
           case pattern
             when FalseClass
             when TrueClass
-              return block
+              return Match.new(self, path, block)
             when String
               if pattern=='*'
-                return block
+                return Match.new(self, path, block)
               elsif /^\*?\.[a-z]+$/ =~ pattern
-                return block if File.extname(realpath(path))==pattern
+                return Match.new(self, path, block) if File.extname(realpath(path))==pattern
               else
-                return block if File.basename(realpath(path))==pattern
+                return Match.new(self, path, block) if File.basename(realpath(path))==pattern
               end
             when Regexp
-              return block if pattern =~ path
+              if matchdata = pattern.match(path)
+                return Match.new(self, path, block, *matchdata.to_a)
+              end
             when Waw::Validation::Validator
-              return block if pattern.validate(matching_file(path))
+              if pattern.validate(matching_file(path))
+                return Match.new(self, path, block) 
+              end
             else
               raise WawError, "Unrecognized wawaccess pattern #{pattern}"
           end
@@ -172,10 +184,8 @@ module Waw
       
       # Applies the rules defined here or delegate to the parent if allowed
       def apply_rules(path)
-        if block = find_matching_block(path)
-          duplicated = self.dup
-          duplicated.served_file = path
-          duplicated.instance_eval(&block)
+        if match = find_match(path)
+          match.__execute
         elsif (parent and inherits)
           parent.apply_rules(path)
         else
@@ -202,83 +212,11 @@ module Waw
   
       # Serves a path from a root waw access in the hierarchy
       def do_path_serve(path)
-        #puts "Do path serve with #{identifier} on #{path}"
         path = normalize_req_path(path)
         waw_access = (find_wawaccess_for(path) || self)
-        #puts "Found #{waw_access.identifier}"
         waw_access.apply_rules(path)
       end
-      
-      ################################################### Callbacks proposed to .wawaccess rules
-      
-      # Deny access to the file
-      def deny
-        body = "Forbidden\n"
-        [403, {"Content-Type" => "text/plain",
-               "Content-Length" => body.size.to_s,
-               "X-Cascade" => "pass"},
-         [body]]
-      end
-      
-      # Serves a static file from a real path
-      def static
-        if Waw.env
-          @file_server ||= ::Rack::File.new(folder)
-          Waw.env["PATH_INFO"] = served_file
-          @file_server.call(Waw.env)
-        else
-          path = File.join(root.folder, served_file)
-          [200, {'Content-Type' => 'text/plain'}, [File.read(path)]]
-        end
-      end
-      
-      # Run a rewriting
-      def apply(path, result_override = nil, headers_override = {})
-        result = root.do_path_serve(path)
-        [result_override || result[0], 
-         result[1].merge(headers_override),
-         result[2]]
-      end
-      
-      # Finds the CSS files
-      def find_css_files
-        Dir[File.join(folder, 'css', '*.css')].sort{|f1, f1|
-          File.basename(f1) <=> File.basename(f2)
-        }.collect{|f|
-          File.join('css', File.basename(f))
-        }
-      end
-      
-      # Finds the JS files
-      def find_js_files
-        Dir[File.join(folder, 'js', '*.js')].sort{|f1, f1|
-          File.basename(f1) <=> File.basename(f2)
-        }.collect{|f|
-          File.join('js', File.basename(f))
-        }
-      end
-      
-      # Builds a default wlang contect
-      def default_wlang_context
-        context = {"css_files"   => root.find_css_files,
-                   "js_files"    => root.find_js_files,
-                   "served_file" => served_file,
-                   "env"         => Waw.env,
-                   "request"     => Waw.request,
-                   "params"      => Waw.request.params,
-                   "response"    => Waw.response,
-                   "session"     => Waw.session}
-        Waw.resources.each {|k, v| context[k.to_s] = v}
-        context
-      end
-      
-      # Instantiates wlang on the current file, with a given context
-      def wlang(context = {}, content_type = 'text/html')
-        context = default_wlang_context.merge(context)
-        path = File.join(root.folder, served_file)
-        [200, {'Content-Type' => content_type}, [WLang.file_instantiate(path, context).to_s]]
-      end
-      
+            
     end # class WawAccess
   end # class StaticController
 end # module Waw

@@ -26,8 +26,8 @@ module Waw
       EOF
       
       def test_dsl
-        first = WawAccess.new.dsl_merge(FIRST_WAW_ACCESS)
-        second = WawAccess.new.dsl_merge(SECOND_WAW_ACCESS)
+        first = WawAccess.new(nil, nil).dsl_merge(FIRST_WAW_ACCESS)
+        second = WawAccess.new(nil, nil).dsl_merge(SECOND_WAW_ACCESS)
         
         first.folder = "/home"
         second.folder = "/home/css"

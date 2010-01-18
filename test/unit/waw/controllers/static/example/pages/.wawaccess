@@ -13,7 +13,7 @@ wawaccess do
 
   # We serve .wtpl files using wlang
   match '.wtpl' do
-    wlang "who" => "blambeau"
+    wlang nil, "who" => "blambeau"
   end
   
 end

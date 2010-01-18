@@ -13,9 +13,7 @@ wawaccess do
 
   # We match .wtpl files using wlang
   match file(:extension => '.wtpl') do
-    template = File.join(folder, '../templates/layout.wtpl')
-    contents = WLang.file_instantiate(template)
-    [200, {'Content-Type' => 'text/html'}, [contents]]
+    wlang '../templates/layout.wtpl'
   end
   
   # When the file cannot be found

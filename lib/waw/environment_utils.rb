@@ -20,9 +20,14 @@ module Waw
       Thread.current[:rack_response]
     end
     
+    # Request parameters
+    def params
+      request && request.params
+    end
+    
     # Returns the current Rack session
     def session
-      env['rack.session']
+      env && env['rack.session']
     end
     
     # Checks if a session has a given key
