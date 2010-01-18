@@ -72,6 +72,12 @@ module Waw
           ok, values = @validator.convert_and_validate(*collect_on_hash(hash))
           values[0]
         end
+        
+        # Completes a hash of default values
+        def complete_defaults(hash)
+          ok, values = @validator.convert_and_validate(*collect_on_hash(hash))
+          @args.each_with_index {|arg, i| hash[arg] = values[i]}
+        end
       
       end # class Validation
     
@@ -128,6 +134,13 @@ module Waw
       # Checks if the signature blocks with some values 
       def blocks?(hash={})
         not(allows?(hash))
+      end
+      
+      # Computed default data for this signature
+      def default
+        defaults = {}
+        @rules.each {|rule| rule.complete_defaults(defaults)}
+        defaults
       end
     
       # Duplicates this validation

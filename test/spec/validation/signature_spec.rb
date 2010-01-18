@@ -138,4 +138,27 @@ describe ::Waw::Validation::Signature do
     signature.blocks?(:age => "hello").should be_true
   end
   
+  it "should provide a utility to get default data" do
+    signature = signature {
+      validation :name, String  | default("hello"), :bad_name
+      validation :age, Integer | default(12),      :bad_age
+    }
+    signature.default.should == {:name => "hello", :age => 12}
+  end
+  
+  it "should support multiple args when computing defaults" do
+    signature = signature {
+      validation :name, String  | default("hello"), :bad_name
+      validation [:age, :support], Integer | default(12),      :bad_age
+    }
+    signature.default.should == {:name => "hello", :age => 12, :support => 12}
+  end
+  
+  it "should support non defaults when computing defaults" do
+    signature = signature {
+      validation [:name1, :name2], String, :bad_name
+    }
+    signature.default.should == {:name1 => nil, :name2 => nil}
+  end
+  
 end
