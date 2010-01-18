@@ -57,7 +57,7 @@ module Waw
             when Regexp
               RegexpValidator.new(who, true)
             else
-              raise "Unable to convert #{who} to a validator"
+              raise "Unable to convert #{who}:#{who.class} to a validator"
           end
         end
       end
