@@ -30,5 +30,27 @@ module Waw
     end
     alias :delete :reset
     
+    # Saves the state of someone
+    def save_state(who, state)
+      save_id = if who.respond_to?(:waw_id)
+        who.waw_id.to_s
+      else
+        Waw.logger.warn("Object #{who} (#{who.class}) does not have a waw_id, using object_id instead (which is unsafe)")
+        who.object_id
+      end
+      self[save_id] = state
+    end
+    
+    # Restores the state of someone
+    def restore_state(who, default = nil)
+      save_id = if who.respond_to?(:waw_id)
+        who.waw_id.to_s
+      else
+        Waw.logger.warn("Object #{who} (#{who.class}) does not have a waw_id, using object_id instead (which is unsafe)")
+        who.object_id
+      end
+      self[save_id] || default
+    end
+    
   end
 end
