@@ -44,7 +44,7 @@ module Waw
       assert_equal @logger, app.find_rack_app{|theapp| ::Rack::CommonLogger===theapp}
       assert_equal @json, app.find_rack_app{|theapp| ::Waw::JSONController===theapp}
       
-      Waw.app = app
+      Waw.kernel.app = app
       assert_equal @app1, Waw.find_rack_app('/')
       assert_equal @app1, Waw.find_rack_app('/'){|theapp| AnApp===theapp}
       assert ::Waw::JSONController===Waw.find_rack_app('/webserv')

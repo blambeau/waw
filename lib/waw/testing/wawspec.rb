@@ -30,7 +30,7 @@ at_exit {
   
     # Load waw through rack in a different thread
     puts "Loading waw application and web server"
-    t = Thread.new(Waw.app) do |app|
+    t = Thread.new(Waw.kernel) do |app|
       begin
         server = Rack::Handler::Mongrel
       rescue LoadError => e
