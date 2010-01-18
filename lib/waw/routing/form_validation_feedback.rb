@@ -11,6 +11,7 @@ module Waw
 				buffer << " "*(align+2)	+ "str += '<li>' + messages[data[1][k]] + '</li>';\n"
 				buffer << " "*align + "}\n"
 				buffer << " "*align + "str += '</ul>';\n"
+				buffer << " "*align + "$(form + ' .feedback').show();"
 				buffer << " "*align + "$(form + ' .feedback').html(str);"
         buffer
       end
