@@ -55,7 +55,7 @@ module Waw
           $LOAD_PATH.unshift(*value)
         when :requires
           value = [value] unless Array===value
-          value.each{|f| Kernel.require(f)}
+          value.each{|f| require(f)}
         when :log_dir
           config_error(name, "log_dir is expected to be a string") unless String===value
           # config_error(name, "Unable to access log_dir #{value}") unless File.exists?(value) and 
