@@ -240,8 +240,41 @@ module Waw
          result[2]]
       end
       
+      # Finds the CSS files
+      def find_css_files
+        Dir[File.join(folder, 'css', '*.css')].sort{|f1, f1|
+          File.basename(f1) <=> File.basename(f2)
+        }.collect{|f|
+          File.join('css', File.basename(f))
+        }
+      end
+      
+      # Finds the JS files
+      def find_js_files
+        Dir[File.join(folder, 'js', '*.js')].sort{|f1, f1|
+          File.basename(f1) <=> File.basename(f2)
+        }.collect{|f|
+          File.join('js', File.basename(f))
+        }
+      end
+      
+      # Builds a default wlang contect
+      def default_wlang_context
+        context = {"css_files"   => root.find_css_files,
+                   "js_files"    => root.find_js_files,
+                   "served_file" => served_file,
+                   "env"         => Waw.env,
+                   "request"     => Waw.request,
+                   "params"      => Waw.request.params,
+                   "response"    => Waw.response,
+                   "session"     => Waw.session}
+        Waw.resources.each {|k, v| context[k.to_s] = v}
+        context
+      end
+      
       # Instantiates wlang on the current file, with a given context
       def wlang(context = {}, content_type = 'text/html')
+        context = default_wlang_context.merge(context)
         path = File.join(root.folder, served_file)
         [200, {'Content-Type' => content_type}, [WLang.file_instantiate(path, context).to_s]]
       end
