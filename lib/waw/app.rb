@@ -77,7 +77,8 @@ module Waw
     
     # Loads the rack application
     def rack(&block)
-      @waw_routing_app = ::Rack::Builder.new(&block).to_app
+      kernel.app = ::Rack::Builder.new(&block).to_app
+      kernel.app
     end
   
     # Finds the Rack application that matches a given path/block pair.
@@ -282,7 +283,6 @@ module Waw
       file = File.join(root_folder, 'waw.routing')
       if File.exists?(file)
         Kernel.load(file)
-        kernel.app = @waw_routing_app
         'waw.routing'
       else
         logger.warn("Ignoring load stage #4, no waw.routing file found")

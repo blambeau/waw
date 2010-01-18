@@ -29,7 +29,8 @@ module Waw
       )
       @session = ::Rack::Session::Pool.new(@urlmap1, :domain => "www.waw.org", :expire_after => 65)
       @logger = ::Rack::CommonLogger.new(@session, STDOUT)
-      @app = @logger
+      @restart = ::Waw::Restart.new(@logger)
+      @app = ::Waw::KernelApp.new(@restart)
     end
     
     def test_find_rack_app
@@ -71,7 +72,7 @@ module Waw
         paths[path] << app
       }
       expected = {
-        '/' => [@logger, @session, @urlmap1, @app1],
+        '/' => [@app, @restart, @logger, @session, @urlmap1, @app1],
         '/webserv' => [@json, @urlmap2],
         '/webserv/event' => [@app2],
         '/webserv/people' => [@app3]
