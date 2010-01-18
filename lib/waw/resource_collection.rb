@@ -17,10 +17,13 @@ module Waw
       
     end # class Resources
     
+    # Resource name
+    attr_reader :__name
+    
     # Creates a resource collection
     def initialize(name = "unnamed")
       @resources = {}
-      @name = name
+      @__name = name
     end
     
     # Yields the block with each resource key,value pair
@@ -53,7 +56,7 @@ module Waw
       if args.size==1
         args[0]
       elsif args.size==0
-        Waw.logger.warn("No such resource #{name} on #{@name}, (#{caller[0]})")
+        Waw.logger.warn("No such resource #{name} on #{@__name}, (#{caller[0]})")
         nil
       else
         super
