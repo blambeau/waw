@@ -54,8 +54,8 @@ module Waw
       
         # Builds a default wlang contect
         def default_wlang_context
-          context = {"css_files"   => root.find_files('css/*.css'),
-                     "js_files"    => root.find_files('js/*.js'),
+          context = {"css_files"   => root.find_files('css'),
+                     "js_files"    => root.find_files('js'),
                      "served_file" => served_file,
                      "env"         => Waw.env,
                      "request"     => Waw.request,
