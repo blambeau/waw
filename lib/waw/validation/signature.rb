@@ -114,6 +114,7 @@ module Waw
       # Validates argument values given through a hash and returns a series
       # of onfailure flags.
       def apply(hash)
+        raise ArgumentError, "Hash expected (did you invoked an action without a Hash?)" unless Hash===hash
         converted, failures = hash.dup, []
         failures = @rules.collect{|rule| rule.convert_and_validate(converted)}.compact
         failures.empty? ? [true, converted] : [false, failures]
