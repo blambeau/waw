@@ -1,6 +1,6 @@
 module Waw
   class Restart
-    include Rack::FindRackAppDelegator
+    include ::Rack::Delegator
     
     # Default options
     DEFAULT_OPTIONS = { :when => :always }

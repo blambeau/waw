@@ -4,8 +4,8 @@ require 'wlang'
 require 'singleton'
 
 require 'waw/errors'
-require 'waw/ext/rack_ext'
-require 'waw/ext/ruby_ext'
+require 'waw/ext'
+require 'waw/ext'
 require 'waw/utils/dsl_helper'
 
 require 'waw/resource_collection'

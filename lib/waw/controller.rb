@@ -5,7 +5,7 @@ module Waw
   #
   class Controller
     include Waw::EnvironmentUtils
-    include Rack::FindRackAppDelegator
+    include ::Rack::Delegator
     
     # Converts a back-trace to a friendly HTML chunck
     def ex_backtrace_to_html(backtrace)

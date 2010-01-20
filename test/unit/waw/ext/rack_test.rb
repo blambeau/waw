@@ -4,7 +4,7 @@ module Waw
   class RackExtensionTest < Test::Unit::TestCase
     
     class AnApp
-      include Rack::FindRackAppDelegator
+      include Rack::Delegator
       def initialize(name)
         @name = name
       end

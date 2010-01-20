@@ -5,7 +5,7 @@ module Waw
   # otherwise.
   #
   class JSONController
-    include Rack::FindRackAppDelegator
+    include ::Rack::Delegator
 
     # Creates a controller instance
     def initialize(app)

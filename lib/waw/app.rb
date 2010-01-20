@@ -3,7 +3,7 @@ module Waw
   
   # The rack application at top of the hierarchy
   class KernelApp
-    include ::Rack::FindRackAppDelegator
+    include ::Rack::Delegator
     
     # Creates a kernel instance
     def initialize(app = nil, options = {})
