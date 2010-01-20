@@ -1,0 +1,9 @@
+require "rubygems"
+require "waw"
+
+task :default => [:test]
+
+desc "Launches all wawspec test"
+task :test do
+  require('test/test_all.rb')
+end

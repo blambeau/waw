@@ -1,0 +1,3 @@
+= Welcome on this blog !
+
+You'll find the list of posts on the left

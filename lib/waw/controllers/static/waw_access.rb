@@ -75,7 +75,7 @@ module Waw
       
       # Installs some pattern services
       def add_serve(patterns, &block)
-        block = Kernel.lambda{|url, realpath, wawaccess, env| app.static(realpath, env) } unless block
+        raise ArgumentError, "WawAccess.add_serve expects a block" unless block 
         patterns.each do |pattern|
           raise WawError, "Invalid serving pattern #{pattern} (#{pattern.class})"\
             unless recognized_pattern?(pattern)

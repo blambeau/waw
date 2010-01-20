@@ -7,8 +7,37 @@ module Waw
     include Waw::EnvironmentUtils
     include Rack::FindRackAppDelegator
     
-    # Content type of the controller
-    attr_accessor :content_type
+    # Converts a back-trace to a friendly HTML chunck
+    def ex_backtrace_to_html(backtrace)
+      "<div>" + backtrace.join('</div><div>') + "</div>"
+    end
+    
+    # Converts an exception to a friendly HTML chunck
+    def ex_to_html(ex)
+      <<-EOF
+        <html>
+          <head>
+            <style type="text/css">
+              body {
+                font-size: 14px;
+              	font-family: "Courier", "Arial", sans-serif;
+              }
+              p.message {
+                font-size: 16px;
+                font-weight: bold;
+              }
+            </style>
+          </head>
+          <body>
+            <h1>Internal server error (ruby exception)</h1>
+            <p class="message"><code>#{ex.message}</code></p>
+            <div style="margin-left:50px;">
+              #{ex_backtrace_to_html(ex.backtrace)}
+            </div>
+          </body>
+        </html>
+      EOF
+    end
     
     # Handler for Rack calls to the controller
     def call(env)
@@ -24,15 +53,13 @@ module Waw
       result = execute(env, req, res)
       raise WawError, "Controller #{self.class} returned an empty result" unless result
       raise WawError, "Controller #{self.class} returned an invalid result #{result.inspect}" unless Array===result
-      #Waw.logger.debug("Waw::Controller serving #{result[0]} with headers #{result[1].inspect}")
-      #Waw.logger.debug("Session is now #{session.inspect}")
       result
     rescue Exception => ex
       # On exception, returns a 500 with a message
       Waw.logger.error("Fatal error #{ex.message}")
       Waw.logger.error(ex.backtrace.join("\n"))
       Waw.logger.error("Returning 500 with #{result}")
-      [500, {'Content-Type' => content_type}, [ex.message]]
+      [500, {'Content-Type' => 'text/html'}, [ex_to_html(ex)]]
     ensure
       # In all cases, remove thread local variables
       Thread.current[:rack_env] = nil

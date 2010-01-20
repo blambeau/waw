@@ -1,0 +1,27 @@
+wawaccess do
+
+  # .wawaccess files are never served
+  match /\.wawaccess$/ do
+    deny
+  end
+
+  # We serve all real files by default. The pages folder
+  # MUST redefine a .wawaccess file to avoid private files
+  # for being served. It should never inherits this 
+  # configuration !
+  match file do
+    static
+  end
+  
+  # We match the root and serve the index
+  match root do 
+    apply 'pages/index.rdoc'
+  end
+  
+  # When something is not found, the call is delegated to
+  # the .wawaccess file located in pages...
+  match true do
+    apply "/pages/#{served_file}"
+  end
+
+end

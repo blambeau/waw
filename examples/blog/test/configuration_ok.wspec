@@ -1,0 +1,18 @@
+scenario "The configuration is ok" do
+  because("The root website URL is correctly served") {
+    i_reach Waw.config.web_base
+    i_see "Welcome on this blog !"
+  }
+  because("Static files (css, js, images, ...) are correctly served") {
+    i_reach Waw.config.web_base + 'css/style.css'
+    i_reach Waw.config.web_base + 'js/blog.js'
+  }
+  because("the default wlang context is correct") {
+    i_reach Waw.config.web_base
+    i_see_tag "link",   {:rel => "stylesheet"}
+    i_see_tag "script", {:type => "text/javascript"}
+    # waw is currently buggy here
+    # i_see_tag "link",   {:rel => "stylesheet", :type => "text/css", :href => "^.*\.css$"}
+    # i_see_tag "script", {:type => "text/javascript", :src => "^.*\.js$"}
+  }
+end

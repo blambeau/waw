@@ -18,6 +18,10 @@ module Waw
           Waw::Validation.directory
         end
         
+        def root
+          Waw::Validation.validator{|served_file| File.expand_path(served_file) == File.expand_path(@wawaccess.root.folder)}
+        end
+        
         # We delegate everything to Waw::Validation
         def method_missing(name, *args, &block)
           Waw::Validation.send(name, *args, &block)

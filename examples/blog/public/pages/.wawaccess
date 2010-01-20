@@ -1,0 +1,22 @@
+wawaccess do
+  
+  # We don't inherits static configuration
+  inherits false
+  
+  # We match .wtpl files using wlang
+  match file(:extension => '.rdoc') do
+    wlang 'layout.wtpl'
+  end
+  
+  # This rule matches everything, that is, private existing
+  # files as well as non existing ones. We first try to add
+  # the .rdoc extension, otherwise we serve the 404 page.
+  match true do
+    if served_file =~ /\.rdoc$/ 
+      apply "pages/404.rdoc", 404
+    else
+      apply "pages/#{served_file}.rdoc"
+    end
+  end
+  
+end
