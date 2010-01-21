@@ -39,7 +39,13 @@ module Rack
     def _visit(path, block)
       block.call(path, self)
       @mapping.each do |host, location, match, app|
-        next unless is_delegate?(app)
+        # seems required on some configurations where rack does not acts
+        # as expected (3 arguments and not 4)
+        app = match if app.nil? 
+        unless is_delegate?(app)
+          Waw.logger.warning("We found a rack application which is not a delegator on #{path}: #{app.inspect}!")
+          next 
+        end
         app._visit((location.to_s.empty? ? path : path.chomp('/') + location.to_s), block)
       end
     end
