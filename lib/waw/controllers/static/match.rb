@@ -2,6 +2,7 @@ module Waw
   class StaticController < ::Waw::Controller
     class WawAccess
       class Match
+        include Waw::ScopeUtils
         
         # Served file
         attr_reader :served_file
@@ -35,9 +36,9 @@ module Waw
       
         # Serves a static file from a real path
         def static
-          if Waw.env
-            Waw.env["PATH_INFO"] = served_file
-            @wawaccess.file_server.call(Waw.env)
+          if rack_env
+            rack_env["PATH_INFO"] = served_file
+            @wawaccess.file_server.call(rack_env)
           else
             path = File.join(root.folder, served_file)
             [200, {'Content-Type' => 'text/plain'}, [File.read(path)]]
@@ -57,11 +58,11 @@ module Waw
           context = {"css_files"   => root.find_files('css'),
                      "js_files"    => root.find_files('js'),
                      "served_file" => served_file,
-                     "env"         => Waw.env,
-                     "request"     => Waw.request,
-                     "params"      => Waw.params,
-                     "response"    => Waw.response,
-                     "session"     => Waw.session}
+                     "env"         => rack_env,
+                     "request"     => request,
+                     "params"      => params,
+                     "response"    => response,
+                     "session"     => session}
           Waw.resources.each {|k, v| context[k.to_s] = v} if Waw.respond_to?(:resources) and Waw.resources
           context
         end

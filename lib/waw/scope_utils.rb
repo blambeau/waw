@@ -2,7 +2,7 @@ module Waw
   module ScopeUtils
     
     # Returns the current Rack env instance
-    def env
+    def rack_env
       Thread.current[:rack_env] ||= {}
     end
     
@@ -23,7 +23,7 @@ module Waw
     
     # Returns the current Rack session
     def real_session
-      env['rack.session'] ||= {}
+      rack_env['rack.session'] ||= {}
     end
     
     # Returns the waw session decorator
