@@ -8,6 +8,7 @@ require 'waw/ext'
 require 'waw/ext'
 require 'waw/utils/dsl_helper'
 
+require 'waw/scope_utils'
 require 'waw/resource_collection'
 require 'waw/config'
 require 'waw/validation'

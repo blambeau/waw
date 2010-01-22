@@ -18,17 +18,20 @@ module Waw
     def [](name)
       Waw.real_session[name]
     end
+    alias :get   :[]
     
     # Returns the value of a given variable
     def []=(name, value)
       Waw.real_session[name] = value
     end
+    alias :set   :[]=
     
     # Resets a given variable whose name is provided
     def reset(name)
       Waw.real_session.delete(name)
     end
     alias :delete :reset
+    alias :unset :reset
     
     # Saves the state of someone
     def save_state(who, state)

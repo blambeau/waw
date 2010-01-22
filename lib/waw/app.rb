@@ -5,28 +5,70 @@ module Waw
   class KernelApp
     include ::Rack::Delegator
     
+    # The current business application
+    attr_accessor :app
+    
     # Creates a kernel instance
     def initialize(app = nil, options = {})
       @app, @options = app, options
     end
     
-    # Changes the running application 
-    def app=(app)
-      @app = app
+    # Converts a back-trace to a friendly HTML chunck
+    def ex_backtrace_to_html(backtrace)
+      "<div>" + backtrace.join('</div><div>') + "</div>"
     end
     
-    # Returns the running application
-    def app
-      @app
+    # Converts an exception to a friendly HTML chunck
+    def ex_to_html(ex)
+      <<-EOF
+        <html>
+          <head>
+            <style type="text/css">
+              body {
+                font-size: 14px;
+              	font-family: "Courier", "Arial", sans-serif;
+              }
+              p.message {
+                font-size: 16px;
+                font-weight: bold;
+              }
+            </style>
+          </head>
+          <body>
+            <h1>Internal server error (ruby exception)</h1>
+            <p class="message"><code>#{ex.message}</code></p>
+            <div style="margin-left:50px;">
+              #{ex_backtrace_to_html(ex.backtrace)}
+            </div>
+          </body>
+        </html>
+      EOF
     end
     
     # Delegated to the real application, if loaded
     def call(env)
+      # Save thread environment variables
+      req, res = Rack::Request.new(env), Rack::Response.new(env)
+      Thread.current[:rack_env] = env
+      Thread.current[:rack_request] = req
+      Thread.current[:rack_response] = res
+      
+      # Make the call
       if @app
         @app.call(env)
       else
         [503, {'Content-Type' => 'text/plain'}, ['This waw application is unloaded']]
       end
+    rescue Exception => ex
+      # On exception, returns a 500 with a message
+      Waw.logger.error("Fatal error #{ex.message}")
+      Waw.logger.error(ex.backtrace.join("\n"))
+      [500, {'Content-Type' => 'text/html'}, [ex_to_html(ex)]]
+    ensure
+      # In all cases, remove thread local variables
+      Thread.current[:rack_env] = nil
+      Thread.current[:rack_request] = nil
+      Thread.current[:rack_response] = nil
     end
     
   end # class KernelApp

@@ -1,7 +1,7 @@
 $waw_deprecated_io = STDOUT
 class Module
   
-  def deprecated(msg = "The method ${name} is deprecated")
+  def deprecated(msg = "The method ${method_name} is deprecated")
     @deprecated = msg
   end
   
@@ -9,7 +9,7 @@ class Module
   # become an action
   def method_added(name)
     if @deprecated
-      deprecated, @deprecated = @deprecated.gsub(/#{Regexp.escape('${name}')}/, name.to_s), nil
+      deprecated, @deprecated = @deprecated.gsub(/#{Regexp.escape('${method_name}')}/, "#{self.name}.#{name}"), nil
       method = instance_method(name)
       define_method name do |*args|
         $waw_deprecated_io << deprecated << " (#{caller[0]})\n"
