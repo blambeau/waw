@@ -1,6 +1,7 @@
 module Waw
   module FullState
     class Variable
+      include Waw::ScopeUtils
       
       # Creates a variable instance with a default value
       def initialize(name, default_value = nil, &block)
@@ -11,13 +12,13 @@ module Waw
       
       # Resets to the default value
       def reset
-        Waw.session_unset(@name)
+        session.unset(@name)
       end
       
       # Returns the current value of the variable
       def value(*args)
-        if Waw.session_has_key?(@name)
-          Waw.session_get(@name)
+        if session.has_key?(@name)
+          session.get(@name)
         elsif @default_value.is_a?(Proc)
           @default_value.call(*args)
         else
@@ -27,7 +28,7 @@ module Waw
       
       # Sets the value of the variable
       def value=(val)
-        Waw.session_set(@name, val)
+        session.set(@name, val)
       end
       
     end # class Variable

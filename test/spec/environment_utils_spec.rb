@@ -7,9 +7,9 @@ describe Waw::EnvironmentUtils do
     session[:name].should == 12
   end
   
-  it "should support session_get and session_set correctly" do
-    session_set(:name, 12)
-    session_get(:name).should == 12
+  it "should support session.get and session.set correctly" do
+    session.set(:name, 12)
+    session.get(:name).should == 12
   end
   
 end
