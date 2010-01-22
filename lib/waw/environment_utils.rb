@@ -4,6 +4,7 @@ module Waw
   # a session is installed in some Rack standard way (through Rack::Session::Pool)
   # for example.
   module EnvironmentUtils
+    include Waw::ScopeUtils
     
     DEPRECATED_MSG = <<-EOF
       Method ${method_name} is deprecated and will be removed in version 0.2.
@@ -13,37 +14,7 @@ module Waw
     # Returns the current Rack env instance
     deprecated DEPRECATED_MSG
     def env
-      Thread.current[:rack_env] ||= {}
-    end
-    
-    # Returns the current Rack request instance
-    deprecated DEPRECATED_MSG
-    def request
-      Thread.current[:rack_request]
-    end
-    
-    # Returns the current Rack request instance
-    deprecated DEPRECATED_MSG
-    def response
-      Thread.current[:rack_response]
-    end
-    
-    # Request parameters
-    deprecated DEPRECATED_MSG
-    def params
-      request && request.params
-    end
-    
-    # Returns the current Rack session
-    deprecated DEPRECATED_MSG
-    def real_session
-      env['rack.session'] ||= {}
-    end
-    
-    # Returns the waw session decorator
-    deprecated DEPRECATED_MSG
-    def session
-      Waw::Session.instance
+      rack_env
     end
     
     # Checks if a session has a given key

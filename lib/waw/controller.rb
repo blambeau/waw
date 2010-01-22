@@ -5,7 +5,6 @@ module Waw
   #
   class Controller
     include Waw::EnvironmentUtils
-    include Waw::ScopeUtils
     include ::Rack::Delegator
     
     # Handler for Rack calls to the controller
