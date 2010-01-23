@@ -23,6 +23,8 @@ module Waw
         attrs
       end
       
+      #################################################################### Tag helpers
+      
       # Find tags inside the browser contents. If a block is given, yield it with
       # each tag information. Otherwise, returns an array of found tags, that can be
       # empty.
@@ -41,8 +43,8 @@ module Waw
         tags(name, opts, contents, &block)
       end
       
-      # Shortcut for tags(name, opts, contents)[0]. Returns nil if no such tag can
-      # be found
+      # Shortcut for <code>tags(name, opts, contents)[0]</code>. Returns nil if no such 
+      # tag can be found
       def first_tag(name, opts = nil, contents = browser_contents)
         tags(name, opts, contents)[0]
       end
@@ -53,6 +55,14 @@ module Waw
         return tags(name, opts, contents).size != 0
       end
 
+      #################################################################### Links helpers
+      
+      # Shortcut for <code>tags('a', {:href => /^(.*?)$/}.merge(opts), contents, &block)</code>
+      def all_links(opts = nil, contents = browser_contents, &block)
+        tags('a', {:href => /^(.*?)$/}.merge(opts || {}), contents, &block)
+      end
+      alias :links :all_links
+      
       # Assert that the user sees something in the browser contents
       def i_see?(what, contents = browser_contents)
         not(contents.nil?) and not(contents.index(what).nil?)

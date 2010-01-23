@@ -93,6 +93,16 @@ describe Waw::WSpec::HTMLAnalysis do
     tag('nothing').should be_nil
   end
   
+  it "should provide shortcuts for links" do
+    all_links.size.should == 2
+    links.size.should == 2
+    links(:href => '/hello').size.should == 1
+    links(:href => '/none').size.should == 0
+    links(:class => 'current').size.should == 1
+    links(:class => /.*/).size.should == 1
+    links(:class => 'nothing').size.should == 0
+  end
+  
   it "should correctly implement has_tag?" do
     has_tag?("title").should be_true
     has_tag?("a").should be_true
