@@ -1,6 +1,6 @@
 require 'json'
 module Waw
-  module Testing
+  module WSpec
     class Scenario
       include Assertions
       include Invocations
@@ -78,5 +78,5 @@ module Waw
       end
       
     end # class Scenario
-  end # module Testing
+  end # module WSpec
 end # module Waw

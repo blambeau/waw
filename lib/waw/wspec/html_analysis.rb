@@ -1,5 +1,5 @@
 module Waw
-  module Testing
+  module WSpec
     #
     # Provides utility methods for analysis of XML/HTML contents.
     #
@@ -47,5 +47,5 @@ module Waw
       end
       
     end # module HTMLAnalysis
-  end # module Testing
+  end # module WSpec
 end # module Waw

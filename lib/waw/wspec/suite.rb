@@ -1,6 +1,6 @@
 module Waw
-  module Testing
-    # A suite of wawspec scenarios
+  module WSpec
+    # A suite of wspec scenarios
     class Suite
       
       # How many assertions?
@@ -50,5 +50,5 @@ module Waw
       end
       
     end # class Suite
-  end # module Testing
+  end # module WSpec
 end # module Waw

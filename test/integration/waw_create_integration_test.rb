@@ -16,7 +16,7 @@ at_exit {
       
       FileUtils.cd layout do |dir|
         puts `ruby -I#{File.join(top, 'lib')} test/unit/test_all.rb`
-        puts `ruby -I#{File.join(top, 'lib')} test/wawspec/test_all.rb`
+        puts `ruby -I#{File.join(top, 'lib')} test/wspec/test_all.rb`
       end
     end
   end

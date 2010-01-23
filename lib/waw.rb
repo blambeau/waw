@@ -24,7 +24,6 @@ require 'waw/controllers/action_controller'
 require 'waw/controllers/static_controller'
 
 require 'waw/routing'
-require 'waw/testing'
 module Waw
   extend Waw::App
   extend Waw::EnvironmentUtils

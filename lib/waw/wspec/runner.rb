@@ -1,5 +1,5 @@
 require 'waw'
-require 'waw/testing'
+require 'waw/wspec'
 
 if RUBY_VERSION >= "1.9"
   # These classes don't seem to exist in some Ruby 1.9 installations
@@ -20,13 +20,13 @@ end
 # The autoloaded scenarios
 $scenarios = []
 def scenario(name, &block)
-  $scenarios << Waw::Testing::Scenario.new(name, &block)
+  $scenarios << Waw::WSpec::Scenario.new(name, &block)
 end
 
 # We run the whole suite at end
 at_exit {
   begin
-    puts "Running wawspec test suite now"
+    puts "Running wspec test suite now"
   
     # Load waw through rack in a different thread
     puts "Loading waw application and web server"
@@ -52,7 +52,7 @@ at_exit {
   
     # Create the suite and run it
     if ok
-      s = ::Waw::Testing::Suite.new($scenarios)
+      s = ::Waw::WSpec::Suite.new($scenarios)
       t1 = Time.now
       s.run
       t2 = Time.now

@@ -1,5 +1,5 @@
 module Waw
-  module Testing
+  module WSpec
     module Invocations
 
       #################################################################### GET invocations
@@ -48,5 +48,5 @@ module Waw
       alias :service :invoke_json_service
       
     end # module Invocations
-  end # module Testing
+  end # module WSpec
 end # module Waw

@@ -1,6 +1,6 @@
 require 'test/unit/assertions'
 module Waw
-  module Testing
+  module WSpec
     module Assertions
       include ::Test::Unit::Assertions
       
@@ -98,5 +98,5 @@ module Waw
       end
       
     end # module Assertions
-  end # module Testing
+  end # module WSpec
 end # module Waw

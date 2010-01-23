@@ -1,9 +1,10 @@
 require 'waw'
+require 'waw/wspec'
 require 'test/unit'
 module Waw
-  module Testing
+  module WSpec
     class HTMLAnalysisTest < Test::Unit::TestCase
-      include Waw::Testing::HTMLAnalysis
+      include Waw::WSpec::HTMLAnalysis
       
       def browser_contents
         @contents ||= File.read(File.join(File.dirname(__FILE__), "html_analysis_test.html"))

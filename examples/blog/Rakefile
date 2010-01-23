@@ -3,7 +3,7 @@ require "waw"
 
 task :default => [:test]
 
-desc "Launches all wawspec test"
+desc "Launches all wspec test"
 task :test do
   require('test/test_all.rb')
 end

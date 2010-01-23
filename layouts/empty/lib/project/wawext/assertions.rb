@@ -1,8 +1,8 @@
 module Waw
-  module Testing
+  module WSpec
     module Assertions
 
-      # Add additional assertions for wawspec tests below
+      # Add additional assertions for wspec tests below
       
     end
   end

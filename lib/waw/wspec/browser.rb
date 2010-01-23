@@ -1,10 +1,10 @@
 require 'net/http'
 require 'uri'
 module Waw
-  module Testing
+  module WSpec
     # A fake browser for waw application testing
     class Browser
-      include Waw::Testing::HTMLAnalysis
+      include Waw::WSpec::HTMLAnalysis
       
       # Current browser location
       attr_reader :location
@@ -186,5 +186,5 @@ module Waw
       
     end # class Browser
     class ServerError < StandardError; end
-  end # module Testing
+  end # module WSpec
 end # module Waw
