@@ -58,7 +58,7 @@ module Waw
       
       # Asserts that the invocation of a service leads to a given result
       def assert_json_service_result(json_response, result, msg="")
-        assert_equal json_response[0], result, (msg + "\nresult was result.inspect")
+        assert_equal json_response[0], result, (msg + "\nresult was #{result.inspect}")
       end
       
       # Asserts that the invocation of a service is a success
