@@ -3,3 +3,4 @@ logs
 pkg
 coverage
 install.sh
+.DS_Store

@@ -20,7 +20,7 @@ wawaccess do
     if served_file =~ /\.rdoc$/ 
       apply "pages/404.rdoc", 404
     else
-      apply "pages/#{served_file}.rdoc"
+      apply "#{served_file}.rdoc"
     end
   end
   

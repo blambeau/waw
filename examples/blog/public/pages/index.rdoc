@@ -1,3 +1,26 @@
-= Welcome on this blog !
+== Welcome on this blog example !
 
-You'll find the list of posts on the left
+This example uses the ::Waw::StaticController as main controller. All you have to do is to understand
+the basics of _.wawaccess_ files and _wlang_.
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pulvinar erat vitae risus faucibus posuere. Sed sit amet 
+arcu urna, et congue arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. 
+Sed feugiat pulvinar orci, vitae ultrices mauris consequat ut. Proin consequat bibendum lobortis. Nunc pharetra, felis 
+ut rutrum dapibus, nunc velit eleifend sapien, sed fringilla lorem leo a turpis. Nulla in eros mauris. Mauris dictum 
+eleifend purus, sit amet faucibus nibh dignissim lobortis. Praesent metus urna, interdum ut interdum a, aliquet quis 
+lectus. Proin et lectus ut diam accumsan sollicitudin. Nunc vitae ipsum vel ligula convallis mattis.
+
+Donec tempus nulla sapien. Pellentesque tempor viverra risus id ornare. Suspendisse ut mauris ultrices orci feugiat 
+varius eu sed lectus. Vivamus ipsum lorem, sollicitudin at consequat vel, fringilla quis risus. Duis ut eros in nisl 
+ullamcorper consequat. Curabitur sed orci ut lacus euismod dictum. Aliquam congue risus eget enim molestie fermentum 
+blandit nisi congue. Aenean tempor venenatis metus non consectetur. Fusce at mi enim, sit amet semper lorem. Aliquam 
+auctor auctor orci iaculis auctor. Praesent pulvinar faucibus sapien porta sodales. Nullam scelerisque, mauris a rhoncus 
+luctus, quam est dictum mi, non sagittis est mi sed nunc.
+
+Nam interdum cursus quam, ut ultrices purus blandit hendrerit. Fusce adipiscing, enim in lobortis ullamcorper, nunc 
+tortor varius magna, in tincidunt justo nulla vitae ante. Morbi sit amet fermentum nisl. Ut consequat ante at arcu 
+malesuada interdum lacinia diam pellentesque. Pellentesque eget ligula neque, nec tempor urna. Vivamus fringilla 
+venenatis ornare. Sed tincidunt purus quis sem lacinia suscipit vestibulum mauris aliquam. Vestibulum sed erat 
+vitae metus aliquet interdum. Pellentesque egestas consectetur orci. Nam egestas, odio non faucibus tristique, 
+enim arcu tincidunt libero, sit amet condimentum lectus nunc ac nunc. Donec id dolor quis odio lobortis ultrices. 
+Phasellus vitae pulvinar lectus.

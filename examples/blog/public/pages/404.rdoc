@@ -1,1 +1,3 @@
-<p>404 not found, the requested page does not exists</p>
+== This article has not been found
+
+Sorry, but the requested page cannot be found.

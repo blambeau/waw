@@ -1,9 +1,10 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<<={posts.yaml as posts}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
     <base href="{Waw.config.web_base}"/>
-		<title>Blog</title>
+		<title>${posts[served_file]['title']}</title>
 		*{css_files as css}{
   		<link rel="stylesheet" type="text/css" href="{css}" />
   	}
@@ -12,6 +13,30 @@
   	}
 	</head>
 	<body>
-	  ^{rdoc/html}{<<{../${served_file}}}
+    <div id="wrap">
+      <div id="header">
+        <h1><a href="#">Waw Blog Example</a></h1>
+        <h2>Master <em>.wawaccess</em> and <em>wlang</em> files for creating a simple blog in 10 minutes</h2>
+      </div>
+      <div id="content">
+        <div class="left"> 
+          ^{rdoc/html}{<<{../${served_file}}}
+        </div>
+        <div class="right"> 
+          <h2>Articles</h2>
+    	    <ul>
+      	    *{posts using each_pair as file, p}{
+      	      ?{p['url']}{
+      	        <li><a href="{p['url']}">${p['title']}</a></li>
+    	        }
+    	      }
+    	    </ul>
+        </div>
+        <div style="clear: both;"> </div>
+      </div>
+      <div id="footer">
+        Designed by <a href="http://www.free-css-templates.com/">Free CSS Templates</a>, Thanks to <a href="http://www.legalhelpers.com/chapter-13-bankruptcy/chapter13.html">Chapter 13 Bankruptcy</a>
+      </div>
+    </div>
 	</body>
 </html>

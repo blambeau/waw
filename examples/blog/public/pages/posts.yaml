@@ -1,0 +1,15 @@
+---
+pages/404.rdoc:
+  title: 404 Not Found
+pages/index.rdoc:
+  title: Introduction
+  url: /index
+pages/2010/january.rdoc: 
+  title: January 2010
+  url: /2010/january
+pages/2009/december.rdoc: 
+  title: December 2009
+  url: /2009/december
+pages/2009/november.rdoc: 
+  title: November 2009
+  url: /2009/november

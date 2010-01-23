@@ -30,6 +30,11 @@ module Waw
         @stack.last[0]
       end
       
+      # Adds an assertion
+      def add_assertion
+        @scenario.add_assertion
+      end
+      
       #################################################################### About browser
       
       # Returns the current browser instance

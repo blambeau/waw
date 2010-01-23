@@ -21,7 +21,7 @@ wawaccess do
   # When something is not found, the call is delegated to
   # the .wawaccess file located in pages...
   match true do
-    apply "/pages/#{served_file}"
+    apply "pages/#{served_file}"
   end
 
 end
