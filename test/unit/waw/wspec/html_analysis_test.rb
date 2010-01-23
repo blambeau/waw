@@ -18,9 +18,7 @@ module Waw
         assert has_tag?("div", :id => "footer")
         assert !has_tag?("div", :id => "footerare")
         assert has_tag?("form", :id => "newsletter_subscribe", :method => "post")
-        assert has_tag?("form", :id => "newsletter_subscribe", :method => "(post|POST)")
-        assert_equal({:id => "newsletter_subscribe", :method => "post"}, 
-            has_tag?("form", :id => "newsletter_subscribe", :method => "(post|POST)"))
+        assert has_tag?("form", :id => "newsletter_subscribe", :method => /(post|POST)/)
       end
       
     end

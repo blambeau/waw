@@ -26,7 +26,7 @@ module Waw
       # Find tags inside the browser contents. If a block is given, yield it with
       # each tag information. Otherwise, returns an array of found tags, that can be
       # empty.
-      def tags(name, opts = nil, contents = browser_contents, &block)
+      def tags(name, opts = nil, contents = browser_contents)
         found = [] unless block_given?
         contents.scan(/(<\s*#{name}\s*(.*?)\/?>)/) do |match|
           tag = Tag.new(match[0], name, decode_attributes_string(match[1]))
@@ -35,33 +35,22 @@ module Waw
         end
         found
       end
+      
+      # Iterates over a tag specification
+      def each_tag(name, opts = nil, contents = browser_contents, &block)
+        tags(name, opts, contents, &block)
+      end
+      
+      # Shortcut for tags(name, opts, contents)[0]. Returns nil if no such tag can
+      # be found
+      def first_tag(name, opts = nil, contents = browser_contents)
+        tags(name, opts, contents)[0]
+      end
+      alias :tag :first_tag
 
       # Look for some html tag
-      def has_tag?(name, opts = nil, contents = browser_contents, treat_values_as_regexp = true)
-        # check that the tag exists
-        contents.scan(/(<\s*#{name}\s*(.*?)\/?>)/) do |match|
-          return match[0] if opts.nil? or opts.empty?
-          
-          # check tag attributes now
-          attributes = match[1]
-          found = {}
-          opts.each_pair do |k, v|
-            krx = Regexp.escape(k.to_s)
-            vrx = treat_values_as_regexp ? v : Regexp.escape(v.to_s)
-            rgxp = v.nil? ?
-                   Regexp.compile(/#{k}\s*=\s*["']([^"']*)["']/) :
-                   Regexp.compile(/#{k}\s*=\s*["'](#{v})["']/)
-            if rgxp =~ attributes 
-              found[k] = $1
-            else
-              found = nil
-              break
-            end
-          end
-          
-          return found unless found.nil?
-        end
-        nil
+      def has_tag?(name, opts = nil, contents = browser_contents)
+        return tags(name, opts, contents).size != 0
       end
 
       # Assert that the user sees something in the browser contents
