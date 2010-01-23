@@ -63,6 +63,30 @@ module Waw
       end
       alias :links :all_links
       
+      # Same as all_links, but retains internal links only (i.e. <code>not(URI::Generic.absolute?)</code>)
+      def all_internal_links(opts = nil, contents = browser_contents, &block)
+        if block
+          all_links(opts, contents).each do |link|
+            yield(link) unless URI.parse(link[:href]).absolute?
+          end
+        else
+          all_links(opts, contents).reject{|link| URI.parse(link[:href]).absolute?}
+        end
+      end
+      alias :internal_links :all_internal_links
+      
+      # Same as all_links, but retains external links only (i.e. <code>URI::Generic.absolute?</code>)
+      def all_external_links(opts = nil, contents = browser_contents, &block)
+        if block
+          all_links(opts, contents).each do |link|
+            yield(link) if URI.parse(link[:href]).absolute?
+          end
+        else
+          all_links(opts, contents).select{|link| URI.parse(link[:href]).absolute?}
+        end
+      end 
+      alias :external_links :all_external_links
+      
       # Assert that the user sees something in the browser contents
       def i_see?(what, contents = browser_contents)
         not(contents.nil?) and not(contents.index(what).nil?)

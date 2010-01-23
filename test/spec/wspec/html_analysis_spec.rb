@@ -25,6 +25,9 @@ describe Waw::WSpec::HTMLAnalysis do
           <div id="main">
             <link href="service?key=value"/>
           </div>
+          <div id="footer">
+            <a href="http://github.com/blambeau/waw">waw</a>
+          </div>
         </body>
       </html>
     HTML
@@ -42,7 +45,7 @@ describe Waw::WSpec::HTMLAnalysis do
   
   it "should provide a useful tags helper, returning an array of tags" do
     links = tags('a')
-    links.size.should == 2
+    links.size.should == 3
     links[0].name.should == 'a'
     links[0][:href].should == '/hello'
     links[0][:class].should == 'current'
@@ -54,7 +57,7 @@ describe Waw::WSpec::HTMLAnalysis do
   it "should allow passing a block to the tags helper method" do
     links = []
     tags('a') {|tag| links << tag}
-    links.size.should == 2
+    links.size.should == 3
     links[0].name.should == 'a'
     links[0][:href].should == '/hello'
     links[0][:class].should == 'current'
@@ -66,11 +69,11 @@ describe Waw::WSpec::HTMLAnalysis do
   it "should provide a each_tag friendly method" do
     links = []
     each_tag('a') {|tag| links << tag}
-    links.size.should == 2
+    links.size.should == 3
   end
   
   it "should support a tags helper method allowing to express constraints" do
-    tags('div').size.should == 2
+    tags('div').size.should == 3
     tags('div', :id => 'menu').size.should == 1
     tags('div', :id => 'main').size.should == 1
     tags('div', :id => 'none').size.should == 0
@@ -94,13 +97,23 @@ describe Waw::WSpec::HTMLAnalysis do
   end
   
   it "should provide shortcuts for links" do
-    all_links.size.should == 2
-    links.size.should == 2
+    all_links.size.should == 3
+    links.size.should == 3
     links(:href => '/hello').size.should == 1
     links(:href => '/none').size.should == 0
     links(:class => 'current').size.should == 1
     links(:class => /.*/).size.should == 1
     links(:class => 'nothing').size.should == 0
+  end
+
+  it "should provide shortcuts for internal links" do
+    all_internal_links.size.should == 2
+    internal_links.size.should == 2
+  end
+  
+  it "should provide shortcuts for external links" do
+    all_external_links.size.should == 1
+    external_links.size.should == 1
   end
   
   it "should correctly implement has_tag?" do
