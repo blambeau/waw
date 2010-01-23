@@ -8,17 +8,14 @@ scenario __FILE__ do
     i_reach Waw.config.web_base + 'js/+(project.lowname).js'
   }
   because(".wawaccess files are correctly written") {
-    i_dont_reach Waw.config.web_base + '.wawaccess'
-    i_dont_reach Waw.config.web_base + 'pages/.wawaccess'
-    i_dont_reach Waw.config.web_base + 'templates/.wawaccess'
-    i_dont_reach Waw.config.web_base + 'templates/layout.wtpl'
+    i_may_not_reach Waw.config.web_base + '.wawaccess'
+    i_may_not_reach Waw.config.web_base + 'pages/.wawaccess'
+    i_may_not_reach Waw.config.web_base + 'templates/.wawaccess'
+    i_may_not_reach Waw.config.web_base + 'templates/layout.wtpl'
   }
   because("the default wlang context is correct") {
     i_reach Waw.config.web_base
-    i_see_tag "link",   {:rel => "stylesheet"}
-    i_see_tag "script", {:type => "text/javascript"}
-    # waw is currently buggy here
-    # i_see_tag "link",   {:rel => "stylesheet", :type => "text/css", :href => "^.*\.css$"}
-    # i_see_tag "script", {:type => "text/javascript", :src => "^.*\.js$"}
+    i_see_tag "link",   {:rel => "stylesheet", :type => "text/css", :href => /^.*\.css/}
+    i_see_tag "script", {:type => "text/javascript", :src => /^.*\.js$/}
   }
 end

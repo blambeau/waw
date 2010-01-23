@@ -1,5 +1,4 @@
 wawaccess do
-  strategy :deny_all
 
   # .wawaccess files are never served
   match /.wawaccess$/ do

@@ -8,7 +8,8 @@ scenario __FILE__ do
   }
     
   because("The controller is correctly implemented") {
-    i_can_invoke action, with(:who => "blambeau")
-    i_see "Hello ! Your name is blambeau"
+    #i_can_invoke action, with(:who => "blambeau")
+    #i_see "Hello ! Your name is blambeau"
   }
+
 end

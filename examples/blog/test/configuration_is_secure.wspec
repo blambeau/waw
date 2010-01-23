@@ -1,8 +1,8 @@
 scenario "The configuration is secure" do
   
   because(".wawaccess files are correctly written") {
-    i_dont_reach Waw.config.web_base + '.wawaccess'
-    i_dont_reach Waw.config.web_base + 'pages/.wawaccess'
+    i_may_not_reach Waw.config.web_base + '.wawaccess'
+    i_may_not_reach Waw.config.web_base + 'pages/.wawaccess'
   }
   
 end

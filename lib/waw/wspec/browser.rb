@@ -54,6 +54,15 @@ module Waw
         @base ||= find_base
       end
       
+      # Finds the base of the current location
+      def find_base
+        if contents and (found = tag("base", {:href => /.*/}, contents))
+          ensure_uri(found[:href])
+        else
+          extract_base(location)
+        end
+      end
+      
       # Checks if the last request waw answered by a 404 not found
       def is404
         (Net::HTTPNotFound === response)
@@ -131,8 +140,8 @@ module Waw
         # You should choose better exception.
         raise 'HTTP redirect too deep' if limit == 0
 
+        # Fetch the result at that location
         location = ensure_uri(uri)
-        
         response = Net::HTTP.start(location.host, location.port) do |http|
           headers = @cookie ? {'Cookie' => @cookie} : {}
           case method
@@ -149,39 +158,33 @@ module Waw
           end
         end
         
-        # If a cookie is requested
+        # If a cookie is requested save it
         @cookie = response['set-cookie']
         
+        # Catch the response, following redirections
         result = case response
-          when Net::HTTPSuccess     
-            [location, response]
           when Net::HTTPRedirection 
             fetch(response['location'], limit - 1)
-          when Net::HTTPNotFound
-            [location, response]
-          when Net::HTTPInternalServerError
-            raise ServerError, "An error occured when fetching #{uri}"
-          when Net::HTTPForbidden
-            [location, response]
           else
-            raise "Unexpected response from web server #{response}"
+            [location, response]
         end
+        
+        # Cleans cache and returns result
         clean_post_fetch
         result
       end
       
-      # Finds the base of the current location
-      def find_base
-        if contents
-          found = has_tag?("base", :href => ".*?")
-          if found
-            ensure_uri(found[:href])
-          else
-            extract_base(location)
-          end
-        else
-          extract_base(location)
-        end
+      #################################################################### Helpers to save context
+      private
+      def install_context(location, response, cookie)
+        @location, @response, @cookie = location, response, cookie
+        self
+      end
+      
+      public
+      # Duplicates this browser instance, with internal state  
+      def dup
+        Browser.new.send(:install_context, @location, @response, @cookie)
       end
       
     end # class Browser

@@ -3,6 +3,11 @@ wawaccess do
   # We don't inherits static configuration
   inherits false
   
+  # .wawaccess files are never served
+  match /\.wawaccess$/ do
+    deny
+  end
+
   # We match .wtpl files using wlang
   match file(:extension => '.rdoc') do
     wlang 'layout.wtpl'

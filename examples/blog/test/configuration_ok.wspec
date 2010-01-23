@@ -9,10 +9,7 @@ scenario "The configuration is ok" do
   }
   because("the default wlang context is correct") {
     i_reach Waw.config.web_base
-    i_see_tag "link",   {:rel => "stylesheet"}
-    i_see_tag "script", {:type => "text/javascript"}
-    # waw is currently buggy here
-    # i_see_tag "link",   {:rel => "stylesheet", :type => "text/css", :href => "^.*\.css$"}
-    # i_see_tag "script", {:type => "text/javascript", :src => "^.*\.js$"}
+    i_see_tag "link",   {:rel => "stylesheet", :type => "text/css", :href => /^.*\.css/}
+    i_see_tag "script", {:type => "text/javascript", :src => /^.*\.js$/}
   }
 end

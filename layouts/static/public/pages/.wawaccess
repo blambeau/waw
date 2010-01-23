@@ -3,8 +3,10 @@ wawaccess do
   # We don't inherits static configuration
   inherits false
   
-  # By default, we deny the call
-  strategy :deny_all
+  # .wawaccess files are never served
+  match /.wawaccess$/ do
+    deny
+  end
   
   # When a folder is requested, find the associated index file
   match directory do
