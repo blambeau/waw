@@ -17,10 +17,17 @@ Rake::TestTask.new(:unit) do |test|
   test.verbose    =  true
 end
 
-desc "Lauches all integration tests"
-Rake::TestTask.new(:integration) do |test|
+desc "Lauches integration tests on layouts"
+Rake::TestTask.new(:layouts) do |test|
   test.libs       = [ "lib", "test/unit" ]
-  test.test_files = [ 'test/integration/**/*.rb']
+  test.test_files = [ 'test/integration/**/*.rb' ]
+  test.verbose    =  true
+end
+
+desc "Lauches integration tests on examples"
+Rake::TestTask.new(:examples) do |test|
+  test.libs       = [ "lib", "test/unit" ]
+  test.test_files = [ 'examples/test_all.rb' ]
   test.verbose    =  true
 end
 

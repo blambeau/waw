@@ -1,4 +1,5 @@
 doc/api
+logs
 pkg
 coverage
 install.sh
