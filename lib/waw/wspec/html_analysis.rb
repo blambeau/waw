@@ -1,3 +1,4 @@
+require 'waw/wspec/html_analysis/tag'
 module Waw
   module WSpec
     #
@@ -11,6 +12,28 @@ module Waw
       # Yields the block passing browser contents as first argument
       def browser_contents
         browser.contents
+      end
+      
+      # Decodes a string of HTML attributes as a hash with symbols as keys
+      def decode_attributes_string(str)
+        attrs = {}
+        str.scan(/([a-z]+)=["'](.*?)["']/) do |match|
+          attrs[match[0].to_sym] = match[1]
+        end
+        attrs
+      end
+      
+      # Find tags inside the browser contents. If a block is given, yield it with
+      # each tag information. Otherwise, returns an array of found tags, that can be
+      # empty.
+      def tags(name, opts = nil, contents = browser_contents, &block)
+        found = [] unless block_given?
+        contents.scan(/(<\s*#{name}\s*(.*?)\/?>)/) do |match|
+          tag = Tag.new(match[0], name, decode_attributes_string(match[1]))
+          next unless tag.matches?(opts)
+          block_given? ? yield(tag) : (found << tag)
+        end
+        found
       end
 
       # Look for some html tag
