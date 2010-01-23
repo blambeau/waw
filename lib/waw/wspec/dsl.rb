@@ -72,6 +72,22 @@ module Waw
         assert Net::HTTPSuccess===result, __last_because + " (cannot actually reach #{which_page}: #{result})"
       end
       
+      # Asserts that a page could be reached (requesting headers leads to a Net::HTTPSucess result)
+      def i_could_reach(which_page)
+        return if which_page.nil? or '#'==which_page 
+        case which_page
+          when Tag
+            i_could_reach(which_page[:href])
+          when Array
+            which_page.each{|link| i_could_reach(link)}
+          when String
+            result = browser.headers_fetch(which_page)
+            assert Net::HTTPSuccess===result, __last_because + " (could not reach #{which_page}: #{result})"
+          else
+            raise ArgumentError, "Unable to use #{which_page} for i_could_reach"
+        end
+      end
+      
       # Asserts that a page cannot be reached, leading to a Net::HTTPNotFound or a Net::HTTPForbidden (403)
       # result
       def i_dont_reach(which_page)

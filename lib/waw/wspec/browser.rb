@@ -98,6 +98,20 @@ module Waw
         end
       end
       
+      # Fetches the headers only and returns it without keeping the result in browser
+      # state
+      def headers_fetch(uri)
+        # Fetch the result at that location
+        if (loc = ensure_uri(uri)).relative?
+          headers_fetch(relative_uri(uri))
+        else
+          response = Net::HTTP.start(loc.host, loc.port) do |http|
+            headers = @cookie ? {'Cookie' => @cookie} : {}
+            http.head(loc.path, headers)
+          end
+        end
+      end
+      
       # Refreshes the browser
       def refresh
         fetch(location)
@@ -128,8 +142,6 @@ module Waw
       end
       
       #################################################################### Private section
-      private 
-      
       # Clean cache after fetch
       def clean_post_fetch
         @base = nil
@@ -175,16 +187,16 @@ module Waw
       end
       
       #################################################################### Helpers to save context
-      private
+      
+      # Installs the browser context
       def install_context(location, response, cookie)
         @location, @response, @cookie = location, response, cookie
         self
       end
       
-      public
       # Duplicates this browser instance, with internal state  
       def dup
-        Browser.new.send(:install_context, @location, @response, @cookie)
+        Browser.new.install_context(@location, @response, @cookie)
       end
       
     end # class Browser

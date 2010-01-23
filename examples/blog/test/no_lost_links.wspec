@@ -1,0 +1,13 @@
+scenario "There is no lost internal link on my blog" do
+  
+  because("The menu is correct") {
+    i_reach Waw.config.web_base
+    i_could_reach all_internal_links
+  }
+  
+  because("My friends maintain their blog correctly") {
+    i_reach Waw.config.web_base
+    i_could_reach all_external_links
+  }
+  
+end
