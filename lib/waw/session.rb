@@ -33,6 +33,11 @@ module Waw
     alias :delete :reset
     alias :unset :reset
     
+    # Inspects the session
+    def inspect
+      Waw.real_session.inspect
+    end
+    
     # Saves the state of someone
     def save_state(who, state)
       save_id = if who.respond_to?(:waw_id)

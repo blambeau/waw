@@ -26,7 +26,6 @@ require 'waw/controllers/static_controller'
 require 'waw/routing'
 module Waw
   extend Waw::App
-  extend Waw::EnvironmentUtils
   
   # Waw version
   VERSION = "0.1.2".freeze

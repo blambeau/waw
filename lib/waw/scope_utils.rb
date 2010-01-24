@@ -1,6 +1,11 @@
 module Waw
   module ScopeUtils
     
+    # Logger to use
+    def logger
+      Waw.logger
+    end
+    
     # Returns the current Rack env instance
     def rack_env
       Thread.current[:rack_env] ||= {}

@@ -75,6 +75,7 @@ module Waw
   
   # Contains the loadstage kernel used by Waw.
   module App
+    include Waw::ScopeUtils
     
     # The root folder of the running application
     attr_accessor :root_folder

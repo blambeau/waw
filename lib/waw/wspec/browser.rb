@@ -117,7 +117,7 @@ module Waw
       
       # Refreshes the browser
       def refresh
-        fetch(location)
+        self.location = location
       end
       
       # Simulates a click. Support relative as well as absolute paths.

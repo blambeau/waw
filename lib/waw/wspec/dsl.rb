@@ -152,15 +152,21 @@ module Waw
       # Submits some form with optional arguments
       def i_submit(form, args = {})
         assert_not_nil form, __last_because + "(form has not been found)"
-        result = case (action=form[:action])
+        i_invoke(form[:action], args)
+      end
+      
+      # Directly invoke an action or service server side, bypassing 
+      # form lookup and so on.
+      def i_invoke(action, args = {})
+        result = case action
           when String
             browser.invoke_service(action, args)
           when ::Waw::ActionController::Action
             browser.invoke_action(action, args)
           else
-            raise ArgumentError, "Unable to apply i_submit on #{form.inspect}, unable to catch the associated action"
+            raise ArgumentError, "Unable to apply i_invoke on #{action.inspect}, unable to catch the associated action"
         end
-        assert Net::HTTPSuccess===result, __last_because + " (submitting #{form} led to: #{result})"
+        assert Net::HTTPSuccess===result, __last_because + " (invoking #{action.inspect} led to: #{result})"
         result
       end
       
