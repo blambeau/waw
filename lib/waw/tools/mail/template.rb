@@ -21,10 +21,13 @@ module Waw
           end
         end
         
-        def instantiate(args = {})
-          mail, args = self.dup, args.unsymbolize_keys
+        # Instantiates this template using a given wlang context.
+        # The date of the resulting mail is set to Time.now
+        def instantiate(context = {})
+          mail, args = self.dup, context.unsymbolize_keys
           mail.subject = mail.subject.wlang(args, dialect)
           mail.body = mail.body.wlang(args, dialect)
+          mail.date = Time.now
           mail
         end
         alias :to_mail :instantiate

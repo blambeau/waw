@@ -15,6 +15,11 @@ module Waw
           @mails.size
         end
         
+        # Checks if the mailbox is empty or not
+        def empty?
+          @mails.empty?
+        end
+        
         # Pushes a mail inside the mailbox, returns an id
         def push(mail)
           @mails << [mail, false]
