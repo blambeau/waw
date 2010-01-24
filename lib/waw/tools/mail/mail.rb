@@ -1,0 +1,88 @@
+module Waw
+  module Tools
+    class MailAgent
+      # A helper to respect the mail protocol
+      class Mail
+        
+        # Source address
+        attr_accessor :from
+        
+        # Target addresses 
+        attr_accessor :to
+        
+        # Mail subject
+        attr_accessor :subject
+        
+        # Mail date
+        attr_accessor :date
+        
+        # MIME version
+        attr_accessor :mime_version
+        
+        # Content-type
+        attr_accessor :content_type
+        
+        # Content-type
+        attr_accessor :charset
+        
+        # Mail body
+        attr_accessor :body
+        
+        # Creates an empty mail
+        def initialize(subject = nil, body = nil, from = nil, *to)
+          @from = from
+          @to = to.empty? ? nil : to
+          @subject = subject
+          @date = Time.now
+          @mime_version = "1.0"
+          @content_type = "text/plain"
+          @charset = "UTF-8"
+          @body = body
+        end
+        
+        # Decodes a mail from a given string
+        def self.decode(str)
+          mail = Mail.new
+          lines = str.split("\n")
+          until false 
+            case line = lines.shift.strip
+              when /^From: (.*)$/
+                mail.from = $1
+              when /^To: (.*)$/
+                mail.to = $1.split(',').collect{|s| s.strip}
+              when /^Subject: (.*)$/
+                mail.subject = $1
+              when /^Date: (.*)$/
+                mail.date = Time.rfc2822($1)
+              when /^MIME-Version: (.*)$/
+                mail.mime_version = $1
+              when /^Content-type: (.*); charset=(.*)$/
+                mail.content_type = $1
+                mail.charset = $2
+              when /^$/
+                break
+            end
+          end
+          mail.body = lines.join("\n")
+          mail
+        end
+        
+        # Returns a valid mail string instantiation
+        def to_s
+<<-MAIL_END
+From: #{from}
+To: #{to.join(", ")}
+Subject: #{subject}
+Date: #{date.rfc2822}
+MIME-Version: #{mime_version}
+Content-type: #{content_type}; charset=#{charset}
+
+#{body}
+MAIL_END
+        end
+        alias :encode :to_s
+        
+      end # class Mail
+    end # class MailAgent
+  end # module Tools
+end # module Waw 
