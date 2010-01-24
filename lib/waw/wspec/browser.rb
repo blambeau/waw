@@ -43,7 +43,10 @@ module Waw
           new_location.query = uri.query
           new_location
         else
-          raise ArgumentError, "This browser does not support real relative uri #{uri}"
+          new_location = base.dup
+          new_location.path = '/' + uri.path
+          new_location.query = uri.query
+          new_location
         end
       end
       

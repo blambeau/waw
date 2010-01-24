@@ -28,7 +28,7 @@ module Waw
       # Find tags inside the browser contents. If a block is given, yield it with
       # each tag information. Otherwise, returns an array of found tags, that can be
       # empty.
-      def tags(name, opts = nil, contents = browser_contents)
+      def all_tags(name, opts = nil, contents = browser_contents)
         found = [] unless block_given?
         contents.scan(/(<\s*#{name}\s*(.*?)\/?>)/) do |match|
           tag = Tag.new(match[0], name, decode_attributes_string(match[1]))
@@ -37,6 +37,7 @@ module Waw
         end
         found
       end
+      alias :tags :all_tags
       
       # Iterates over a tag specification
       def each_tag(name, opts = nil, contents = browser_contents, &block)
