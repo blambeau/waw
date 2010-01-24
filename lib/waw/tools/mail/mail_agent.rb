@@ -13,6 +13,34 @@ module Waw
           raise ArgumentError, "Opts should include :host, :port and :timeout parameters\n#{opts.inspect} received"\
             if @smtp_host.nil? or @smtp_port.nil? or @smtp_timeout.nil?
         end
+        @templates = {}
+      end
+      
+      # Builds a mail instance. This method should always be used preferably
+      # to an explicit Mail.new invocation.
+      def mail(*args)
+        Mail.new(*args)
+      end
+      
+      # Builds a template instance. This method should always be used preferably
+      # to an explicit Template.new invocation.
+      def template(*args)
+        Template.new(*args)
+      end
+      
+      # Adds a mail template under a given name
+      def add_template(name, *args)
+        if args.size == 1 and Template===args[0]
+          @templates[name] = args[0]
+        else
+          @templates[name] = template(*args)
+        end
+      end
+      
+      # Converts a named template to a mail
+      def to_mail(template_name, wlang_context)
+        raise ArgumentError, "No such template #{template_name}" unless @templates.has_key?(template_name)
+        @templates[template_name].to_mail(wlang_context)
       end
       
       # Send mails, really?
@@ -31,10 +59,48 @@ module Waw
         mailboxes[receiver]
       end
       
+      #
       # Sends an email. If Waw.config.deploy_mode is set to 'production'
       # or 'acceptation', the mail is really sent. Otherwise it is pushed
       # in the receiver mailbox.
-      def send_mail(mail)
+      #
+      # This method accepts the following invocation signatures:
+      #
+      #   # sending a real Mail instance (and only one)
+      #   agent.send_mail(mail)
+      #
+      #   # sending from a template for which receivers have been already set
+      #   agent.send_mail(:my_template, {:title => "Hello"})
+      #
+      #   # sending from a template, with explicit receivers as varargs
+      #   agent.send_mail(:my_template, {:title => "Hello"}, "receiver@example.com", ..., "receiver_N@example.com")
+      #
+      #   # sending from a template, with explicit receivers as an array
+      #   agent.send_mail(:my_template, {:title => "Hello"}, [...])
+      #
+      def send_mail(*args)
+        # Let try to match the signature
+        if args.size == 1 and Mail===args[0]
+          # first one
+          mail = args[0]
+        elsif Symbol===args[0] and Hash===args[1]
+          # the others
+          mail = to_mail(args.shift, args.shift)
+          unless args.empty?
+            if args.size == 1 and Array===args[0]
+              # third one
+              mail.to = args[0]
+            else
+              # fourth one
+              mail.to = args
+            end
+          else
+            # second one
+          end
+        else
+          raise ArgumentError, "Unable to find the send_mail sigature you want with #{args.inspect}"
+        end
+        
         if do_it_really?
           require 'net/smtp'
           smtp_conn = Net::SMTP.new(@smtp_host, @smtp_port)

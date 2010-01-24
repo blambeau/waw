@@ -82,6 +82,14 @@ MAIL_END
         end
         alias :encode :to_s
         
+        # Makes a deep copy of this mail. Changing the list of receivers
+        # in particular does not affect the original mail
+        def dup
+          mail = super
+          mail.to = to.nil? ? nil : to.dup
+          mail
+        end
+        
       end # class Mail
     end # class MailAgent
   end # module Tools
