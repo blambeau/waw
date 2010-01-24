@@ -29,7 +29,7 @@ module Waw
       
       # Returns the last because clause
       def __last_because
-        @stack.last
+        __stack.last || @scenario.name
       end
       
       # Adds an assertion
@@ -170,6 +170,7 @@ module Waw
       # Submits some form with optional arguments
       def i_submit(form, args = {})
         assert_not_nil form, __last_because + "(form has not been found)"
+        raise ArgumentError, "i_submit requires a Tag instance, #{form.inspect} received" unless Tag===form
         i_invoke(form[:action], args)
       end
       
