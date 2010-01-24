@@ -40,47 +40,55 @@ module Waw
           @body = body
         end
         
-        # Decodes a mail from a given string
-        def self.decode(str)
-          mail = Mail.new
-          lines = str.split("\n")
-          until false 
-            case line = lines.shift.strip
-              when /^From: (.*)$/
-                mail.from = $1
-              when /^To: (.*)$/
-                mail.to = $1.split(',').collect{|s| s.strip}
-              when /^Subject: (.*)$/
-                mail.subject = $1
-              when /^Date: (.*)$/
-                mail.date = Time.rfc2822($1)
-              when /^MIME-Version: (.*)$/
-                mail.mime_version = $1
-              when /^Content-type: (.*); charset=(.*)$/
-                mail.content_type = $1
-                mail.charset = $2
-              when /^$/
-                break
+        # Class methods
+        class << self
+          
+          # Decodes a mail from a given string
+          def decode(str)
+            mail = Mail.new
+            lines = str.split("\n")
+            until false 
+              case line = lines.shift.strip
+                when /^From: (.*)$/
+                  mail.from = $1
+                when /^To: (.*)$/
+                  mail.to = $1.split(',').collect{|s| s.strip}
+                when /^Subject: (.*)$/
+                  mail.subject = $1
+                when /^Date: (.*)$/
+                  mail.date = Time.rfc2822($1)
+                when /^MIME-Version: (.*)$/
+                  mail.mime_version = $1
+                when /^Content-type: (.*); charset=(.*)$/
+                  mail.content_type = $1
+                  mail.charset = $2
+                when /^$/
+                  break
+              end
             end
+            mail.body = lines.join("\n")
+            mail
           end
-          mail.body = lines.join("\n")
-          mail
-        end
         
+          alias :parse :decode
+        end
+
         # Returns a valid mail string instantiation
         def to_s
-<<-MAIL_END
-From: #{from}
-To: #{to.join(", ")}
-Subject: #{subject}
-Date: #{date.rfc2822}
-MIME-Version: #{mime_version}
-Content-type: #{content_type}; charset=#{charset}
+          str = <<-MAIL_END
+            From: #{from}
+            To: #{to.join(", ")}
+            Subject: #{subject}
+            Date: #{date.rfc2822}
+            MIME-Version: #{mime_version}
+            Content-type: #{content_type}; charset=#{charset}
 
-#{body}
-MAIL_END
+            #{body}
+          MAIL_END
+          str.gsub(/^[ \t]*/, '')
         end
         alias :encode :to_s
+        alias :dump :to_s
         
         # Makes a deep copy of this mail. Changing the list of receivers
         # in particular does not affect the original mail

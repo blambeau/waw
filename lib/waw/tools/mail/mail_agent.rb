@@ -109,7 +109,8 @@ module Waw
           smtp_conn.send_message(mail.body, mail.from, *mail.to)
           smtp_conn.finish
         else
-          mail.to.each {|who| mailbox(who) << mail.dup}
+          sent = Mail.parse(mail.dump)
+          mail.to.each {|who| mailbox(who) << sent.dup}
         end
       end
       alias :<< :send_mail

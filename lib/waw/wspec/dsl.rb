@@ -20,6 +20,7 @@ module Waw
       def __execute(&block)
         self.instance_eval(&block)
       end
+      alias :by_the_way :__execute
     
       # A stack of execution context  
       def __stack
