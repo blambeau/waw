@@ -88,9 +88,47 @@ module Waw
       end 
       alias :external_links :all_external_links
       
+      # Shortcut for <code>links(name, opts, contents)[0]</code>. Returns nil if no such 
+      # link can be found
+      def first_link(opts = nil, contents = browser_contents)
+        links(opts, contents)[0]
+      end
+      alias :link :first_link
+
+      # Checks if some link can be found
+      def has_link?(opts = nil, contents = browser_contents)
+        return links(opts, contents).size != 0
+      end
+      
+      #################################################################### Form helpers
+      
+      # Shortcut for <code>tag('form', opts, contents)</code>
+      def form(opts = nil, contents = browser_contents)
+        if opts[:action] and ::Waw::ActionController::Action===opts[:action]
+          action = opts[:action]
+          opts = {:id => action.id}.merge(opts || {}).forget(:action)
+          form = tag('form', opts, contents)
+          form[:action] = action if form
+          form
+        else
+          tag('form', opts, contents)
+        end
+      end
+      
+      #################################################################### Text helpers
+      
       # Assert that the user sees something in the browser contents
       def i_see?(what, contents = browser_contents)
-        not(contents.nil?) and not(contents.index(what).nil?)
+        case what
+          when NilClass
+            false
+          when String, Regexp
+            not(contents.index(what).nil?)
+          when Tag
+            true
+          else
+            raise ArgumentError, "Unable to see #{what}, not understood"
+        end
       end
       
     end # module HTMLAnalysis

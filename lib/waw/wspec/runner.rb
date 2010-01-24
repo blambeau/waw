@@ -22,6 +22,7 @@ $scenarios = []
 def scenario(name, &block)
   $scenarios << Waw::WSpec::Scenario.new(name, &block)
 end
+alias :requirement :scenario
 
 # We run the whole suite at end
 at_exit {

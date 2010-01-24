@@ -24,6 +24,11 @@ module Waw
           attributes[key]
         end
         
+        # Forces the value of an attribute
+        def []=(key, value)
+          attributes[key] = value
+        end
+        
         # Checks if this tags has a given attribute
         def has_attribute?(name)
           attributes.has_key?(name)

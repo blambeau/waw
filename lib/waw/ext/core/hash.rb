@@ -8,6 +8,14 @@ class Hash
     self.dup.delete_if{|k,v| !keys.include?(k)}
   end
 
+  def forget!(*keys)
+    self.delete_if{|k,v| keys.include?(k)}
+  end
+
+  def forget(*keys)
+    self.dup.delete_if{|k,v| keys.include?(k)}
+  end
+
   def symbolize_keys
     copy = Hash.new
     self.each_pair {|k,v| copy[k.to_s.to_sym] = v}

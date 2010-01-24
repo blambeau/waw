@@ -138,6 +138,31 @@ module Waw
       
       #################################################################### Server invocation utilities
       
+      # Applies the action routing for a given action
+      def apply_action_routing(action, result)
+        action.routing.apply_on_browser(result, self) if action.routing
+        result.extend(Waw::Routing::Methods)
+        result
+      end        
+      
+      # Invokes an action server side, decodes json response an applies action routing. 
+      # Returns the action result.
+      def invoke_action(action, args = {})
+        raise ArgumentError, "Browser.invoke_action expects an ActionController::Action as first parameter"\
+          unless ::Waw::ActionController::Action===action
+        location, response = fetch(relative_uri(action.uri), :post, args)
+        apply_action_routing(action, JSON.parse(response.body))
+        self.response
+      end
+      
+      # Invokes a service server side and returns HTTP response
+      def invoke_service(service, args = {})
+        raise ArgumentError, "Browser.invoke_service expects a String as first parameter"\
+          unless String===service
+        location, response = fetch(relative_uri(service), :post, args)
+        self.response
+      end
+      
       # Invokes a server service with arguments and decoding method
       def server_invoke(service, args, decode_method = nil)
         location, response = fetch(relative_uri(service), :post, args)

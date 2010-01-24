@@ -1,6 +1,4 @@
 require 'waw/wspec/html_analysis'
-require 'waw/wspec/invocations'
-require 'waw/wspec/assertions'
 require 'waw/wspec/browser'
 require 'waw/wspec/suite'
 require 'waw/wspec/dsl'

@@ -1,6 +1,19 @@
 require 'waw'
 require 'waw/wspec'
 
+class ServicesController < ::Waw::ActionController
+  
+  def self.url
+    '/services'
+  end
+  
+  signature {}
+  def say_hello(params)
+    :ok
+  end
+  
+end
+
 describe Waw::WSpec::HTMLAnalysis do
   include Waw::WSpec::HTMLAnalysis
   
@@ -24,6 +37,10 @@ describe Waw::WSpec::HTMLAnalysis do
           </div>
           <div id="main">
             <link href="service?key=value"/>
+            <form id="services_say_hello" class="say-hello">
+            </form>
+            <form action="/say/hello" id="say_hello2">
+            </form>
           </div>
           <div id="footer">
             <a href="http://github.com/blambeau/waw">waw</a>
@@ -96,6 +113,15 @@ describe Waw::WSpec::HTMLAnalysis do
     tag('nothing').should be_nil
   end
   
+  it "should correctly implement has_tag?" do
+    has_tag?("title").should be_true
+    has_tag?("a").should be_true
+    has_tag?("div").should be_true
+    has_tag?("div", :id => 'menu').should be_true
+    has_tag?("div", :id => 'notmenu').should be_false
+    has_tag?("p").should be_false
+  end
+  
   it "should provide shortcuts for links" do
     all_links.size.should == 3
     links.size.should == 3
@@ -104,6 +130,14 @@ describe Waw::WSpec::HTMLAnalysis do
     links(:class => 'current').size.should == 1
     links(:class => /.*/).size.should == 1
     links(:class => 'nothing').size.should == 0
+    
+    link(:href => '/hello').should_not be_nil
+    first_link(:href => '/hello').should_not be_nil
+    
+    link(:nohing => true).should be_nil
+    
+    has_link?(:href => '/hello').should be_true
+    has_link?(:nohing => true).should be_false
   end
 
   it "should provide shortcuts for internal links" do
@@ -116,13 +150,21 @@ describe Waw::WSpec::HTMLAnalysis do
     external_links.size.should == 1
   end
   
-  it "should correctly implement has_tag?" do
-    has_tag?("title").should be_true
-    has_tag?("a").should be_true
-    has_tag?("div").should be_true
-    has_tag?("div", :id => 'menu').should be_true
-    has_tag?("div", :id => 'notmenu').should be_false
-    has_tag?("p").should be_false
+  it "should provide shortcuts for forms" do
+    form(:id => 'services_say_hello').should_not be_nil
+    form(:id => 'say_hello2').should_not be_nil
+    form(:action => '/say/hello').should_not be_nil
+    form(:id => 'say_hello2', :action => '/say/hello').should_not be_nil
+    form(:id => 'nothing').should be_nil
+  end
+  
+  it "should support looking forms through Action instances" do
+    ServicesController.say_hello.id.should == "services_say_hello"
+    form = form(:action => ServicesController.say_hello)
+    form.should_not be_nil
+    form[:action].should == ServicesController.say_hello
+    form[:class].should == 'say-hello'
+    form[:id].should == ServicesController.say_hello.id
   end
   
 end

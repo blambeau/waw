@@ -1,16 +1,17 @@
+require 'test/unit/assertions'
 module Waw
   module WSpec
     # 
     # Provides the DSL of the .wspec scenario language.
     #
     class DSL
-      include Assertions
-      include Invocations
+      include ::Test::Unit::Assertions
       include HTMLAnalysis
     
       # Creates a DSL instance for a given scenario
       def initialize(scenario)
         @scenario = scenario
+        @browser = Browser.new
       end
       
       #################################################################### Semi-private utilities
@@ -22,12 +23,12 @@ module Waw
     
       # A stack of execution context  
       def __stack
-        @stack ||= [["Outside because clauses", Browser.new]]
+        @stack ||= []
       end
       
       # Returns the last because clause
       def __last_because
-        @stack.last[0]
+        @stack.last
       end
       
       # Adds an assertion
@@ -35,11 +36,22 @@ module Waw
         @scenario.add_assertion
       end
       
+      #################################################################### About scoping
+      
+      # Delegates to waw ressources
+      def method_missing(name, *args, &block)
+        if args.empty? and Waw.resources and Waw.resources.has_resource?(name)
+          Waw.resources[name]
+        else
+          super(name, *args, &block)
+        end
+      end
+      
       #################################################################### About browser
       
       # Returns the current browser instance
       def browser
-        @stack.last[1]
+        @browser
       end
       
       # Returns current browser contents (used by HTMLAnalysis)
@@ -48,21 +60,33 @@ module Waw
       end
       alias :contents :browser_contents
       
+      # Returns the URL of the index page (the web_base actually)
+      # This method returns nil unless the Waw application has been loaded
+      def index_page
+        Waw.config && Waw.config.web_base
+      end
+      
       # Goes to a given location and returns the HTTPResponse object
       def go(location)
         browser.location = location
         browser.response
       end
       
+      # Simply returns args
+      def with(args = {})
+        args
+      end
+      
       #################################################################### About scenario execution
       
       # Because some condition holds...
       def because(msg="Unknown cause", &block)
-        raise ArgumentError, "WSpec because expects a block" unless block
-        __stack.push([msg, browser.dup])
+        raise ArgumentError, "WSpec because/therefore expects a block" unless block
+        __stack.push(msg)
         yield(browser)
         __stack.pop
       end
+      alias :therefore :because
       
       #################################################################### About reaching pages
       
@@ -109,8 +133,30 @@ module Waw
       end
       
       # Asserts that I see a particular tag (see HTMLAnalysis.tag)
-      def i_see_tag(name, opts = {})
+      def i_see_tag(name, opts = nil)
         assert has_tag?(name, opts), __last_because + " (don't see tag <#{name} #{opts.inspect})"
+      end
+      
+      # Asserts that I see a particular link (see HTMLAnalysis.link)
+      def i_see_link(opts = nil)
+        assert has_link?(opts), __last_because + " (dont see link <a #{opts.inspect})"
+      end
+      
+      #################################################################### About forms and action
+      
+      # Submits some form with optional arguments
+      def i_submit(form, args = {})
+        assert_not_nil form, __last_because + "(form has not been found)"
+        result = case (action=form[:action])
+          when String
+            browser.invoke_service(action, args)
+          when ::Waw::ActionController::Action
+            browser.invoke_action(action, args)
+          else
+            raise ArgumentError, "Unable to apply i_submit on #{form.inspect}, unable to catch the associated action"
+        end
+        assert Net::HTTPSuccess===result, __last_because + " (submitting #{form} led to: #{result})"
+        result
       end
       
     end # class DSL
