@@ -148,6 +148,23 @@ module Waw
         assert has_link?(opts), __last_because + " (dont see link <a #{opts.inspect})"
       end
       
+      #################################################################### About link-based navigation
+      
+      # Following a link
+      def i_follow(link)
+        link = case link
+          when String
+            link
+          when Tag
+            link[:href]
+          when ::Waw::ActionController::Action
+            link.href
+          else
+            raise ArgumentError, "Unable to apply i_follow to #{link.inspect}"
+        end
+        i_reach(link)
+      end
+      
       #################################################################### About forms and action
       
       # Submits some form with optional arguments
