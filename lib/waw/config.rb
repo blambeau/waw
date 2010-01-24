@@ -52,6 +52,7 @@ module Waw
       case name
         when :load_path
           value = [value] unless Array===value
+          value = value.collect{|val| File.expand_path(File.join(Waw.root_folder, val))}
           $LOAD_PATH.unshift(*value)
         when :requires
           value = [value] unless Array===value

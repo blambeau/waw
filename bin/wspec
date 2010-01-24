@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+#
+#  WSpec - Executes wspec waw tests
+#         (see lib/waw/waw.rb for more information)
+#
+#  Copyright (c) 2010 University of Louvain, Bernard & Louis Lambeau
+#  Released under a MIT or Ruby licence
+#
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
+require 'waw'
+
+# Abord execution
+def abord(message, code)
+  puts message
+  exit(code)
+end
+
+unless ARGV.size == 1 
+  abord("Usage: wspec a_test.wspec", 0)
+else
+  # Checks that the test exists
+  wspec_file = ARGV[0]
+  abord("Unable to find .wspec file #{wspec_file}", -1) unless File.exists?(wspec_file)
+  
+  # Find the web root folder
+  web_root = File.expand_path(File.dirname(wspec_file))
+  until File.exists?(File.join(web_root, 'waw.deploy'))
+    web_root = File.expand_path(File.join(web_root, '..'))
+    abord("Unable to find waw.deploy file from this folder", -1) if web_root == '/'
+  end
+  
+  # Load the waw application for having configuration
+  Waw.autoload(web_root)
+  raise "Tests cannot be run in production mode, to avoid modifying real database "\
+        "or sending spam mails to real users." unless Waw.config.deploy_mode=='devel'
+  
+  # Load the wspec runner now
+  require 'waw/wspec/runner'
+  load(wspec_file)
+end

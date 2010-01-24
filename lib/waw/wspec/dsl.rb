@@ -132,6 +132,11 @@ module Waw
         assert i_see?(what), __last_because + " (don't see #{what})"
       end
       
+      # Asserts that something is not present on the current page
+      def i_dont_see(what)
+        assert !i_see?(what), __last_because + " (actually see #{what})"
+      end
+      
       # Asserts that I see a particular tag (see HTMLAnalysis.tag)
       def i_see_tag(name, opts = nil)
         assert has_tag?(name, opts), __last_because + " (don't see tag <#{name} #{opts.inspect})"
