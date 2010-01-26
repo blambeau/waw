@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'cgi'
 module Waw
   
   # The rack application at top of the hierarchy
@@ -15,11 +16,11 @@ module Waw
     
     # Converts a back-trace to a friendly HTML chunck
     def ex_backtrace_to_html(backtrace)
-      "<div>" + backtrace.join('</div><div>') + "</div>"
+      "<div>" + backtrace.collect{|s| CGI.escapeHTML(s)}.join('</div><div>') + "</div>"
     end
     
     # Converts an exception to a friendly HTML chunck
-    def ex_to_html(ex)
+    def ex_to_html(ex, backtrace)
       <<-EOF
         <html>
           <head>
@@ -36,9 +37,9 @@ module Waw
           </head>
           <body>
             <h1>Internal server error (ruby exception)</h1>
-            <p class="message"><code>#{ex.message}</code></p>
+            <p class="message"><code>#{CGI.escapeHTML(ex.message)}</code></p>
             <div style="margin-left:50px;">
-              #{ex_backtrace_to_html(ex.backtrace)}
+              #{ex_backtrace_to_html(backtrace)}
             </div>
           </body>
         </html>
@@ -59,11 +60,16 @@ module Waw
       else
         [503, {'Content-Type' => 'text/plain'}, ['This waw application is unloaded']]
       end
+    rescue ::WLang::Error => ex
+      # On exception, returns a 500 with a message
+      Waw.logger.error("Fatal error #{ex.message}")
+      Waw.logger.error(ex.wlang_backtrace.join("\n"))
+      [500, {'Content-Type' => 'text/html'}, [ex_to_html(ex, ex.wlang_backtrace)]]
     rescue Exception => ex
       # On exception, returns a 500 with a message
       Waw.logger.error("Fatal error #{ex.message}")
       Waw.logger.error(ex.backtrace.join("\n"))
-      [500, {'Content-Type' => 'text/html'}, [ex_to_html(ex)]]
+      [500, {'Content-Type' => 'text/html'}, [ex_to_html(ex, ex.backtrace)]]
     ensure
       # In all cases, remove thread local variables
       Thread.current[:rack_env] = nil
