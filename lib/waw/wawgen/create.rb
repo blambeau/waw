@@ -108,7 +108,7 @@ module Waw
                 io << File.read(File.join(layout_folder, file))
               else
                 context = {"project" => project}
-                WLang.file_instantiate(File.join(layout_folder, file), context, io, 'wlang/active-string', :parentheses)
+                io << WLang.file_instantiate(File.join(layout_folder, file), context, 'wlang/active-string', :parentheses).to_s
               end
             end
           end
