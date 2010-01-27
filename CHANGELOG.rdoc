@@ -1,5 +1,11 @@
 == Changelog
 
+=== Version 0.2.1
+
+* Layouts have been cleaned. The empty layout is less complete than before
+* Layouts force the waw version that is loaded by config.ru to a version greater
+  than the one that created the layout. 
+
 === Version 0.2.0
 
 ==== Broken features and APIs (by order of importance)

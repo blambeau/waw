@@ -22,15 +22,8 @@ else
   wspec_file = ARGV[0]
   abord("Unable to find .wspec file #{wspec_file}", -1) unless File.exists?(wspec_file)
   
-  # Find the web root folder
-  web_root = File.expand_path(File.dirname(wspec_file))
-  until File.exists?(File.join(web_root, 'waw.deploy'))
-    web_root = File.expand_path(File.join(web_root, '..'))
-    abord("Unable to find waw.deploy file from this folder", -1) if web_root == '/'
-  end
-  
   # Load the waw application for having configuration
-  Waw.autoload(web_root)
+  Waw.autoload(wspec_file)
   raise "Tests cannot be run in production mode, to avoid modifying real database "\
         "or sending spam mails to real users." unless Waw.config.deploy_mode=='devel'
   

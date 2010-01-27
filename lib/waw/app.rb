@@ -179,15 +179,21 @@ module Waw
     
     ################################################################# About loading
     
+    # Finds the root of the waw application by traversing the file system
+    # up from _from_ until a waw.deploy file can be found.
+    def find_web_root(from)
+      from = File.dirname(from) if File.file?(from)
+      web_root = File.expand_path(from)
+      until File.exists?(File.join(web_root, 'waw.deploy'))
+        web_root = File.expand_path(File.join(web_root, '..'))
+        raise WawError, "Unable to find waw.deploy file from folder #{from}" if web_root == '/'
+      end
+      web_root
+    end
+    
     # Autoloads waw from a given file or a root folder
     def autoload(file)
-      if File.file?(file)
-        @root_folder = File.expand_path(File.dirname(file))
-      elsif File.directory?(file)
-        @root_folder = File.expand_path(file)
-      else
-        raise WawError, "Invalid root folder #{file}, inexisting!", caller
-      end
+      @root_folder = find_web_root(file)
       puts "Autoloading waw web application from #{root_folder}"
       load_application(root_folder)
       kernel

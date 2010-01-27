@@ -15,8 +15,8 @@ at_exit {
       `ruby -I#{File.join(top, 'lib')} #{File.join(top, 'bin', 'waw')} create --force --layout #{layout} #{layout}`
       
       FileUtils.cd layout do |dir|
-        puts `ruby -I#{File.join(top, 'lib')} test/unit/test_all.rb`
-        puts `ruby -I#{File.join(top, 'lib')} test/wspec/test_all.rb`
+        puts `ruby -I#{File.join(top, 'lib')} test/unit/test_all.rb` if File.directory?('test/unit')
+        puts `ruby -I#{File.join(top, 'lib')} test/wspec/test_all.rb` if File.directory?('test/wspec')
       end
     end
   end
