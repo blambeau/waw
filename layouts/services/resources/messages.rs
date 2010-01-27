@@ -1,1 +1,0 @@
-who_is_mandatory     "Your name is mandatory"

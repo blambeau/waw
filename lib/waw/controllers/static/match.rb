@@ -57,13 +57,7 @@ module Waw
         def default_wlang_context
           context = {"css_files"   => root.find_files('css'),
                      "js_files"    => root.find_files('js'),
-                     "served_file" => served_file,
-                     "env"         => rack_env,
-                     "request"     => request,
-                     "params"      => params,
-                     "response"    => response,
-                     "session"     => session}
-          Waw.resources.each {|k, v| context[k.to_s] = v} if Waw.respond_to?(:resources) and Waw.resources
+                     "served_file" => served_file}
           context
         end
       

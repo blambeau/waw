@@ -1,1 +1,0 @@
-services ::+(project.upname)::ServicesController
