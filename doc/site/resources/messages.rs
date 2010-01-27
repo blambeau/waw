@@ -1,0 +1,1 @@
+# Messages that the waw application use

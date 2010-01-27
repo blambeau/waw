@@ -1,0 +1,7 @@
+# This file helps you developing your web application with a version-control 
+# system like Git or Subversion. The following waw files should always be ignored
+# to avoid overriding configuration of other developers or production deployments
+waw.deploy
+config/*.cfg
+tmp
+logs
