@@ -1,0 +1,24 @@
+<div class="example">
+
+<table>
+  <tr>
+    <th>menu.whtml</th>
+    <th>menu.yaml</th>
+    <th>result</th>
+  </tr>
+  <tr>
+    <td>
+<pre>
+<<{menu.wtpl}</pre>
+    </td>
+    <td>
+<pre>
+<<{menu.yaml}</pre>
+    </td>
+    <td>
+      <<+{menu.wtpl}
+    </td>
+  </tr>
+</table>
+
+</div>

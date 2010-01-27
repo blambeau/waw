@@ -1,0 +1,94 @@
+body { 
+	width: 80%; 
+	margin: auto; 
+	padding: 15px 0px 15px 0px;
+  background-color: #2f4860; 
+	font-family: "Myriad Pro", "Arial", sans-serif;
+  font-size: 0.8em;
+  color: #606760;
+}
+h1 {
+	padding: 5px; margin: 0;
+	border-bottom: solid 2px #ffffff; 
+	background-color: #2f4860; color: #ffffff;
+	font-weight: bold; 
+}
+h1 a, h1 a:hover, h1 a:visited {
+	color: white;
+	text-decoration: none;
+}
+h1 a:hover {
+	cursor: pointer;
+}
+h2 {
+	margin: 15px 5px 5px 0px;
+	font-size: 1.8em;
+	font-weight: normal; 
+	color: #2f4860;
+}
+p {
+	text-align: justify;
+}
+pre {
+	color: #333333;
+	padding: 5px 0px 10px 0px;
+	margin: 10px 20px 0px 20px;
+	background: white; 
+	font-size: 1.25em;
+	font-weight: bold;
+}
+
+#perm-links { 
+	float: right; text-align: center;
+	margin: 8px 5px 0px 0px; padding: 0; 
+}
+#perm-links ul {list-style: none; margin: 0; padding: 5px;}
+#perm-links li {display: inline; width: 150px;}
+#perm-links a { margin: 0; padding-top: 2px; padding-bottom: 2px;  padding-left: 10px; padding-right: 10px}
+#perm-links a {text-align: center; border: solid 1px #2f4860; background-color: #2f4860; color: #ffffff; font-weight: bold; text-decoration: none;}
+#perm-links a:hover {color: #ffcc00; border: solid 1px #ffcc00;}
+
+#menu { width: 21%; float: left; margin-bottom: 25px; padding: 3px; padding-bottom: 20px;}
+#menu { border: solid 2px #c0c0b0; background-color: #c0c0b0; color: #af8060; }
+#menu ul { list-style: square; }
+#menu ul {width: 89%; margin: 0; padding-left: 25px;}
+#menu li { margin-top: 0px; margin-bottom: 1px;}
+#menu li { border-bottom: solid 1px #606070;}
+#menu li.current a { text-align: right; }
+#menu a { width: 96%; display: block; margin: 0; padding: 1px;}
+#menu h3 { width: 100%; margin: 0px; padding-top: 10px; }
+#menu h3 { width: 100%; margin: 0; text-align: left; border-bottom: solid 1px #606070; color: #ffffff;}
+#menu a { border: solid 1px #c0c0b0; background-color: #c0c0b0; color: #2f4860; font-weight: bold; text-decoration: none; text-align: left;}
+#menu a:hover {background-color: #ffffff; color: #2f4860;}
+
+#inside {background-color: #2f4860;}
+
+#content { margin-left: 22%; padding: 0px 10px 10px 10px; }
+#content p { line-height: 140%; padding-left: 20px; padding-right: 10px; text-align: justify; }
+#content {background-color: #ffffff;}
+#content a {color: #2f4860; font-weight: bold; text-decoration: underline;}
+#content a:hover {color: #2f4860; text-decoration: underline;}
+#content table {margin: auto; margin-top: 15px; margin-bottom: 15px; width: 550px; border: solid 1px #666666;}
+#content th {background-color: #cccccc;}
+#content td {padding: 3px; border: solid 1px #cccccc;}
+#content img {margin: auto; margin-top: 15px; margin-bottom: 15px; border: solid 1px #666666;}
+#content h3 {margin: 0; color: #2f4860; border-bottom: solid 1px #2f4860;}
+#content dt {margin-top: 8px; padding-left: 10px; font-weight: bold; color: #2f4860;}
+#content dd {width: 90%;}
+#content ul li li {padding-top: 3px;}
+#content strong {color: black;}
+
+#footer { clear: both; padding: 2px; float: right; }
+#footer a, #footer a:visited { color:white; }
+#footer {border: solid 1px #2f4860; text-align: right; background-color: #2f4860; color: #ffffff;}
+
+.info-title {font-size: 0.9em; background-color: #c0c0b0; margin: 0; padding: 2px; padding-left: 5px; color: #ffffff;}
+
+.example {margin: 0px 0px 0px 0px; }
+#content .example tr th { margin: 0px; border: 1px solid black; padding:2px;}
+#content .example table {border-collapse: collapse; border: 1px solid black; margin:auto; padding: 0px; margin-bottom: 15px;}
+#content .example table tr td {text-align: left; vertical-align: top; border: 1px solid black;}
+#content .example table pre {margin-top: 0px; margin-bottom: 0px;}
+#content .example ul {margin: 0px; padding: 20px; padding-left: 30px;}
+#content .example a { color: #2f4860; text-decoration: none;}
+#content .example a:hover { color: #2f4860; text-decoration: underline;}

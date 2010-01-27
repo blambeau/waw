@@ -1,3 +1,4 @@
+require 'wlang/ext/hash_methodize'
 wawaccess do
   
   # We don't inherits static configuration
@@ -7,23 +8,31 @@ wawaccess do
   match /.wawaccess$/ do
     deny
   end
-  
+
   # When a folder is requested, find the associated index file
   match directory do
-    apply "#{served_file}/index.wtpl"
+    apply "#{served_file}/index.redc"
   end
 
-  # We match .wtpl files using wlang
-  match file(:extension => '.wtpl') do
-    wlang '../templates/layout.wtpl'
+  # We match .redc files using wlang and redcloth
+  match file(:extension => '.redc') do
+    require 'RedCloth'
+    source = WLang::file_instantiate("public/#{served_file}", {}, 'wlang/xhtml')
+    text = RedCloth.new(source).to_html
+    wlang 'layout.wtpl', {:content => text}
+  end
+
+  # We match .whtml files using wlang
+  match file(:extension => '.whtml') do
+    wlang 'layout.wtpl'
   end
   
   # When the file cannot be found
   match true do
-    if /\.wtpl$/ =~ served_file
-      apply "pages/404.wtpl", 404
+    if /\.redc$/ =~ served_file
+      apply "pages/404.redc"
     else
-      apply "#{served_file}.wtpl"
+      apply "#{served_file}.redc"
     end
   end
   

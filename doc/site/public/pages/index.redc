@@ -1,0 +1,37 @@
+h2. Welcome to waw !
+
+We are pleased to announce this first stable version of a new ruby web framework. Waw is an alternative to Rails and other good frameworks like it.
+   
+h3. Yet another web framework?
+
+Yes! Some people are convinced by existing frameworks, other are not. Waw is born a long time ago, during a research project about secure web applications. A first implementation in PHP was convincing, talking about ideas at least, but the language was not so friendly for the developers. Some years later Waw has been entirely rewritten... in Ruby, which supports good ideas a lot better than PHP. So, what makes waw different?
+
+h3. Powerful templating engine
+
+Waw comes with bundled with _wlang_ a powerful templating engine, as illustrated below. The following example has been computed on the fly when generating this page, which is itself written in ... "Textile/RedCloth":http://redcloth.org
+
+<<+{examples/menu_example.wtpl}
+
+h3. Non intrusive framework
+
+* Based on "Rack":http://rack.rubyforge.org/, you can bypass the whole waw architecture when things become easier that way
+* _wlang_ does not fit your needs? Use another templating engine if it helps!
+* You want access relational databases instead of an Object Relational Mapper? Do it! 
+
+h3. Linking requirements to code
+
+<pre>requirement("Users should be able to subscribe") do
+  milestone("A subscription link should appear on the index page") {
+    go     index_page
+    i_see  "Subscribe"
+  }
+  milestone("Following this link should lead to a registration form") {
+    i_follow link(:href   => "/subscribe")
+    i_see    form(:action => "/subscribe.do")
+  }
+  milestone("Sumitting this form should send an activation email") {
+    i_submit    form(:action => "/subscribe.do", :mail => "myself@example.com")
+    i_see       "Thank you for registration!"
+    i_received  email('myself@example.com')
+  }
+end</pre>

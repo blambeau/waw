@@ -1,0 +1,30 @@
+<div id="menu">
+  <h3>Essentials</h3>
+    <ul>
+      <li><a href="/essentials/introduction">Introduction</a></li>
+      <li><a href="/essentials/news">News</a></li>
+      <li><a href="/essentials/downloads">Downloads</a></li>
+      <li><a href="/essentials/licence">Licence &amp; Credits</a></li>
+      <li><a href="/essentials/references">References</a></li>
+    </ul>
+  <h3>Getting started</h3>
+    <ul>
+      <li><a href="/starting/installation">Installation</a></li>
+      <li><a href="/starting/waw-create">Go!</a></li>
+    </ul>
+  <h3>Tutorials</h3>
+    <ul>
+      <li><a href="/tutorials/non-so-static-sites">Non-so Static Sites</a></li>
+      <li><a href="/tutorials/web-applications">Web Applications</a></li>
+    </ul>
+  <h3>Reference</h3>
+    <ul>
+      <li><a href="/reference/architecture">Architecture overview</a></li>
+      <li><a href="/reference/kernel">Kernel &amp; Rack</a></li>
+      <li><a href="/reference/wlang">Templating engine</a></li>
+      <li><a href="/reference/static-controller">Static Controller</a></li>
+      <li><a href="/reference/action-controller">Action Controller</a></li>
+      <li><a href="/reference/extension-points">Extension points</a></li>
+      <li><a href="/reference/api">Waw API</a></li>
+    </ul>
+</div>

@@ -1,0 +1,10 @@
+<<={menu.yaml as menu}
+<ul>
+  *{menu as entry}{
+    <li>
+      <a href="{entry.url}">
+        ${entry.label}
+      </a>
+    </li>
+  }
+</ul>

@@ -1,0 +1,9 @@
+- url: /
+  label: Home
+- url: /bugs
+  label: Bugs?
+- url: /contribute
+  label: Contribute
+- url: /contact
+  label: Contact
+  

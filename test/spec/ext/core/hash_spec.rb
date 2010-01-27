@@ -41,5 +41,10 @@ describe ::Hash do
     
     {:name => "bla&beau"}.to_url_query.should == "name=bla%26beau"
   end
+  
+  it "should provide a methodize helper" do
+    hash = {'hello' => 'world'}
+    hash.methodize.hello.should == 'world'
+  end
 
 end

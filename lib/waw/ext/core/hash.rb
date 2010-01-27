@@ -21,6 +21,18 @@ class Hash
     self.each_pair {|k,v| copy[k.to_s.to_sym] = v}
     copy
   end
+  
+  def methodize
+    copy = self.symbolize_keys
+    keys.each {|key| 
+      copy.instance_eval <<-EOF
+        def #{key}
+          self[:"#{key}"]
+        end
+      EOF
+    }
+    copy
+  end
 
   def unsymbolize_keys
     copy = Hash.new

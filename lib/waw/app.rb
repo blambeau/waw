@@ -254,7 +254,7 @@ module Waw
       raise ConfigurationError, "Missing waw.deploy file" unless File.exists?(deploy_file)
       
       words = []
-      File.readlines(deploy_file).each do |line|
+      File.readlines(deploy_file).each_with_index do |line, i|
         next if /^#/ =~ (line = line.strip)
         next if line.empty?
         raise "Waw deploy file corrupted on line #{i} (#{line})" unless /^[a-z_]+(\s+[a-z_]+)*$/ =~ line

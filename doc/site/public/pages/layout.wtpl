@@ -3,7 +3,7 @@
 	<head>
 		<meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
     <base href="{Waw.config.web_base}"/>
-		<title>WawDocSite</title>
+		<title>${messages.title}</title>
 		*{css_files as css}{
   		<link rel="stylesheet" type="text/css" href="{css}" />
   	}
@@ -12,6 +12,18 @@
   	}
 	</head>
 	<body>
-	  <<+{../${served_file} share all}
+	  <<+{header.wtpl}
+    <div id="inside">
+      <<+{menu.wtpl}
+      <div id="content">
+        <h5 class="info-title">Making web another way</h5>
+?{content}{
++{content}
+}{
+<<+{../${served_file} share all}
+}
+        <a style="display:block; margin-top: 20px;" href="#top">Top ^</a>
+    	</div>
+  	</div>
 	</body>
 </html>
