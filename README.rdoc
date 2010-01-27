@@ -29,4 +29,4 @@ features are
 Waw requires the following ruby gems
 
 - rack >= 1.1.0 (provided through <code>gem install rack</code>)
-- wlang >= 0.8.4 (provided in the vendors folder)
+- wlang >= 0.9.0 (provided in the vendors folder)
