@@ -10,7 +10,7 @@ module Waw
   
       # Creates a project instance
       def initialize(name, folder=nil)
-        @upname, @lowname = name, lower(name)
+        @upname, @lowname = name, WLang::encode(name, 'ruby/method-case')
         @folder = folder
       end
   
@@ -19,13 +19,6 @@ module Waw
         @folder ||= lowname
       end
       alias :folder :root
-  
-      # Handle project name
-      def lower(str)
-        lowered = str.gsub(/[A-Z]/) {|s| s.swapcase} 
-        lowered = lowered[1..-1] if lowered[0...1]=='_'
-        lowered
-      end
   
     end # class Project
   end # module Wawgen

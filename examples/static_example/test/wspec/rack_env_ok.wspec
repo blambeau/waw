@@ -1,0 +1,6 @@
+requirement("Rack env page should be working") do
+  therefore("Typical environment parameters are present on the page") {
+    go index_page + 'rack_env'
+    i_see "SERVER_NAME"
+  }
+end

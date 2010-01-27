@@ -6,11 +6,10 @@ require 'wlang'
 require 'singleton'
 
 require 'waw/errors'
-require 'waw/ext'
+require 'waw/scope_utils'
 require 'waw/ext'
 require 'waw/utils/dsl_helper'
 
-require 'waw/scope_utils'
 require 'waw/resource_collection'
 require 'waw/config'
 require 'waw/validation'
@@ -30,6 +29,6 @@ module Waw
   extend Waw::App
   
   # Waw version
-  VERSION = "0.1.3".freeze
+  VERSION = "0.2.0".freeze
   
 end

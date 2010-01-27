@@ -1,0 +1,11 @@
+*{resources using each_pair as name, collection}{
+  <h2>${name}.rs</h2>
+  <table>
+  *{collection using each_pair as name, value}{
+    <tr>
+      <td width="200px">${name}</td>
+      <td>${value.inspect}</td>
+    </tr>
+  }
+  </table>
+}

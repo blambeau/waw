@@ -1,0 +1,47 @@
+<p>HTTP Parameters of the page (both GET and POST) are made accessible in all 
+   wlang templates as well. Even if using them directly in your templates is
+   considered a bad practice, you can still access them as illustrated below.</p>
+   
+<p>The code for displaying the table below is as follows</p>
+
+<pre>
+&{<<{params_code.wtpl}}
+</pre>
+
+<div class="left">
+  <h2>Make get queries</h2>
+
+  <p>Use the different links or the form below to test the params collection.</p>
+
+  <ul>
+    <li><a href="/params?first=hello&second=world">&{/params?first=hello&second=world}</a></li>
+    <li><a href="/params?tab[]=one&tab[]=two&tab[]=three">&{/params?tab[]=one&tab[]=two&tab[]=three}</a></li>
+  </ul>
+
+  <h2>Make post queries</h2>
+
+  <form method="POST" action="/params">
+    <div class="section">
+      <label for="name">Who are you?</label>
+      <input type="text" name="who" value=""/><br/>
+    </div>
+    <div class="section">
+      <label for="happy">Are you happy?</label>
+      <input type="radio" name="happy" checked="checked" value="yes"/>&nbsp;Yes
+      <input type="radio" name="happy" value="no"/>&nbsp;No<br/>
+    </div>
+    <div class="section">
+      <label for="happy">Which waw usage?</label>
+      <input type="checkbox" name="which[]" value="static">&nbsp;Static site</br>
+      <input type="checkbox" name="which[]" value="wiki">&nbsp;Wiki</br>
+      <input type="checkbox" name="which[]" value="ajax">&nbsp;Ajax app</br>
+    </div>
+    <div class="section">
+      <input type="submit" value="Submit"/>
+    </div>
+  </form>
+</div>
+<div class="right">
+  <h2>Page parameters</h2>
+  <<+{params_code.wtpl}
+</div>

@@ -30,6 +30,7 @@ module Waw
     def each
       @resources.each_pair {|k, v| yield(k, v)}
     end
+    alias :each_pair :each
     
     # Returns the resource installed under name
     def [](name)

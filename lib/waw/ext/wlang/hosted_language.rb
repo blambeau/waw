@@ -13,7 +13,7 @@ module WLang
       elsif Waw.resources.has_resource?(name)
         Waw.resources[name]
       else
-        super(name)
+        raise ::WLang::UndefinedVariableError.new(nil, nil, nil, name)
       end
     end
     

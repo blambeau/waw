@@ -1,0 +1,35 @@
+wawaccess do
+  
+  # We don't inherits static configuration
+  inherits false
+  
+  # .wawaccess files are never served
+  match /.wawaccess$/ do
+    deny
+  end
+  
+  # When a folder is requested, find the associated index file
+  match directory do
+    apply "#{served_file}/home.whtml"
+  end
+
+  # We match .whtml files using wlang
+  match file(:extension => '.whtml') do
+    wlang 'layout.wtpl'
+  end
+
+  # We deny all real templates
+  match file(:extension => '.wtpl') do
+    deny
+  end
+  
+  # When the file cannot be found
+  match true do
+    if /\.wtpl$/ =~ served_file
+      apply "pages/404.whtml", 404
+    else
+      apply "#{served_file}.whtml"
+    end
+  end
+  
+end

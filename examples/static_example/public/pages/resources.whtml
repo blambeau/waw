@@ -1,0 +1,11 @@
+<p>Another useful variable accessible in all templates is <code>resources</code>.
+   It is the master collection containing all resources contained in .rs files of
+   the resources folder. For example, the following code:</p>
+   
+<pre>
+&{<<{resources_code.wtpl}}</pre>
+
+<p>Leads to the following result: </p>
+
+<<+{resources_code.wtpl}
+   

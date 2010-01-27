@@ -1,0 +1,12 @@
+require "rake/rdoctask"
+require "rake/testtask"
+
+task :default => [:test]
+
+desc "Launches all wspec test"
+task :wspec do
+  require('test/wspec/test_all.rb')
+end
+
+desc "Launches wspec test"
+task :test => [:wspec]

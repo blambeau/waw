@@ -1,0 +1,80 @@
+body  { 
+	width: 800px; margin:auto; 
+	font-family: Verdana;
+	font-size: 14px;
+}
+h2 {
+	color: red;
+	border-bottom: 2px solid red;
+	padding-bottom: 5px;
+}
+table { 
+	border-collapse : collapse;
+	font-family: Courier; 
+	font-size: 0.9em; 
+	table-layout:fixed; 
+	width: 100%;
+	word-wrap: break-word;
+	border: 1px solid black;
+}
+table td {
+	padding: 3px 5px 3px 5px;
+	border-bottom: 1px dashed black;
+	border-right: 1px solid black;
+}
+table th {
+	border: 1px solid black;
+}
+table tr td.key, table tr th.key {
+	width: 220px;
+}
+a:visited {
+  color: blue;
+}
+form {
+	width: 100%;
+}
+form .section {
+	margin-top: 10px;
+	border-bottom: 1px dashed grey;
+}
+form label {
+	clear: both;
+	display: block;
+	float: left;
+	width: 200px;
+}
+
+#top, #body {
+	width: 800px;
+}
+
+#top {
+	border-bottom: 2px solid red;	
+}
+
+#menu {
+	margin: 0px;
+	padding: 0px;
+}
+#menu li {
+	width: 100px;
+	margin-right: 10px;
+	float: left;
+	padding: 5px;
+	background: red;
+	list-style: none;
+	text-align: center;
+}
+#menu li a {
+	text-decoration: none;
+	color: white;
+}
+
+div.left {
+	width: 550px;
+	float: left;
+}
+div.right {
+	float: right;
+}

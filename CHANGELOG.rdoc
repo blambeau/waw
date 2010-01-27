@@ -1,0 +1,41 @@
+== Changelog
+
+=== Version 0.2.0
+
+==== Broken features and APIs (by order of importance)
+
+* Major changes due to wlang version 0.9.0 (see Changelog there). Waw 0.2.0 verifies
+  that a wlang gem >= 0.9.0 is installed in rubygems.
+* The 'using self' syntax is deprecated in .wtpl files. Equivalence can be obtained 
+  trough 'share all' (see also auto-waw-scoping later)
+
+==== New features
+
+* All methods in Waw::ScopeUtils are automatically present in all wlang scopes as 
+  low priority variables (aka auto-waw-scoping)
+* wlang executable ensures that it executes the current version
+* 'waw create' applies WLang::encode(upper_name, 'ruby/method-case') for computing 
+  the lower project name.
+
+==== Bugfixes
+
+* bug #290: Rack >= 1.1.0 is verified through rubygems
+* feature #259: CSS and JS files are sorted by names when put in css_files and js_files wlang 
+  variables
+
+=== Version 0.1.3
+
+==== Broken features and APIs (by order of importance)
+
+* wawspec become wspec, all old invocations and assertions have been removed
+* 'scenario' and 'because' in wspec are considered deprecated (but can still be used).
+  They are replaced by 'requirement' and 'therefore'
+
+==== New features
+
+* A mail agent has been added in tools. It expects a smtp_config variable in Waw.config.
+  This agent really send mails in 'production' and 'acceptation' deployment modes. In
+  'devel' and 'test' modes, it simply put mails in internal mailboxes accessible through
+  accessors (see ::Waw::Tools::MailAgent)
+* validation architecture has been consolidated and is well tested
+* wawaccess files refactored and consolidated.

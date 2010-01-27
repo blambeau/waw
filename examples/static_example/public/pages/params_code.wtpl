@@ -1,0 +1,12 @@
+<table>
+  <tr>
+    <th>Key</th>
+    <th>Value</th>
+  </tr>
+  *{params using each_pair as key, value}{
+    <tr>
+      <td>${key}</td>
+      <td>${value.inspect}</td>
+    </tr>
+  }
+</table>

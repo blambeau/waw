@@ -36,5 +36,10 @@ module Waw
       Waw::Session.instance
     end
     
+    # Returns waw resources
+    def resources
+      Waw.resources
+    end
+    
   end # module ScopeUtils
 end # module Waw

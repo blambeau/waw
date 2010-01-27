@@ -1,0 +1,13 @@
+requirement("Static site structure is secure") do
+  therefore(".wawaccess files may not be accessed") {
+    i_may_not_reach index_page + '.wawaccess'
+    i_may_not_reach index_page + 'pages/.wawaccess'
+    i_may_not_reach index_page + 'pages/layout.wtpl'
+  }
+  therefore("layout files may not be accessed") {
+    i_may_not_reach index_page + 'pages/layout.wtpl'
+  }
+  therefore("files outside the structure may not be accessed") {
+    i_may_not_reach index_page + '../logs/static_example.log'
+  }
+end

@@ -1,0 +1,7 @@
+<ul id="menu">
+  <li><a href="/home">Home</a></li>
+  <li><a href="/rack_env">Rack env</a></li>
+  <li><a href="/params">Params</a></li>
+  <li><a href="/resources">Resources</a></li>
+</ul>
+<div style="clear: both"></div>

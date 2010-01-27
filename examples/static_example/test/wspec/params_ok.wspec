@@ -1,0 +1,7 @@
+requirement("The params page works correctly") do
+  therefore("If a put GET parameters, i see them") {
+    go index_page + 'params?wspec=this_is_a_test'
+    i_see 'wspec'
+    i_see 'this_is_a_test'
+  }
+end

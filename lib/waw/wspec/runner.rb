@@ -58,7 +58,7 @@ at_exit {
       s.run
       t2 = Time.now
       puts "\nFinished in #{Time.now - t1} seconds.\n"
-      puts "#{s.scenario_count} scenarios, #{s.assertion_count} assertions, #{s.failure_count} failures, #{s.error_count} errors"
+      puts "#{s.scenario_count} high-level requirements, #{s.assertion_count} assertions, #{s.failure_count} failures, #{s.error_count} errors"
     else
       raise WawError, "Unable to reach the local web server... sorry!"
     end

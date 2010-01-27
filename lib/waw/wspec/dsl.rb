@@ -5,6 +5,7 @@ module Waw
     # Provides the DSL of the .wspec scenario language.
     #
     class DSL
+      include ::Waw::ScopeUtils
       include ::Test::Unit::Assertions
       include HTMLAnalysis
     

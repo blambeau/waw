@@ -1,0 +1,12 @@
+<p>In all wlang templates, you have access to all methods that are defined
+   in ::WLang::ScopeUtils.</p>
+   
+<p>For example, the Rack environment is accessible through the variable <code>rack_env</code> 
+   so that the following code:</p>
+
+<pre>
+&{<<{rack_env_code.wtpl}}</pre>
+
+<p>Leads to the following result: </p>
+
+<<+{rack_env_code.wtpl}

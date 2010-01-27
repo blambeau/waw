@@ -1,0 +1,12 @@
+<table class="rack_env">
+  <tr>
+    <th class="key">Key</th>
+    <th>Value</th>
+  </tr>
+  *{rack_env using each_pair as key, value}{
+    <tr>
+      <td class="key">${key}</td>
+      <td>${value.inspect}</td>
+    </tr>
+  }
+</table>
