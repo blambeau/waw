@@ -1,4 +1,6 @@
 require 'rubygems'
+gem 'rack', ">= 1.1.0"
+gem 'wlang', ">= 0.9.0"
 require 'rack'
 require 'wlang'
 require 'singleton'

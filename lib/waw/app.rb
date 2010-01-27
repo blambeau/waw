@@ -64,6 +64,7 @@ module Waw
       # On exception, returns a 500 with a message
       Waw.logger.error("Fatal error #{ex.message}")
       Waw.logger.error(ex.wlang_backtrace.join("\n"))
+      Waw.logger.error(ex.backtrace.join("\n"))
       [500, {'Content-Type' => 'text/html'}, [ex_to_html(ex, ex.wlang_backtrace)]]
     rescue Exception => ex
       # On exception, returns a 500 with a message

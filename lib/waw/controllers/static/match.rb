@@ -77,7 +77,7 @@ module Waw
           context = default_wlang_context.merge(context || {})
           [result_override || 200, 
            {'Content-Type' => 'text/html'}.merge(headers_override || {}), 
-            [WLang.file_instantiate(template, context.unsymbolize_keys).to_s]]
+            [::WLang.file_instantiate(template, context.unsymbolize_keys).to_s]]
         end
 
       end # class Match

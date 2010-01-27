@@ -82,7 +82,13 @@ module Waw
         
         # create project
         project = ::Waw::Wawgen::Project.new(project_name)
-        generate(project)
+        begin
+          generate(project)
+        rescue WLang::Error => ex
+          puts ex.message
+          puts ex.wlang_backtrace.join("\n")
+          puts ex.backtrace.join("\n")
+        end
       end
       
       # Puts an error message and exits
