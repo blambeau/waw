@@ -25,7 +25,7 @@ wawaccess do
   
   # When the file cannot be found
   match true do
-    if /\.wtpl$/ =~ served_file
+    if /\.whtml$/ =~ served_file
       apply "pages/404.whtml", 404
     else
       apply "#{served_file}.whtml"

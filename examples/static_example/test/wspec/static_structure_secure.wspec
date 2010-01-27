@@ -8,6 +8,10 @@ requirement("Static site structure is secure") do
     i_may_not_reach index_page + 'pages/layout.wtpl'
   }
   therefore("files outside the structure may not be accessed") {
-    i_may_not_reach index_page + '../logs/static_example.log'
+    # maybe it does not exist at all (so not a i_may_not_reach)
+    i_dont_reach index_page + '../logs/static_example.log'
+    i_may_not_reach index_page + '../config/commons.cfg'
+    i_may_not_reach index_page + '../waw.deploy'
+    i_may_not_reach index_page + '../waw.routing'
   }
 end
