@@ -60,7 +60,7 @@ gemspec = Gem::Specification.new do |s|
                     '--main' << 'README.rdoc' <<
                     '--line-numbers'  
   s.bindir = "bin"
-  s.executables = ["waw", "wspec"]
+  s.executables = ["waw", "wspec", "waw-start"]
   s.author = "Bernard Lambeau"
   s.email = "blambeau@gmail.com"
   s.homepage = "http://github.com/blambeau/waw"
