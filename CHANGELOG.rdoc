@@ -5,6 +5,10 @@
 * Layouts have been cleaned. The empty layout is less complete than before
 * Layouts force the waw version that is loaded by config.ru to a version greater
   than the one that created the layout. 
+* Bug/Feature #261 related to self referencing resource files has been implemented.
+* Features #305 and #306 related to default validators and validators taking blocks
+  have been implemented.
+
 
 === Version 0.2.0
 
