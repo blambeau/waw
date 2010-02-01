@@ -1,0 +1,9 @@
+h2. Contribute
+
+Users and developers are welcome to make contributions on "github":http://github.com/blambeau/waw. Forking the project there is the prefered way to submit patches or bug fixes. You are also invited to report bugs of feature requests on "our redmine bug tracker":https://redmine.chefbe.net/projects/waw.
+
+h3. We are currently looking for...
+
+* People are much welcome for contributing to the external (this site) as well as internal (API) documentation. Documentation improvements, tutorials, additional examples are all appreciated! Fork the source code and send us a pull request on github.
+
+* We are also looking for partners for enhancing waw kernel and tools. 
