@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+#
+#  Waw - making web development simple
+#        (see lib/waw/waw.rb for more information)
+#
+#  Copyright (c) 2010 University of Louvain, Bernard & Louis Lambeau
+#  Released under a MIT or Ruby licence
+#
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
+require 'waw'
+require 'waw/commands/command'
+require 'waw/commands/profile_command'
+
+begin
+  r = Waw::Commands::ProfileCommand.new.run '.', ARGV
+rescue Interrupt => e
+  $stderr.puts
+  $stderr.puts "Interrupted"
+  raise e
+rescue OptionParser::ParseError => e
+  $stderr.puts e.message
+  raise e
+rescue => e
+  $stderr.puts e.message
+  raise e
+end

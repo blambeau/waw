@@ -25,12 +25,24 @@ module Waw
           options = {:Port => Waw.config.web_port, :Host => "0.0.0.0", :AccessLog => []}
           server.run app, options
         end
-        if verbose
-          info "Your web application has been started successfully"
-          info "Have a look at #{Waw.config.web_base}"
-          info "Enjoy waw!"
+        try, ok = 0, false
+        begin
+          info "Attempting to reach the web server..." if verbose
+          Net::HTTP.get(URI.parse(Waw.config.web_base))
+          ok = true
+        rescue Errno::ECONNREFUSED => ex
+          sleep 0.1
+        end until (ok or (try += 1)>10)
+        if ok
+          if verbose
+            info "Your web application has been started successfully"
+            info "Have a look at #{Waw.config.web_base}"
+            info "Enjoy waw!"
+          end
+          t
+        else
+          raise Waw::Error, "Unable to reach the web server after having been started"
         end
-        t
       end
       
       # Runs the sub-class defined command
