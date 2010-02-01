@@ -3,7 +3,7 @@ module Waw
     class WawAccess
       # Domain specific language for .wawaccess language
       class DSL
-        #include ::Waw::Validation
+        include ::Waw::Validation
         
         # Creates a new DSL instance
         def initialize(wawaccess)
@@ -11,21 +11,9 @@ module Waw
           @wawaccess = wawaccess
         end
         
-        def file(opts = {})
-          Waw::Validation.file(opts)
-        end
-        
-        def directory
-          Waw::Validation.directory
-        end
-        
+        # Returns a validator that matches the root of the wawaccess tree
         def root
           Waw::Validation.validator{|served_file| File.expand_path(served_file) == File.expand_path(@wawaccess.root.folder)}
-        end
-        
-        # We delegate everything to Waw::Validation
-        def method_missing(name, *args, &block)
-          Waw::Validation.send(name, *args, &block)
         end
         
         # Starts a wawaccess file
@@ -48,7 +36,9 @@ module Waw
         
         # Serve some patterns
         def match(*patterns, &block)
-          raise WawError, "#{@wawaccess.identifier}: missing patterns in wawaccess.serve call" if patterns.empty?
+          patterns = patterns.compact
+          raise WawError, "#{@wawaccess.identifier}: missing patterns in wawaccess.match call" if patterns.empty?
+          raise WawError, "#{@wawaccess.identifier}: missing block in wawaccess.match call" if block.nil?
           @wawaccess.add_serve(patterns, &block)
         end
         
