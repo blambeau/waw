@@ -36,6 +36,29 @@ module Waw
     # Ruby classes => validators
     @@ruby_classes_to_validators = {}
     
+    # Other modules that include me
+    @@who_includes_me = []
+    
+    # Allows this module to be included as a normal one, hiding
+    # introspection mechanisms to install validators
+    class << self
+      
+      # When this module is included in _who_ we install all validation
+      # methods dynamically
+      def included(who)
+        @@who_includes_me << who unless @@who_includes_me.include?(who)
+        @@validators.each_pair do |name, validator|
+          who.module_eval <<-EOF
+            def #{name}(*args, &block)
+              ::Waw::Validation.send(:#{name}, *args, &block)
+            end
+          EOF
+        end
+      end
+      
+    end # Metaprogramming hack for module inclusion
+    
+    
     # Helpers for extensions
     class << self
       
@@ -91,6 +114,15 @@ module Waw
             end
           end
         EOF
+        
+        # Install the class methods on all modules that include me
+        @@who_includes_me.each do |mod|
+          mod.module_eval <<-EOF
+            def #{name}(*args, &block)
+              ::Waw::Validation.send(:#{name}, *args, &block)
+            end
+          EOF
+        end
         
         validator
       end

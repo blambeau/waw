@@ -3,6 +3,7 @@ module Waw
     class WawAccess
       # Domain specific language for .wawaccess language
       class DSL
+        #include ::Waw::Validation
         
         # Creates a new DSL instance
         def initialize(wawaccess)
