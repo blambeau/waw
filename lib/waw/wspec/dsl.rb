@@ -124,7 +124,7 @@ module Waw
       # Asserts that a page may not be reached, leading to a Net::HTTPForbidden (403) result.
       def i_may_not_reach(which_page)
         result = go(which_page)
-        assert Net::HTTPForbidden===result, __last_because + " (may actually reach #{which_page}: #{result})"
+        assert (Net::HTTPForbidden===result or Net::HTTPBadRequest===result), __last_because + " (may actually reach #{which_page}: #{result})"
       end
       
       #################################################################### About seeing something on the page
