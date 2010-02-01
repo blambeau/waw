@@ -11,8 +11,16 @@ module Waw
       end
       
       # Adds a resource to the collection
-      def method_missing(name, *args)
-        @resources.send(:add_resource, name, args[0])
+      def method_missing(name, *args, &block)
+        if args.length==0 and block.nil?
+          @resources.send(name)
+        elsif args.length==1 and block.nil?
+          @resources.send(:add_resource, name, args[0])
+        elsif args.length==0 and block
+          @resources.send(:add_resource, name, nil, &block)
+        elsif block
+          raise ArgumentError, "Bad resources usage on #{name} #{args.inspect} #{block.inspect}"
+        end
       end
       
     end # class Resources
@@ -43,13 +51,24 @@ module Waw
     end
     
     # Add a resource
-    def add_resource(name, value)
-      @resources[name.to_s.to_sym] = value
-      self.instance_eval <<-EOF
-        def #{name}
-          @resources[:#{name}] 
-        end
-      EOF
+    def add_resource(name, value, &block)
+      if not(value.nil?) and block.nil?
+        @resources[name.to_s.to_sym] = value
+        self.instance_eval <<-EOF
+          def #{name}
+            @resources[:#{name}] 
+          end
+        EOF
+      elsif value.nil? and not(block.nil?)
+        @resources[name.to_s.to_sym] = block
+        self.instance_eval <<-EOF
+          def #{name}
+            @resources[:#{name}].call(self)
+          end
+        EOF
+      else
+        raise ArgumentError, "ResourceCollection.add_resource expects one argument or a block"
+      end
     end
     
     # Logs a friendly message and returns nil
