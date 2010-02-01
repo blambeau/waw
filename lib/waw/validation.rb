@@ -85,9 +85,9 @@ module Waw
         # Installs the class method that returns the validator
         instance_eval <<-EOF
           class << self
-            def #{name}(*args)
+            def #{name}(*args, &block)
               val = @@validators[:#{name}]
-              val.is_a?(::Class) ? val.new(*args) : val
+              val.is_a?(::Class) ? val.new(*args, &block) : val
             end
           end
         EOF
