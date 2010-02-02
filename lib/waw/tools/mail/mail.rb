@@ -77,7 +77,7 @@ module Waw
         def to_s
           str = <<-MAIL_END
             From: #{from}
-            To: #{to.join(", ")}
+            To: #{to.nil? ? '' : to.join(", ")}
             Subject: #{subject}
             Date: #{date.rfc2822}
             MIME-Version: #{mime_version}
