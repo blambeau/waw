@@ -106,7 +106,7 @@ module Waw
           smtp_conn = Net::SMTP.new(@smtp_host, @smtp_port)
           smtp_conn.open_timeout = @smtp_timeout
           smtp_conn.start
-          smtp_conn.send_message(mail.to_s, mail.from, *mail.to)
+          smtp_conn.send_message(mail.dump, mail.from, *mail.to)
           smtp_conn.finish
         else
           sent = Mail.parse(mail.dump)
