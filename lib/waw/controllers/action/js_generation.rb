@@ -20,45 +20,45 @@ module Waw
       
       # Start hook start callback required by Waw. Generates the javascript code
       # if the configuration variable 'code_at_startup' is true. 
-      def run
-        return unless Waw.config.code_at_startup
+      def run(waw_kernel)
+        return unless waw_kernel.config.code_at_startup
         
         # Now, find the StaticController, that should be installed
-        static = Waw.find_rack_app {|app| ::Waw::StaticController===app}
+        static = waw_kernel.find_rack_app {|app| ::Waw::StaticController===app}
         error("Code generation expects a ::Waw::StaticController being installed.") if static.nil?
         
         # Find the folder now
-        folder = File.join(Waw.root_folder, static.root_folder, 'js')
+        folder = File.join(waw_kernel.root_folder, static.public_folder, 'js')
         error("Code generation expects #{folder} to be an existing directory.") unless File.directory?(folder)
         
         # Look for the application name
-        appname = Waw.config.knows?(:application_name) ? Waw.config.application_name : 'waw'
+        appname = waw_kernel.config.knows?(:application_name) ? waw_kernel.config.application_name : 'waw'
         
         # And let's go now!
         file = File.join(folder, "#{appname}_generated.js")
         File.open(file, 'w') do |buffer|
-          generate_js(buffer)
+          generate_js(waw_kernel, buffer)
         end
       end  
       
       # Generate the javascript code for installed action controllers.
-      def generate_js(buffer)
+      def generate_js(waw_kernel, buffer)
         # 1) header first
         buffer << strip(HEADER, 8) << "\n"
         
         # 2) messages
-        generate_js_messages(buffer)
+        generate_js_messages(waw_kernel, buffer)
         
         # 3) controllers
-        generate_js_controllers(buffer)
+        generate_js_controllers(waw_kernel, buffer)
       end
     
       # Generates the javascript code for message resources.
-      def generate_js_messages(buffer)
-        if Waw.resources.has_resource?(:messages)
+      def generate_js_messages(waw_kernel, buffer)
+        if waw_kernel.resources.has_resource?(:messages)
           buffer << "/* Messages, from waw.resources.messages */\n"
           messages = {}
-          Waw.resources.messages.each do |name, value|
+          waw_kernel.resources.messages.each do |name, value|
             messages[name] = value 
           end  
           buffer << "var messages = new Array();\n"
@@ -71,13 +71,13 @@ module Waw
       end
       
       # Generates the js controllers
-      def generate_js_controllers(buffer)
+      def generate_js_controllers(waw_kernel, buffer)
         ActionController.controllers.sort{|c1, c2| c1.class.name <=> c2.class.name}.each do |controller|
           # Let find the URL for this controller
-          app = Waw.find_rack_app{|a| controller===a}
-          url = app ? Waw.find_url_of(app) : nil
+          app = waw_kernel.find_rack_app{|a| controller===a}
+          url = app ? app.find_url_of(app) : nil
           unless url
-            Waw.logger.warn("Skipping #{controller}, which does not seem to be mapped to an URL")
+            waw_kernel.logger.warn("Skipping #{controller}, which does not seem to be mapped to an URL")
           else
             header = <<-EOF
               /* Actions contributed by #{controller}, mapped to #{url} */
@@ -85,14 +85,14 @@ module Waw
             buffer << strip(header, 14)
             controller.actions.keys.sort{|k1, k2| k1.to_s <=> k2.to_s}.each do |name|
               action = controller.actions[name]
-              generate_js_for_action(action, buffer)
+              generate_js_for_action(waw_kernel, action, buffer)
             end
           end
         end
       end
     
       # Generates the javascript code for a given action
-      def generate_js_for_action(action, buffer)
+      def generate_js_for_action(waw_kernel, action, buffer)
         action_js = <<-THEEND
           function #{action.id}(request_data, form) {
             $.ajax({type: "POST", url: "#{action.url}", data: request_data, dataType: "json",

@@ -1,15 +1,14 @@
 require "waw"
 describe Waw::FullState::Variable do
+  include ::Waw::Fixtures
+  before(:each) { load_empty_app   }
+  after(:each)  { unload_empty_app }
   
   # Creates a variable instance
   def variable(name, default_value = nil, &block)
     Waw::FullState::Variable.new(name, default_value, &block)
   rescue => ex
     raise ex
-  end
-  
-  before(:each) do
-    Waw.session.clear
   end
   
   it "should accept respect assignation" do

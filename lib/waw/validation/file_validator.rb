@@ -15,7 +15,7 @@ module Waw
             when :extension
               return false unless value==File.extname(f)
             else
-              Waw.logger.warn("Unexpected FileValidator option #{key} : #{value}")
+              raise Waw::Error, "Unexpected FileValidator option #{key} : #{value}"
           end
         end
         true

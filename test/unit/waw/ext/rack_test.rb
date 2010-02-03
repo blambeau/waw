@@ -30,7 +30,8 @@ module Waw
       @session = ::Rack::Session::Pool.new(@urlmap1, :domain => "www.waw.org", :expire_after => 65)
       @logger = ::Rack::CommonLogger.new(@session, STDOUT)
       @restart = ::Waw::Restart.new(@logger)
-      @app = ::Waw::KernelApp.new(@restart)
+      @app = ::Waw::Kern::App.new
+      @app.app = @restart
     end
     
     def test_find_rack_app
@@ -44,17 +45,6 @@ module Waw
       assert_equal @app3, app.find_rack_app('/webserv/people/and_an_action_name'){|theapp| AnApp===theapp}
       assert_equal @logger, app.find_rack_app{|theapp| ::Rack::CommonLogger===theapp}
       assert_equal @json, app.find_rack_app{|theapp| ::Waw::JSONController===theapp}
-      
-      Waw.kernel.app = app
-      assert_equal @app1, Waw.find_rack_app('/')
-      assert_equal @app1, Waw.find_rack_app('/'){|theapp| AnApp===theapp}
-      assert ::Waw::JSONController===Waw.find_rack_app('/webserv')
-      assert_equal @app2, Waw.find_rack_app('/webserv/event'){|theapp| AnApp===theapp}
-      assert_equal @app2, Waw.find_rack_app('/webserv/event/and_an_action_name'){|theapp| AnApp===theapp}
-      assert_equal @app3, Waw.find_rack_app('/webserv/people'){|theapp| AnApp===theapp}
-      assert_equal @app3, Waw.find_rack_app('/webserv/people/and_an_action_name'){|theapp| AnApp===theapp}
-      assert_equal @logger, Waw.find_rack_app{|theapp| ::Rack::CommonLogger===theapp}
-      assert_equal @json, Waw.find_rack_app{|theapp| ::Waw::JSONController===theapp}
     end
     
     def test_find_url_of

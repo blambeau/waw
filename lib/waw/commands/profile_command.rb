@@ -41,8 +41,8 @@ module Waw
         require 'waw/wspec/browser'
         
         # Start the server first
-        thread = ::Waw::Commands::StartCommand.new.waw_start(requester_file, verbose)
-        visited, browser, location = {}, ::Waw::WSpec::Browser.new, Waw.config.web_base
+        thread, waw_kernel = ::Waw::Commands::StartCommand.new.waw_start(requester_file, verbose)
+        visited, browser, location = {}, ::Waw::WSpec::Browser.new, waw_kernel.config.web_base
         
         # Launch the visit
         t1 = Time.now

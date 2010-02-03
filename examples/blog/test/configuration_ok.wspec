@@ -1,22 +1,22 @@
 scenario "The configuration is ok" do
   because("The root website URL is correctly served") {
-    i_reach Waw.config.web_base
+    i_reach index_page
     i_see "Welcome on this blog example !"
   }
   because("The 404 page is friendly") {
-    i_dont_reach Waw.config.web_base + 'nothing'
+    i_dont_reach index_page + 'nothing'
     i_see "This article has not been found"
   }
   because("Static files (css, js, images, ...) are correctly served") {
-    i_reach Waw.config.web_base + 'css/style.css'
-    i_reach Waw.config.web_base + 'js/blog.js'
+    i_reach index_page + 'css/style.css'
+    i_reach index_page + 'js/blog.js'
   }
   because("wlang correctly handles rdoc") {
-    i_reach Waw.config.web_base
+    i_reach index_page
     i_see_tag "h2"
   }
   because("the default wlang context is correct") {
-    i_reach Waw.config.web_base
+    i_reach index_page
     i_see_tag "link",   {:rel => "stylesheet", :type => "text/css", :href => /^.*\.css/}
     i_see_tag "script", {:type => "text/javascript", :src => /^.*\.js$/}
   }

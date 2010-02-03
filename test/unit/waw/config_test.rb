@@ -3,8 +3,12 @@ require 'test/unit'
 module Waw
   class ConfigTest < Test::Unit::TestCase
     
+    def root_folder
+      File.dirname(__FILE__)
+    end
+    
     def test_default_config
-      c = Config.new(false).merge <<-EOF
+      c = Config.new(self, false).merge <<-EOF
         log_dir   'logs'
         log_frequency 'weekly'
         log_level   Logger::DEBUG
@@ -16,7 +20,7 @@ module Waw
     end
     
     def test_config_allows_future_references
-      c = Config.new(false)
+      c = Config.new(self, false)
       c.merge <<-EOF
         first   12
         second  first
@@ -25,7 +29,7 @@ module Waw
     end
     
     def test_config_allows_block
-      c = Config.new(false)
+      c = Config.new(self, false)
       c.merge <<-EOF
         help           12
         jsgeneration   { true }
@@ -35,7 +39,7 @@ module Waw
     end
 
     def test_config_allows_block_referencing_others
-      c = Config.new(false)
+      c = Config.new(self, false)
       c.merge <<-EOF
         mode           'devel'
         jsgeneration   { mode=='devel' }

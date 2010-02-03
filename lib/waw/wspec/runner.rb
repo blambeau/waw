@@ -55,7 +55,7 @@ at_exit {
     if ok
       s = ::Waw::WSpec::Suite.new($scenarios)
       t1 = Time.now
-      s.run
+      s.run(Waw.kernel)
       t2 = Time.now
       puts "\nFinished in #{Time.now - t1} seconds.\n"
       puts "#{s.scenario_count} high-level requirements, #{s.assertion_count} assertions, #{s.failure_count} failures, #{s.error_count} errors"

@@ -27,7 +27,9 @@ module Waw
     
     # Initialize a configuration instance. If merge_default is set to true,
     # the default configuration file is automatically loaded.
-    def initialize(merge_default = true)
+    def initialize(app, merge_default = true)
+      raise ArgumentError, "Waw application required as first argument" unless app.respond_to?(:root_folder)
+      @wawapp = app
       self.merge_file(File.join(File.dirname(__FILE__), 'default_config.cfg')) if merge_default
     end
     
@@ -52,7 +54,7 @@ module Waw
       case name
         when :load_path
           value = [value] unless Array===value
-          value = value.collect{|val| File.expand_path(File.join(Waw.root_folder, val))}
+          value = value.collect{|val| File.expand_path(File.join(@wawapp.root_folder, val))}
           $LOAD_PATH.unshift(*value)
         when :requires
           value = [value] unless Array===value

@@ -9,14 +9,14 @@ module Waw
     
     # Handler for Rack calls to the controller
     def call(env)
-      if Waw.config.deploy_mode == 'devel'
+      if config.deploy_mode == 'devel'
         logger.debug("Starting controller execution #{self.class}")
         logger.debug("Session is #{session.inspect}")
       end
       result = execute(env, request, response)
       raise WawError, "Controller #{self.class} returned an empty result" unless result
       raise WawError, "Controller #{self.class} returned an invalid result #{result.inspect}" unless Array===result
-      if Waw.config.deploy_mode == 'devel'
+      if config.deploy_mode == 'devel'
         logger.debug("Successfull controller execution with #{result[0]}")
         logger.debug("Session is #{session.inspect}")
       end

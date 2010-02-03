@@ -10,8 +10,8 @@ module WLang
     def variable_missing(name)
       if self.respond_to?(name)
         self.send(name)
-      elsif Waw.resources.has_resource?(name)
-        Waw.resources[name]
+      elsif resources && resources.has_resource?(name)
+        resources[name]
       else
         raise ::WLang::UndefinedVariableError.new(nil, nil, nil, name)
       end

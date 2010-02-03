@@ -10,9 +10,15 @@ module Waw
       include HTMLAnalysis
     
       # Creates a DSL instance for a given scenario
-      def initialize(scenario)
+      def initialize(waw_kernel, scenario)
+        @waw_kernel = waw_kernel
         @scenario = scenario
         @browser = Browser.new
+      end
+      
+      # Returns waw kernel
+      def waw_kernel
+        @waw_kernel
       end
       
       #################################################################### Semi-private utilities
@@ -42,8 +48,8 @@ module Waw
       
       # Delegates to waw ressources
       def method_missing(name, *args, &block)
-        if args.empty? and Waw.resources and Waw.resources.has_resource?(name)
-          Waw.resources[name]
+        if args.empty? and resources and resources.has_resource?(name)
+          resources[name]
         else
           super(name, *args, &block)
         end
@@ -65,7 +71,7 @@ module Waw
       # Returns the URL of the index page (the web_base actually)
       # This method returns nil unless the Waw application has been loaded
       def index_page
-        Waw.config && Waw.config.web_base
+        config && config.web_base
       end
       
       # Goes to a given location and returns the HTTPResponse object
