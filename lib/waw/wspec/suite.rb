@@ -24,12 +24,12 @@ module Waw
       end
       
       # Runs the suite
-      def run
+      def run(waw_kernel)
         @scenarios.each do |sc|
           begin
             STDOUT.write('.')
             STDOUT.flush
-            sc.run
+            sc.run(waw_kernel)
             self.assertion_count += sc.assertion_count
           rescue Test::Unit::AssertionFailedError => ex
             # for ruby 1.8.6

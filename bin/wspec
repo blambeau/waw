@@ -23,9 +23,9 @@ else
   abord("Unable to find .wspec file #{wspec_file}", -1) unless File.exists?(wspec_file)
   
   # Load the waw application for having configuration
-  Waw.autoload(wspec_file)
+  app = Waw.autoload(wspec_file)
   raise "Tests cannot be run in production mode, to avoid modifying real database "\
-        "or sending spam mails to real users." unless Waw.config.deploy_mode=='devel'
+        "or sending spam mails to real users." unless app.config.deploy_mode=='devel'
   
   # Load the wspec runner now
   require 'waw/wspec/runner'

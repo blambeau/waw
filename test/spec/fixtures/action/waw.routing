@@ -1,0 +1,6 @@
+Waw.rack do
+  use ::Waw::JSONController
+  map "/services" do
+    run ::Waw::Fixtures::ActionControllerTest.instance
+  end
+end

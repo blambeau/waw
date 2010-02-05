@@ -11,17 +11,17 @@ module Waw
     ##############################################################################################
   
     # Default options of this service
-    DEFAULT_OPTIONS = {:root => 'public'}
+    DEFAULT_OPTIONS = {:public => 'public'}
   
     # Creates a service instance
     def initialize(opts = {})
       @options = DEFAULT_OPTIONS.merge(opts)
-      @wawaccess = ::Waw::StaticController::WawAccess.load_hierarchy(File.join(Waw.root_folder, root_folder))
+      @wawaccess = ::Waw::StaticController::WawAccess.load_hierarchy(File.join(root_folder, public_folder))
     end
   
     # Returns the template folder
-    def root_folder
-      @options[:root]
+    def public_folder
+      @options[:public] || @options[:root]
     end
   
     ##############################################################################################

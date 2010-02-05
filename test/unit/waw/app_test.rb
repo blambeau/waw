@@ -3,25 +3,21 @@ require 'test/unit'
 require 'waw'
 module Waw
   class AppTest < Test::Unit::TestCase
-    include Waw::App
+    include ::Waw::Kern::FreezedState
+    include ::Waw::Kern::Hooks
+    include ::Waw::Kern::Utils
+    include ::Waw::Kern::Lifecycle
+    attr_reader :folder
     
+    # Thrash class for the logger
     class Trash
       def self.write(*args) end
       def self.close(*args) end
     end
     
-    def self.app
-      @app
-    end
-    
-    def self.app=(app)
-      @app = app
-    end
-    
-    attr_reader :folder
-    
     def setup
       @folder = File.join(File.dirname(__FILE__), 'app_test')
+      wawrouting(nil, "nil")
     end
 
     def teardown
@@ -45,7 +41,7 @@ module Waw
     def wawrouting(name, value)
       file = name ? "waw.#{name}.routing" : "waw.routing"
       File.open(File.join(@folder, file), 'w') do |io|
-        io << "Waw::AppTest.app = '#{value}'"
+        io << "'#{value}'"
       end
     end
     
@@ -84,7 +80,7 @@ module Waw
         wawrouting "commons", "This is the commons routing"
         wawrouting "devel", "This is the devel routing"
         load_application(folder)
-        assert_equal "This is the devel routing", Waw::AppTest.app
+        assert_equal "This is the devel routing", app
       end
     end
 
@@ -93,7 +89,7 @@ module Waw
         wawrouting nil, "This is the standard routing"
         wawrouting "commons", "This is the commons routing"
         load_application(folder)
-        assert_equal "This is the commons routing", Waw::AppTest.app
+        assert_equal "This is the commons routing", app
       end
     end
 
@@ -102,7 +98,7 @@ module Waw
         wawrouting nil, "This is the standard routing"
         wawrouting "commons", "This is the commons routing"
         load_application(folder)
-        assert_equal "This is the standard routing", Waw::AppTest.app
+        assert_equal "This is the standard routing", app
       end
     end
     
@@ -112,7 +108,7 @@ module Waw
         wawrouting "commons", "This is the commons routing"
         wawrouting "devel", "This is the commons routing"
         load_application(folder)
-        assert_equal "This is the standard routing", Waw::AppTest.app
+        assert_equal "This is the standard routing", app
       end
     end
     
@@ -122,7 +118,7 @@ module Waw
         wawrouting "commons", "This is the commons routing"
         wawrouting "devel", "This is the commons routing"
         load_application(folder)
-        assert_equal "This is the commons routing", Waw::AppTest.app
+        assert_equal "This is the commons routing", app
       end
     end
     

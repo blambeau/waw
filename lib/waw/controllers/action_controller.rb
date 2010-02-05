@@ -27,14 +27,14 @@ module Waw
         super(child)
         # Adds the controller as a child
         controllers << child
+        
         # Let it become a singleton
         child.instance_eval { include Singleton }
+        
         # And install start hook for code generation
-        if controllers.size==1
-          Waw.add_start_hook(JSGeneration.new) 
-          Waw.add_unload_hook Kernel.lambda {
-            @@controllers = []
-          }
+        if controllers.size==1 && (k = Waw.kernel)
+          k.add_start_hook(JSGeneration.new) 
+          k.add_unload_hook ::Kernel.lambda { @@controllers = [] }
         end
       end
 
@@ -46,7 +46,7 @@ module Waw
       
       # Returns the url on which this controller is mapped
       def url
-        Waw.find_url_of(self.instance)
+        self.instance.url
       end
     
       # Returns installed actions
@@ -97,7 +97,7 @@ module Waw
     
     # Returns the url on which this controller is mapped
     def url
-      Waw.find_url_of(self)
+      find_kernel_context.find_url_of(self)
     end
     
     # Returns the actions installed on this controller
@@ -113,17 +113,17 @@ module Waw
     # Executes the controller
     def execute(env, request, response)
       action_name = request.respond_to?(:path) ? request.path : request[:action]
-      Waw.logger.debug("Executing the action whose name is #{action_name}")
+      logger.debug("Executing the action whose name is #{action_name}")
       action = find_action(action_name)
       if action
         actual_params = request.params.symbolize_keys
         result = encapsulate(action, actual_params) do 
           action.execute(actual_params)
         end
-        Waw.logger.debug("ActionResult is #{result.inspect}")
+        logger.debug("ActionResult is #{result.inspect}")
         [200, {}, result]
       else
-        Waw.logger.warn("Action #{action_name} has not been found")
+        logger.warn("Action #{action_name} has not been found")
         [200, {}, [:error, :action_not_found]]
       end
     end

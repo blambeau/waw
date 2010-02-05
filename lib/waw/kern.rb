@@ -1,0 +1,6 @@
+require 'waw/kern/freezed_state'
+require 'waw/kern/living_state'
+require 'waw/kern/hooks'
+require 'waw/kern/lifecycle'
+require 'waw/kern/utils'
+require 'waw/kern/app'

@@ -1,12 +1,11 @@
 require 'waw'
 describe ::Waw::Session do
+  include ::Waw::Fixtures
+  before(:each) { load_empty_app   }
+  after(:each)  { unload_empty_app }
   
   def session
-    ::Waw::Session.instance
-  end
-  
-  before(:each) do
-    Waw.session.clear
+    @empty_app.session
   end
   
   it "should allows being extended" do

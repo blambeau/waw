@@ -1,6 +1,5 @@
 require 'waw'
 require 'waw/tools/mail'
-
 describe ::Waw::Tools::MailAgent do
   
   def agent

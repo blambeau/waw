@@ -1,4 +1,3 @@
-$waw_deprecated_io = nil
 class Module
   
   def deprecated(msg = "The method ${method_name} is deprecated")

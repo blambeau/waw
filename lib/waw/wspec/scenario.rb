@@ -18,8 +18,6 @@ module Waw
         @browser = Browser.new
         @block = block
         @assertion_count = 0
-        
-        @because = []
       end
       
       # Adds an assertion
@@ -28,8 +26,8 @@ module Waw
       end
       
       # Run the test scenario
-      def run
-        DSL.new(self).__execute(&@block)
+      def run(waw_kernel)
+        DSL.new(waw_kernel, self).__execute(&@block)
       end
       
     end # class Scenario

@@ -1,9 +1,8 @@
 require "waw"
 describe ::Waw::FullState::OnInstance do
-  
-  before(:each) do
-    Waw.session.clear
-  end
+  include ::Waw::Fixtures
+  before(:each) { load_empty_app   }
+  after(:each)  { unload_empty_app }
   
   it "should allow session variable creation on classes" do
     class A
@@ -53,7 +52,7 @@ describe ::Waw::FullState::OnInstance do
     end
     a = A.new
     a.myvar = "world"
-    Waw.session[:myvar].should == "world"
+    @empty_app.session[:myvar].should == "world"
     a.myvar.should == "world"
   end
   
