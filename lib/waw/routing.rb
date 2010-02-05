@@ -5,6 +5,7 @@ require 'waw/routing/feedback'
 require 'waw/routing/form_validation_feedback'
 require 'waw/routing/refresh'
 require 'waw/routing/redirect'
+require 'waw/routing/javascript'
 module Waw
   module Routing
     module Methods
