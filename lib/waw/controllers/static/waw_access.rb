@@ -211,11 +211,13 @@ module Waw
       
       # Normalizes a requested path, removing any .html, .htm suffix
       def normalize_req_path(req_path)
-        # 1) Strip first
+        # 1) Decode the req_path with URI::decode
+        req_path = URI::decode(req_path)
+        # 2) Strip first
         req_path = req_path.strip
-        # 2) Remove first slash 
+        # 3) Remove first slash 
         req_path = req_path[1..-1] if req_path[0,1]=='/'
-        # 3) Remove last slash
+        # 4) Remove last slash
         req_path = req_path[0..-2] if req_path[req_path.length-1,1]=='/'
         req_path
       end
