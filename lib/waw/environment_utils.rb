@@ -7,7 +7,7 @@ module Waw
     include Waw::ScopeUtils
     
     DEPRECATED_MSG = <<-EOF
-      Method ${method_name} is deprecated and will be removed in version 0.2.
+      Method ${method_name} is deprecated and will be removed in version 0.3.
       Please include Waw::ScopeUtils module instead.
     EOF
     
@@ -19,7 +19,7 @@ module Waw
     
     # Checks if a session has a given key
     deprecated <<-EOF
-      Method ${method_name} is deprecated and will be removed in version 0.2.
+      Method ${method_name} is deprecated and will be removed in version 0.3.
       Please include Waw::ScopeUtils module and use session.has_key? instead.
     EOF
     def session_has_key?(key)
@@ -28,7 +28,7 @@ module Waw
 
     # Sets a pair inside the session. Returns the value.
     deprecated <<-EOF
-      Method ${method_name} is deprecated and will be removed in version 0.2.
+      Method ${method_name} is deprecated and will be removed in version 0.3.
       Please include Waw::ScopeUtils module and use session.set instead.
     EOF
     def session_set(key, value)
@@ -37,7 +37,7 @@ module Waw
     
     # Sets a pair inside the session
     deprecated <<-EOF
-      Method ${method_name} is deprecated and will be removed in version 0.2.
+      Method ${method_name} is deprecated and will be removed in version 0.3.
       Please include Waw::ScopeUtils module and use session.unset instead.
     EOF
     def session_unset(key)
@@ -46,7 +46,7 @@ module Waw
     
     # Get a value from the current session
     deprecated <<-EOF
-      Method ${method_name} is deprecated and will be removed in version 0.2.
+      Method ${method_name} is deprecated and will be removed in version 0.3.
       Please include Waw::ScopeUtils module and use session.get instead.
     EOF
     def session_get(key)
