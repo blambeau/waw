@@ -1,3 +1,4 @@
+require 'net/http'
 module Waw
   module Commands
     class StartCommand < Command
@@ -28,7 +29,7 @@ module Waw
         try, ok = 0, false
         begin
           info "Attempting to reach the web server..." if verbose
-          Net::HTTP.get(URI.parse(waw_kernel.config.web_base))
+          ::Net::HTTP.get(URI.parse(waw_kernel.config.web_base))
           ok = true
         rescue Errno::ECONNREFUSED => ex
           sleep 0.1
