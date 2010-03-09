@@ -1,3 +1,4 @@
+require 'uri'
 require 'waw/controllers/static/match'
 module Waw
   class StaticController < ::Waw::Controller

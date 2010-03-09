@@ -1,3 +1,4 @@
+require 'uri'
 require 'net/http'
 module Waw
   module Commands
