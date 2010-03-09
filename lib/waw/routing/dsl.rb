@@ -35,6 +35,11 @@ module Waw
         Waw::Routing::Redirect.new(*args)
       end
       
+      # Javascript routing execution
+      def javascript(*args)
+        Waw::Routing::Javascript.new(*args)
+      end
+      
     end # class DSL
   end # module Routing
 end # module Waw
