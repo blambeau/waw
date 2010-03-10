@@ -18,13 +18,13 @@ module Waw
       end
     
       # Adds a start hook.
-      def add_start_hook(hook)
-        hooks(:start) << hook
+      def add_start_hook(hook = nil, &block)
+        hooks(:start) << (hook || block)
       end
     
       # Adds an unload hook.
-      def add_unload_hook(hook)
-        hooks(:unload) << hook
+      def add_unload_hook(hook = nil, &block)
+        hooks(:unload) << (hook || block)
       end
     
       # Executes all hooks installed under _which_. Hooks installed through

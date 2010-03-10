@@ -1,19 +1,19 @@
 class Hash
 
   def keep!(*keys)
-    self.delete_if{|k,v| !keys.include?(k)}
+    self.delete_if{|k,v| !keys.flatten.include?(k)}
   end
 
   def keep(*keys)
-    self.dup.delete_if{|k,v| !keys.include?(k)}
+    self.dup.delete_if{|k,v| !keys.flatten.include?(k)}
   end
 
   def forget!(*keys)
-    self.delete_if{|k,v| keys.include?(k)}
+    self.delete_if{|k,v| keys.flatten.include?(k)}
   end
 
   def forget(*keys)
-    self.dup.delete_if{|k,v| keys.include?(k)}
+    self.dup.delete_if{|k,v| keys.flatten.include?(k)}
   end
 
   def symbolize_keys
