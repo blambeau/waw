@@ -6,7 +6,7 @@ module Waw
       
       # Creates the validator instance
       def initialize(*allowed)
-        @allowed = allowed
+        @allowed = (allowed.size==1 and Range===allowed[0]) ? allowed[0] : allowed
       end
       
       # Validation method
