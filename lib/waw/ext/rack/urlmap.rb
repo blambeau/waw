@@ -43,7 +43,7 @@ module Rack
         # as expected (3 arguments and not 4)
         app = match if app.nil? 
         unless is_delegate?(app)
-          Waw.logger.warning("We found a rack application which is not a delegator on #{path}: #{app.inspect}!")
+          Waw.logger.warn("We found a rack application which is not a delegator on #{path}: #{app.inspect}!")
           next 
         end
         app._visit((location.to_s.empty? ? path : path.chomp('/') + location.to_s), block)
