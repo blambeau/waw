@@ -12,6 +12,9 @@ module Waw
       # Current server response
       attr_reader :response
       
+      # The last action result
+      attr_reader :last_action_result
+      
       # Creates a browser instance
       def initialize(location = nil)
         self.location = location if location
@@ -26,16 +29,19 @@ module Waw
       
       # Ensures that something is an uri or convert it.
       def ensure_uri(uri)
+        raise ArgumentError, "ensure_uri: uri may not be nil" if uri.nil?
         is_uri?(uri) ? uri : URI.parse(uri)
       end
       
       # Extracts the base of an URI
       def extract_base(uri)
+        raise ArgumentError, "extract_base: uri may not be nil" if uri.nil?
         ensure_uri("#{uri.scheme}://#{uri.host}#{uri.port ? (':' + uri.port.to_s) : ''}/")
       end
       
       # Computes the new location if a relative uri is followed
       def relative_uri(uri)
+        raise ArgumentError, "relative_uri: uri may not be nil" if uri.nil?
         uri = ensure_uri(uri)
         if uri.path[0...1] == '/'
           new_location = base.dup
@@ -140,6 +146,7 @@ module Waw
       
       # Applies the action routing for a given action
       def apply_action_routing(action, result)
+        @last_action_result = result
         action.routing.apply_on_browser(result, self) if action.routing
         result.extend(Waw::Routing::Methods)
         result
