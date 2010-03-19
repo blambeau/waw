@@ -1,0 +1,16 @@
+requirement("Friendly error handlers should be provided by waw") {
+  browser.location = index_page + "argument"
+  i_see "ArgumentError error handler"
+
+  browser.location = index_page + "nomethod"
+  i_see "NoMethodError error handler"
+
+  browser.location = index_page + "fatal"
+  i_see "Internal Server Error"
+
+  browser.location = index_page + "anyother"
+  i_see "500.html error page"
+  
+  browser.location = index_page + "backtrace"
+  i_see "Mail should not be nil"
+}

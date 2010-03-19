@@ -211,7 +211,7 @@ module Waw
         # Catch the response, following redirections
         result = case response
           when Net::HTTPRedirection 
-            fetch(response['location'], limit - 1)
+            fetch(response['location'] || response['Location'], :get, {}, limit - 1)
           else
             [location, response]
         end

@@ -1,0 +1,32 @@
+Waw.rack do 
+  use ::Waw::ErrorHandler, Kernel.lambda{|k, ex|
+    [500, {'Content-Type' => 'text/plain'}, ["ArgumentError error handler"]] if ArgumentError === ex
+  }, Kernel.lambda{|k, ex|
+    [500, {'Content-Type' => 'text/plain'}, ["NoMethodError error handler"]] if NoMethodError === ex
+  }, Kernel.lambda{|k, ex|
+    raise if RuntimeError === ex
+  }, Kernel.lambda{|k, ex|
+    [301, {'Location' => k.config.web_base + '500.html'}, ['']]
+  }
+  map '/argument' do
+    run Kernel.lambda{|env| raise ArgumentError}
+  end
+  map '/nomethod' do
+    run Kernel.lambda{|env| raise NoMethodError}
+  end
+  map '/fatal' do
+    run Kernel.lambda{|env| raise}
+  end
+  map '/anyother' do
+    run Kernel.lambda{|env| raise Exception}
+  end
+  map '/500.html' do
+    run Kernel.lambda{|env|
+      [200, {'Content-Type' => 'text/plain'}, ['500.html error page']]
+    }
+  end
+  map '/backtrace' do
+    use ::Waw::ErrorHandler, ::Waw::ErrorHandler::Backtrace.new
+    run Kernel.lambda{|env| raise ArgumentError, "Mail should not be nil"}
+  end
+end
