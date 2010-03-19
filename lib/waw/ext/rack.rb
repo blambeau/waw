@@ -15,5 +15,5 @@ require 'waw/ext/rack/delegator'
 end
 
 # Makes overrides now
-#require 'waw/ext/rack/builder.rb'
+require 'waw/ext/rack/builder.rb'
 require 'waw/ext/rack/urlmap.rb'

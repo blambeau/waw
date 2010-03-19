@@ -1,8 +1,8 @@
 Waw.rack do 
-  # error_handler(ArgumentError) {|k, ex| [500, {'Content-Type' => 'text/plain'}, ["ArgumentError error handler"]] }
-  # error_handler(NoMethodError) {|k, ex| [500, {'Content-Type' => 'text/plain'}, ["NoMethodError error handler"]] }
-  # error_handler(RuntimeError)  {|k, ex| raise                                                                    }
-  # error_handler                {|k, ex| [301, {'Location' => k.config.web_base + '500.html'}, ['']]              }
+  error_handler(ArgumentError) {|k, ex| [500, {'Content-Type' => 'text/plain'}, ["ArgumentError error handler"]] }
+  error_handler(NoMethodError) {|k, ex| [500, {'Content-Type' => 'text/plain'}, ["NoMethodError error handler"]] }
+  error_handler(RuntimeError)  {|k, ex| raise                                                                    }
+  error_handler                {|k, ex| [301, {'Location' => k.config.web_base + '500.html'}, ['']]              }
   map '/argument' do
     run Kernel.lambda{|env| raise ArgumentError}
   end
@@ -21,7 +21,7 @@ Waw.rack do
     }
   end
   map '/backtrace' do
-    use ::Waw::ErrorHandler, ::Waw::ErrorHandler::Backtrace.new
+    error_handler ::Waw::ErrorHandler::Backtrace.new
     run Kernel.lambda{|env| raise ArgumentError, "Mail should not be nil"}
   end
 end
