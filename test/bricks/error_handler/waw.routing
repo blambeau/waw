@@ -1,13 +1,8 @@
 Waw.rack do 
-  use ::Waw::ErrorHandler, Kernel.lambda{|k, ex|
-    [500, {'Content-Type' => 'text/plain'}, ["ArgumentError error handler"]] if ArgumentError === ex
-  }, Kernel.lambda{|k, ex|
-    [500, {'Content-Type' => 'text/plain'}, ["NoMethodError error handler"]] if NoMethodError === ex
-  }, Kernel.lambda{|k, ex|
-    raise if RuntimeError === ex
-  }, Kernel.lambda{|k, ex|
-    [301, {'Location' => k.config.web_base + '500.html'}, ['']]
-  }
+  # error_handler(ArgumentError) {|k, ex| [500, {'Content-Type' => 'text/plain'}, ["ArgumentError error handler"]] }
+  # error_handler(NoMethodError) {|k, ex| [500, {'Content-Type' => 'text/plain'}, ["NoMethodError error handler"]] }
+  # error_handler(RuntimeError)  {|k, ex| raise                                                                    }
+  # error_handler                {|k, ex| [301, {'Location' => k.config.web_base + '500.html'}, ['']]              }
   map '/argument' do
     run Kernel.lambda{|env| raise ArgumentError}
   end
