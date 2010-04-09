@@ -108,6 +108,8 @@ module Waw
         def dup
           mail = super
           mail.to = to.nil? ? nil : to.dup
+          mail.cc = cc.nil? ? nil : cc.dup
+          mail.bcc = bcc.nil? ? nil : bcc.dup
           mail
         end
         
