@@ -10,6 +10,12 @@ module Waw
         # Target addresses 
         attr_accessor :to
         
+        # Target carbon copy addresses 
+        attr_accessor :cc
+        
+        # Target b carbon copy addresses 
+        attr_accessor :bcc
+        
         # Mail subject
         attr_accessor :subject
         
@@ -53,6 +59,10 @@ module Waw
                   mail.from = $1
                 when /^To: (.*)$/
                   mail.to = $1.split(',').collect{|s| s.strip}
+                when /^Cc: (.*)$/
+                  mail.cc = $1.split(',').collect{|s| s.strip}
+                when /^Bcc: (.*)$/
+                  mail.bcc = $1.split(',').collect{|s| s.strip}
                 when /^Subject: (.*)$/
                   mail.subject = $1
                 when /^Date: (.*)$/
@@ -78,6 +88,8 @@ module Waw
           str = <<-MAIL_END
             From: #{from}
             To: #{to.nil? ? '' : to.join(", ")}
+            Cc: #{cc.nil? ? '' : to.join(", ")}
+            Bcc: #{bcc.nil? ? '' : to.join(", ")}
             Subject: #{subject}
             Date: #{date.rfc2822}
             MIME-Version: #{mime_version}
