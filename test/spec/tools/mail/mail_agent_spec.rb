@@ -38,6 +38,16 @@ describe ::Waw::Tools::MailAgent do
     agent.mailbox("receiver2").size.should == 1
   }
   
+  it("should allow sending carbon copies") {
+    mail = agent.mail("Subject", "Message", "sender", "receiver1")
+    mail.cc = ["cc@chefbe.net"]
+    mail.bcc = ["bcc@chefbe.net"]
+    agent << mail
+    agent.mailbox("receiver1").size.should == 1
+    agent.mailbox("cc@chefbe.net").size.should == 1
+    agent.mailbox("bcc@chefbe.net").size.should == 1
+  }
+  
   # it("should really send mails if we force it") {
   #   agent = ::Waw::Tools::MailAgent.new({:host => 'localhost', :port => 7654, :timeout => 1}, true)
   #   agent << mail("Subject", "Message", "sender", "receiver1", "receiver2")

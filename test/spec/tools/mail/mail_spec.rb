@@ -6,12 +6,16 @@ describe ::Waw::Tools::MailAgent::Mail do
     mail = ::Waw::Tools::MailAgent::Mail.new
     mail.from = "blambeau@gmail.com"
     mail.to = ["blambeau@chefbe.net", "llambeau@chefbe.net"]
+    mail.cc = ["cc@chefbe.net"]
+    mail.bcc = ["bcc@chefbe.net"]
     mail.subject = "This is a test mail"
     mail.body = "Hello people"
     
     mail = ::Waw::Tools::MailAgent::Mail.decode(mail.encode)
     mail.from.should == "blambeau@gmail.com"
     mail.to.should == ["blambeau@chefbe.net", "llambeau@chefbe.net"]
+    mail.cc.should == ["cc@chefbe.net"]
+    mail.bcc.should == ["bcc@chefbe.net"]
     mail.subject.should == "This is a test mail"
     mail.content_type.should == "text/plain"
     mail.charset.should == "UTF-8"

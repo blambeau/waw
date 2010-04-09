@@ -37,7 +37,8 @@ module Waw
         # Creates an empty mail
         def initialize(subject = nil, body = nil, from = nil, *to)
           @from = from
-          @to = to.empty? ? nil : to
+          @to = to.empty? ? [] : to
+          @cc, @bcc = [], []
           @subject = subject
           @date = Time.now
           @mime_version = "1.0"
@@ -88,8 +89,8 @@ module Waw
           str = <<-MAIL_END
             From: #{from}
             To: #{to.nil? ? '' : to.join(", ")}
-            Cc: #{cc.nil? ? '' : to.join(", ")}
-            Bcc: #{bcc.nil? ? '' : to.join(", ")}
+            Cc: #{cc.nil? ? '' : cc.join(", ")}
+            Bcc: #{bcc.nil? ? '' : bcc.join(", ")}
             Subject: #{subject}
             Date: #{date.rfc2822}
             MIME-Version: #{mime_version}

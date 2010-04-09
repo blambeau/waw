@@ -112,6 +112,8 @@ module Waw
           Waw.logger.debug mail.dump
           sent = Mail.parse(mail.dump)
           mail.to.each {|who| mailbox(who) << sent.dup}
+          mail.cc.each {|who| mailbox(who) << sent.dup}
+          mail.bcc.each {|who| mailbox(who) << sent.dup}
         end
       end
       alias :<< :send_mail
