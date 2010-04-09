@@ -109,6 +109,7 @@ module Waw
           smtp_conn.send_message(mail.dump, mail.from, *mail.to)
           smtp_conn.finish
         else
+          Waw.logger.debug mail.dump
           sent = Mail.parse(mail.dump)
           mail.to.each {|who| mailbox(who) << sent.dup}
         end
