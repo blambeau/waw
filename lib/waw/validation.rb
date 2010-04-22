@@ -11,10 +11,12 @@ require 'waw/validation/default_validator'
 require 'waw/validation/same_validator'
 require 'waw/validation/isin_validator'
 
+require 'date'
 require 'waw/validation/boolean_validator'
 require 'waw/validation/string_validator'
 require 'waw/validation/integer_validator'
 require 'waw/validation/float_validator'
+require 'waw/validation/date_validator'
 require 'waw/validation/regexp_validator'
 
 require 'waw/validation/comparison_validations'
@@ -148,10 +150,12 @@ module Waw
     validator :string,    ::Waw::Validation::StringValidator.new
     validator :integer,   ::Waw::Validation::IntegerValidator.new
     validator :float,     ::Waw::Validation::FloatValidator.new
+    validator :date,      ::Waw::Validation::DateValidator.new
     ruby_class_to_validator(::Boolean, boolean)
     ruby_class_to_validator(::String, string)
     ruby_class_to_validator(::Integer, integer)
     ruby_class_to_validator(::Float, float)
+    ruby_class_to_validator(::Date, date)
     
     # Regexp-based validators
     validator :mail,      /^[a-zA-Z][\w\.-]*[a-zA-Z0-9]?@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$/
