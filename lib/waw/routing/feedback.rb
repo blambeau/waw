@@ -9,11 +9,12 @@ module Waw
       end
 
       def generate_js_code(result, align=0)
+        selector = @opts[:css_selector] || '.feedback'
         buffer = ""
         buffer << " "*align + "$(form + ' input').hide();\n" if @opts[:hide_input]
-        buffer << " "*align + "$(form + ' .feedback').show();\n"
+        buffer << " "*align + "$(form + ' #{selector}').show();\n"
         message = @opts[:message] ? "'#{@opts[:message]}'" : 'data[1][0]'
-        buffer << " "*align + "$(form + ' .feedback').html(messages[#{message}]);"
+        buffer << " "*align + "$(form + ' #{selector}').html(messages[#{message}]);"
         buffer
       end
       

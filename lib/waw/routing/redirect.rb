@@ -4,9 +4,7 @@ module Waw
     class Redirect < RoutingRule
       
       # Creates a redirection rule instance
-      def initialize(opts)
-        raise ArgumentError, "Invalid options #{opts.inspect} for Redirect, missing url"\
-          unless Hash===opts and opts.has_key?(:url)
+      def initialize(opts = {})
         @opts = opts
       end
       
@@ -16,7 +14,11 @@ module Waw
       end
       
       def generate_js_code(result, align=0)
-        " "*align + "window.location = \"#{@opts[:url]}\";"
+        if @opts[:url]
+          " "*align + "window.location = \"#{@opts[:url]}\";"
+        else
+          " "*align + "window.location = data[1];"
+        end
       end
       
     end # class Redirect
