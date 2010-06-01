@@ -58,6 +58,12 @@ module Waw
         EOF
       end
       
+      # Factors a javascript call to the associated action
+      def ajax_action_call(opts = {})
+        form_id = opts[:form_id] || id
+        "#{id}($(\"form##{form_id}\").serialize(), \"form##{form_id}\");"
+      end
+      
       # Factors the ajax code to submit the formulary
       def ajax_form_submit(opts = {})
         form_id = opts[:form_id] || id
