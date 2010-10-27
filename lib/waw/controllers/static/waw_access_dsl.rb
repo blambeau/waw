@@ -9,11 +9,20 @@ module Waw
         def initialize(wawaccess)
           raise ArgumentError, "wawaccess cannot be nil" unless WawAccess===wawaccess
           @wawaccess = wawaccess
+          @matchers = {}
         end
         
         # Returns a validator that matches the root of the wawaccess tree
         def root
           Waw::Validation.validator{|served_file| File.expand_path(served_file) == File.expand_path(@wawaccess.root.folder)}
+        end
+        
+        # Installs a matcher
+        def matcher(name, &predicate)
+          @matchers[name] = Matcher.new(@wawaccess, predicate)
+          (class << self; self; end).send(:define_method,name) do
+            @matchers[name]
+          end
         end
         
         # Starts a wawaccess file

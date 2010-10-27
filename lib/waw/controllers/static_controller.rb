@@ -1,5 +1,8 @@
+require 'uri'
 require 'waw/controllers/static/waw_access'
 require 'waw/controllers/static/waw_access_dsl'
+require 'waw/controllers/static/matcher'
+require 'waw/controllers/static/match'
 module Waw
   # 
   # A waw service that serves public pages expressed in wlang wtpl format
@@ -29,8 +32,8 @@ module Waw
     ##############################################################################################
 
     # Executes the service
-    def execute(env, req, res)
-      @wawaccess.do_path_serve(env['PATH_INFO'])
+    def call(env)
+      @wawaccess.call(env)
     end
 
   end # class Controller

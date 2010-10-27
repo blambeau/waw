@@ -1,0 +1,5 @@
+Waw.rack do 
+  map '/' do
+    run Waw::StaticController.new(:public => 'views')
+  end
+end

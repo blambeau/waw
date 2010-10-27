@@ -1,0 +1,19 @@
+wawaccess do
+  
+  matcher :is_number do
+    reqpath =~ /^\d+$/ 
+  end
+  
+  match is_number do
+    [200, {'Content-Type' => 'text/plain'}, "is_number"]
+  end
+  
+  match /^[a-z]+$/ do
+    [200, {'Content-Type' => 'text/plain'}, "[a-z]+"]
+  end
+  
+  match true do
+    [404, {'Content-Type' => 'text/plain'}, "Not found"]
+  end
+  
+end

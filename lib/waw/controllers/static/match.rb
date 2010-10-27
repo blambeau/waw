@@ -15,7 +15,7 @@ module Waw
         end
         
         # Executes on a wawaccess instance
-        def __execute
+        def __execute(env)
           instance_exec *@args, &@block
         end
         

@@ -1,9 +1,8 @@
-require 'uri'
-require 'waw/controllers/static/match'
 module Waw
   class StaticController < ::Waw::Controller
     # Waw version of .htaccess files
     class WawAccess
+      include Waw::ScopeUtils
       
       # The folder which is served
       attr_accessor :folder
@@ -66,7 +65,7 @@ module Waw
       
       def recognized_pattern?(pattern)
         [FalseClass, TrueClass, String, 
-         Regexp, Waw::Validation::Validator].any?{|c| c===pattern}
+         Regexp, Waw::Validation::Validator, StaticController::Matcher].any?{|c| c===pattern}
       end
       
       # Adds a child in the hierarchy
@@ -164,7 +163,8 @@ module Waw
       ################################################### .waw access rules application!
       
       # Finds the matching block inside this .wawaccess handler
-      def find_match(path)
+      def find_match(env)
+        path = env['REQ_PATH']
         @serve.each do |pattern, block|
           case pattern
             when FalseClass
@@ -186,6 +186,10 @@ module Waw
               if pattern.validate(matching_file(path))
                 return Match.new(self, path, block) 
               end
+            when StaticController::Matcher
+              if pattern.matches?(env)
+                return Match.new(self, path, block)
+              end
             else
               raise WawError, "Unrecognized wawaccess pattern #{pattern}"
           end
@@ -194,16 +198,16 @@ module Waw
       end 
       
       # Applies the rules defined here or delegate to the parent if allowed
-      def apply_rules(path)
-        if match = find_match(path)
-          match.__execute
+      def apply_rules(env)
+        if match = find_match(env)
+          match.__execute(env)
         elsif (parent and inherits)
-          parent.apply_rules(path)
+          parent.apply_rules(env)
         else
           body = "File not found: #{path}\n"
           [404, {"Content-Type" => "text/plain",
-             "Content-Length" => body.size.to_s,
-             "X-Cascade" => "pass"},
+                 "Content-Length" => body.size.to_s,
+                 "X-Cascade" => "pass"},
            [body]]
         end
       end
@@ -224,10 +228,15 @@ module Waw
       end
   
       # Serves a path from a root waw access in the hierarchy
-      def do_path_serve(path)
-        path = normalize_req_path(path)
-        waw_access = (find_wawaccess_for(path) || self)
-        waw_access.apply_rules(path)
+      def do_path_serve(path, env = rack_env)
+        env['REQ_PATH'] = normalize_req_path(path)
+        waw_access = (find_wawaccess_for(env['REQ_PATH']) || self)
+        waw_access.apply_rules(env)
+      end
+      
+      # Makes a Rack standard call
+      def call(env)
+        do_path_serve(env['PATH_INFO'], env)
       end
             
     end # class WawAccess

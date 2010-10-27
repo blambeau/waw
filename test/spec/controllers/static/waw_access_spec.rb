@@ -69,9 +69,9 @@ describe ::Waw::StaticController::WawAccess do
         match(true)      { :is404 }
       end
     EOF
-    wa.apply_rules('waw_access_spec.rb').should == :file
-    wa.apply_rules('').should == :directory
-    wa.apply_rules('nothing/at/all').should == :is404
+    wa.do_path_serve('waw_access_spec.rb').should == :file
+    wa.do_path_serve('').should == :directory
+    wa.do_path_serve('nothing/at/all').should == :is404
   end
   
   it "should not provide block conflict between validators and matching rules" do
