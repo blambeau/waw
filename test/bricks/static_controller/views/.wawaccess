@@ -1,7 +1,7 @@
 wawaccess do
   
   matcher :is_number do
-    reqpath =~ /^\d+$/ 
+    req_path =~ /^\d+$/ 
   end
   
   match is_number do

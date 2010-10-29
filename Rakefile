@@ -31,6 +31,13 @@ Rake::TestTask.new(:examples) do |test|
   test.verbose    =  true
 end
 
+desc "Lauches integration tests on bricks"
+Rake::TestTask.new(:bricks) do |test|
+  test.libs       = [ "lib", "test/unit" ]
+  test.test_files = [ 'test/bricks/test_all.rb' ]
+  test.verbose    =  true
+end
+
 desc "Run all rspec test"
 Spec::Rake::SpecTask.new(:spec) do |t|
   t.ruby_opts = ['-I.']
