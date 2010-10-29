@@ -8,6 +8,7 @@ module Waw
       Waw.logger.warn("Using a empty kernel because no one has been found")
       Waw::Kern::App.new("Empty autoloaded kernel").autoload(File.join(File.dirname(__FILE__), 'kern', 'empty'))
     end
+    alias :kernel :find_kernel_context
     
     ################################################################# About waw application
     
