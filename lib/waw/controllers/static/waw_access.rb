@@ -105,6 +105,10 @@ module Waw
       
       ################################################### Utilites about paths
       
+      def req_path
+        rack_env['REQ_PATH'] || normalize_req_path(rack_env['PATH_INFO'])
+      end
+
       # Returns the real path of a file
       def realpath(file)
         File.expand_path(File.join(folder, file))

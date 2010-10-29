@@ -4,6 +4,8 @@ module Waw
       class Match
         include Waw::ScopeUtils
         
+        attr_reader :wawaccess
+        
         # Served file
         attr_reader :served_file
         
@@ -22,6 +24,7 @@ module Waw
         # Delegated to the wawaccess that created me
         def root; @wawaccess.root; end
         def folder; @wawaccess.folder; end
+        def req_path; @wawaccess.req_path; end
         
         ################################################### Callbacks proposed to .wawaccess rules
       

@@ -21,8 +21,8 @@ module Waw
       end
       
       # Returns requested path
-      def reqpath
-        wawaccess.normalize_req_path(rack_env['PATH_INFO'])
+      def req_path
+        wawaccess.req_path
       end
       
       # Does the matcher matches a given path?
