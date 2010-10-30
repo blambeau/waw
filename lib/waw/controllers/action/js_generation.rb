@@ -97,7 +97,7 @@ module Waw
           function #{action.id}(request_data, form) {
             $.ajax({type: "POST", url: "#{action.url}", data: request_data, dataType: "json",
               error: function(data) {
-          		  window.location = '/feedback?mkey=server_error';
+          		  window.location = '/500';
           		},
           		success: function(data) {
         THEEND
