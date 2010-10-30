@@ -17,6 +17,7 @@ require 'waw/validation/string_validator'
 require 'waw/validation/integer_validator'
 require 'waw/validation/float_validator'
 require 'waw/validation/date_validator'
+require 'waw/validation/datetime_validator'
 require 'waw/validation/regexp_validator'
 
 require 'waw/validation/comparison_validations'
@@ -151,6 +152,8 @@ module Waw
     validator :integer,   ::Waw::Validation::IntegerValidator.new
     validator :float,     ::Waw::Validation::FloatValidator.new
     validator :date,      ::Waw::Validation::DateValidator.new
+    validator :datetime,  ::Waw::Validation::DateTimeValidator
+    validator :regexp,    ::Waw::Validation::RegexpValidator
     ruby_class_to_validator(::Boolean, boolean)
     ruby_class_to_validator(::String, string)
     ruby_class_to_validator(::Integer, integer)

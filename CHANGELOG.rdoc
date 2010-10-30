@@ -4,7 +4,8 @@
 
 * Added a Matcher class in StaticController, and matcher dsl rule in .wawaccess
 * Modified some WawAccess API (env is passed instead of path at different places)
-* Extends the kernel application to support internal requests
+* Kernel application has been extended to support internal requests
+* A DateTimeValidator has been added to the validation framework
 
 === Version 0.2.1
 
