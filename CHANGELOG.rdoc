@@ -6,6 +6,18 @@
 * Modified some WawAccess API (env is passed instead of path at different places)
 * Kernel application has been extended to support internal requests
 * A DateTimeValidator has been added to the validation framework
+* Waw::ActionController::JSGeneration becomes a controller. This allows setting
+  configuration variable 'code_at_startup' to false (no code generated as a file
+  at all) and including generated javascript as follows:
+
+    waw.routing
+        map '/webservices.js' do
+          run ::Waw::ActionController::JSGeneration.new
+        end
+      
+    layout.wtpl
+  		  <script type="text/javascript" src="/webservices.js"></script>
+  		  
 * Set Rack version to 1.2.1
 
 === Version 0.2.1
