@@ -19,6 +19,7 @@
   		  <script type="text/javascript" src="/webservices.js"></script>
   		  
 * Set Rack version to 1.2.1
+* Fixed a bug with waw-profile when encountering relative links.
 
 === Version 0.2.1
 

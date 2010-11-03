@@ -31,7 +31,11 @@ module Waw
         else
           puts "Visiting #{location}" if verbose
           browser.all_internal_links.each do |link|
-            visit(browser, link[:href], visited)
+            begin
+              visit(browser, link[:href], visited)
+            rescue URI::InvalidURIError => ex
+              puts "Hohoho, I've found something really wrong #{link[:href]}"
+            end
           end
         end 
       end

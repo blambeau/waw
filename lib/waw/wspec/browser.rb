@@ -43,6 +43,7 @@ module Waw
       def relative_uri(uri)
         raise ArgumentError, "relative_uri: uri may not be nil" if uri.nil?
         uri = ensure_uri(uri)
+        new_location = nil
         if uri.path[0...1] == '/'
           new_location = base.dup
           new_location.path = uri.path
@@ -50,17 +51,18 @@ module Waw
           new_location
         else
           new_location = base.dup
-          new_location.path = '/' + uri.path
+          new_location.path = File.dirname(new_location.path) + '/' + uri.path
           new_location.query = uri.query
           new_location
         end
+        new_location
       end
       
       #################################################################### Query utilities
       
       # Looks for the base of the website
       def base
-        @base ||= find_base
+        find_base
       end
       
       # Finds the base of the current location
