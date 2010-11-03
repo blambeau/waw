@@ -9,7 +9,7 @@ module Waw
   
   # Requirements on gems for this version
   GEM_REQUIREMENTS = {
-    :rack  => '>= 1.1.0',
+    :rack  => '>= 1.2.1',
     :wlang => '>= 0.9.0',
     :json  => '>= 1.1.9'
   }
