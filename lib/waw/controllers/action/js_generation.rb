@@ -1,6 +1,6 @@
 module Waw
   class ActionController < ::Waw::Controller
-    class JSGeneration
+    class JSGeneration < ::Waw::Controller
       
       # Header of the generated javascript file
       HEADER = <<-EOF
@@ -16,6 +16,15 @@ module Waw
       # Raises a ConfigurationError
       def error(msg)
         raise ConfigurationError, msg
+      end
+      
+      # Acts as a waw controller
+      def call(env)
+        buffer = []
+        generate_js(kernel, buffer)
+        [ 200, 
+          {'Content-Type' => 'application/javascript'},
+          buffer ]
       end
       
       # Start hook start callback required by Waw. Generates the javascript code

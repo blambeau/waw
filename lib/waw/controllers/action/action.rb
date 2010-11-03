@@ -43,6 +43,17 @@ module Waw
         "javascript:#{id}({#{buffer[2..-1]}}, '##{id}')"
       end
       
+      # Factors the ajax code for the action itself
+      def ajax_action_code
+        js = Waw::ActionController::JSGeneration.new
+        code = js.generate_js_for_action(Waw::kernel, self, "")
+        <<-EOF
+          <script type="text/javascript">
+            #{code}
+          </script>
+        EOF
+      end
+      
       # Factors the ajax code for preparing a formulary
       def ajax_form_preparer(opts = {})
         form_id = opts[:form_id] || id
