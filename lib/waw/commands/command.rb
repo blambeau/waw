@@ -35,12 +35,12 @@ module Waw
             @trace = true
           end
           
-          opt.on("--verbose", "-v", "Display extra progress as we progress") do |value|
-            @verbosity = 1
+          opt.on("--verbose", "Display extra info as we progress") do |value|
+            @verbosity = 2
           end
           
-          opt.on("--verbosity=X", "Set the verbosity level (0 to 5)") do |value|
-            @verbosity = value.to_i
+          opt.on("--silent", "Be quiet silent") do |value|
+            @verbosity = 0
           end
           
           # No argument, shows at tail.  This will print an options summary.

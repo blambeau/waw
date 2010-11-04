@@ -17,17 +17,17 @@ module Waw
       # Adds the options
       def add_options(options)
         @crawler = Waw::Crawler.new(nil)
-        options.on("--[no-]ping-externals", "[Don't] ping external links") do |value|
+        options.on("--[no-]check-externals", "[Don't] ping any external link") do |value|
           @crawler.check_externals = value
         end
         options.on("--[no-]check-img", "[Don't] check image <img src='...'>") do |value|
-          @crawler.check_img_src = value
+          @crawler.ping_on('img/@src', value)
         end
         options.on("--[no-]check-link", "[Don't] check <link href='...'>") do |value|
-          @crawler.check_link_href = value
+          @crawler.ping_on('link/@href', value)
         end
         options.on("--[no-]check-script", "[Don't] check <script src='...'>") do |value|
-          @crawler.check_script_src = value
+          @crawler.ping_on('script/@src', value)
         end
       end
       
@@ -35,7 +35,7 @@ module Waw
       def __run(requester_file, arguments)
         exit(nil, true) unless (arguments.size == 1)
         @crawler.root_uri = arguments[0]
-        @crawler.logger.level = verbosity
+        @crawler.listener.verbosity = @verbosity
         @crawler.crawl
       rescue Interrupt => ex
         info "waw-crawl stopping now... ciao!" if verbose
