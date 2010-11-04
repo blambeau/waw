@@ -5,14 +5,14 @@ module Waw
     class Command
       
       # The verbose level
-      attr_accessor :verbose
+      attr_accessor :verbosity
       
       # Show stack traces?
       attr_accessor :trace
       
       # Creates an empty command instance
       def initialize
-        @verbose = false
+        @verbosity = 1
         @buffer = STDOUT
       end
       
@@ -36,7 +36,11 @@ module Waw
           end
           
           opt.on("--verbose", "-v", "Display extra progress as we progress") do |value|
-            @verbose = true
+            @verbosity = 1
+          end
+          
+          opt.on("--verbosity=X", "Set the verbosity level (0 to 5)") do |value|
+            @verbosity = value.to_i
           end
           
           # No argument, shows at tail.  This will print an options summary.
@@ -54,6 +58,10 @@ module Waw
     
           opt.separator nil
         end
+      end
+      
+      def verbose
+        verbosity < 0
       end
 
       # Runs the command
