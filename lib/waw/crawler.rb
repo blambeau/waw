@@ -60,12 +60,6 @@ module Waw
       @agent = Mechanize.new
       @checked  = Hash.new
       @stack = [ agent.get(root_uri) ]
-      _crawl
-      @agent = nil
-    end
-    
-    # Crawls the pages
-    def _crawl
       until stack.empty?
         to_check = stack.shift
         case to_check
@@ -75,6 +69,7 @@ module Waw
             logger.debug("Skipping verification of #{to_check.uri}: not recognized")
         end
       end
+      @agent = nil
     end
     
     # Checks a web page
@@ -91,36 +86,72 @@ module Waw
       end
     end
     
+    # Converts an element for a location string
+    def location_str_for(element)
+      case element
+        when String
+          element
+        when Mechanize::Page::Link
+          element.href
+        when Mechanize::Page::Image
+          element.src
+        when Nokogiri::XML::Element
+          element[:href] || element[:src] || element[:url]
+        else
+          raise "Unexpected element #{element}"
+      end
+    end
+    
+    # Pings a single element
+    def ping(element, referer_page)
+      location = location_str_for(element)
+      if location
+        uri = resolve_uri(location, referer_page)
+        unless already_checked_or_pending?(uri)
+          agent.get(uri)
+          checked[uri] = true
+        else
+          false
+        end
+      else
+        nil
+      end
+    rescue => ex
+      handle_error(ex, element)
+    end
+    
+    def ping_web_page_uri(uri_href_src, page)
+      if uri_href_src.nil? or uri_href_src.empty?
+        nil
+      else
+        uri = resolve_uri(uri_href_src, page)
+        unless already_checked_or_pending?(uri)
+          agent.get(uri)
+          checked[uri] = true
+        else
+          false
+        end
+      end
+    end
+    
     def check_web_page_link_href(page)
       page.search('link').each do |link|
-        begin
-          next if link[:href].nil? or link[:href].empty?
-          uri = resolve_uri(link[:href], page)
-          
-          unless already_checked_or_pending?(uri)
-            agent.get(uri)
-            logger.info("pinging link #{uri}")
-            checked[uri] = true
-          end
-        rescue => ex
-          handle_error(ex, img)
+        done = ping(link, page)
+        if done
+          logger.info("<link href='#{link[:href]}'> ok!")
+        elsif done.nil?
+          #logger.warn("<link #{link.inspect}> check failed")
         end
       end
     end
     
     def check_web_page_script_src(page)
-      page.search('script').each do |link|
-        begin
-          next if link[:src].nil? or link[:src].empty?
-          uri = resolve_uri(link[:src], page)
-          
-          unless already_checked_or_pending?(uri)
-            agent.get(uri)
-            logger.info("pinging script #{uri}")
-            checked[uri] = true
-          end
-        rescue => ex
-          handle_error(ex, img)
+      page.search('script').each do |script|
+        done = ping(script, page)
+        if done
+          logger.info("<script src='#{script[:src]}'> ok!")
+        elsif done.nil?
+          #logger.warn("<script #{script.inspect}> check failed")
         end
       end
     end
@@ -158,36 +189,23 @@ module Waw
     
     def check_web_page_img_src(page)
       page.images.each do |img|
-        begin
-          next if img.src.nil? or img.src.empty?
-          uri = resolve_uri(img.src, page)
-          
-          unless already_checked_or_pending?(uri)
-            agent.get(uri)
-            logger.info("pinging image #{uri}")
-            checked[uri] = true
-          end
-        rescue => ex
-          handle_error(ex, img)
+        done = ping(img, page)
+        if done
+          logger.info("<img src='#{img.src}'> ok!")
+        elsif done.nil?
+          #logger.warn("<script #{script.inspect}> check failed")
         end
       end
     end
     
     # Handles errors that occur
     def handle_error(ex, to_check)
-      what = case to_check
-        when Mechanize::Page
-          to_check.uri
-        when Mechanize::Page::Link
-          to_check.href 
-        when Mechanize::Page::Image
-          to_check.src 
-      end
+      location = location_str_for(to_check)
       case ex
         when Mechanize::ResponseCodeError
-          logger.error("lost link #{what}")
+          logger.error("lost link #{location}")
         when Mechanize::UnsupportedSchemeError
-          logger.debug("unsupported scheme on #{what}")
+          logger.debug("unsupported scheme on #{location}")
         else
           raise ex
       end
