@@ -208,7 +208,7 @@ module Waw
         elsif (parent and inherits)
           parent.apply_rules(env)
         else
-          body = "File not found: #{path}\n"
+          body = "File not found: #{env['PATH_INFO']}\n"
           [404, {"Content-Type" => "text/plain",
                  "Content-Length" => body.size.to_s,
                  "X-Cascade" => "pass"},
