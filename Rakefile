@@ -1,7 +1,7 @@
 require "rake/rdoctask"
 require "rake/testtask"
 require "rake/gempackagetask"
-require 'spec/rake/spectask'
+require "rspec/core/rake_task"
 require "rubygems"
 
 dir     = File.dirname(__FILE__)
@@ -39,9 +39,9 @@ Rake::TestTask.new(:bricks) do |test|
 end
 
 desc "Run all rspec test"
-Spec::Rake::SpecTask.new(:spec) do |t|
+RSpec::Core::RakeTask.new(:spec) do |t|
   t.ruby_opts = ['-I.']
-  t.spec_files = FileList['test/spec/test_all.rb']
+  t.pattern = 'test/spec/test_all.rb'
 end
 
 desc "Lauches all tests"
