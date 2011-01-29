@@ -73,8 +73,13 @@ module Waw
           @critical = true
       
           # Create the action instance
-          action = Waw::ActionController::Action.new(name, @signature, @routing, self, instance_method(name))
-          actions[name] = action
+          meth = instance_method(name)
+          if meth.arity != 1
+            raise WawError, "Action #{self}::#{name} is missing its 'params' argument"
+          else
+            action = Waw::ActionController::Action.new(name, @signature, @routing, self, meth)
+            actions[name] = action
+          end
           
           # Installs the class method that returns the action
           instance_eval <<-EOF
