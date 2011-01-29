@@ -3,7 +3,7 @@ module Waw
     class ActionControllerTest < ::Waw::ActionController
       
       signature {}
-      def say_hello
+      def say_hello(params)
         :hello
       end
       
