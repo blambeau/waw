@@ -1,0 +1,27 @@
+wawaccess do
+
+  matcher :has_param1 do
+    request.params['param1'] == 'true'
+  end
+  
+  matcher :has_param2 do
+    request.params['param2'] == 'true'
+  end
+  
+  matcher :has_param3 do
+    request.params['param3'] == 'true'
+  end
+  
+  match(has_param1 & has_param2) do
+    [200, {'Content-Type' => 'text/plain'}, "has_param1 & has_param2"]
+  end
+  
+  match(has_param1 | has_param2) do
+    [200, {'Content-Type' => 'text/plain'}, "has_param1 | has_param2"]
+  end
+
+  match((has_param1 | has_param2).negate) do
+    [200, {'Content-Type' => 'text/plain'}, "(has_param1 | has_param2).negate"]
+  end
+  
+end

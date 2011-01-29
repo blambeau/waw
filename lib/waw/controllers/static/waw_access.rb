@@ -65,7 +65,7 @@ module Waw
       
       def recognized_pattern?(pattern)
         [FalseClass, TrueClass, String, 
-         Regexp, Waw::Validation::Validator, StaticController::Matcher].any?{|c| c===pattern}
+         Regexp, Waw::Validation::Validator, StaticController::AbstractMatcher].any?{|c| c===pattern}
       end
       
       # Adds a child in the hierarchy
@@ -190,7 +190,7 @@ module Waw
               if pattern.validate(matching_file(path))
                 return Match.new(self, path, block) 
               end
-            when StaticController::Matcher
+            when StaticController::AbstractMatcher
               if pattern.matches?(env)
                 return Match.new(self, path, block)
               end

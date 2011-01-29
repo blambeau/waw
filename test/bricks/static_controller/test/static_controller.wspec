@@ -1,12 +1,24 @@
 requirement("Friendly static control should be provided by waw") {
   
-  browser.location = index_page + "not_existing"
-  i_see "Not found"
-
-  browser.location = index_page + "hello"
-  i_see "[a-z]+"
-  
   browser.location = index_page + "123"
   i_see "is_number"
   
+  browser.location = index_page + "hello"
+  i_see "[a-z]+"
+  
+  browser.location = index_page + "not_existing"
+  i_see "Not found"
+  
+  browser.location = index_page + 'boolean?param1=true&param2=true'
+  i_see "has_param1 & has_param2"
+
+  browser.location = index_page + 'boolean?param1=true'
+  i_see "has_param1 | has_param2"
+
+  browser.location = index_page + 'boolean?param2=true'
+  i_see "has_param1 | has_param2"
+  
+  browser.location = index_page + 'boolean?param3=true'
+  i_see "(has_param1 | has_param2).negate"
+
 }
