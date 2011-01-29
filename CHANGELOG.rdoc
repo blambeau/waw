@@ -20,6 +20,7 @@
   		  
 * Set Rack version to 1.2.1
 * Fixed a bug with waw-profile when encountering relative links.
+* Moved to rspec 2.4.0
 
 === Version 0.2.1
 
