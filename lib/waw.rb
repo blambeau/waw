@@ -15,7 +15,7 @@ module Waw
   }
   
   # Waw version
-  VERSION = "0.3.0".freeze
+  VERSION = "0.3.1".freeze
   
   # Waw loading mutex
   WAW_KERNELS_LOCK = Mutex.new
