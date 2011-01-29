@@ -1,0 +1,15 @@
+class Waw::ActionControllerBrickTest < Waw::ActionController
+  
+  signature{}
+  def say_hello(params)
+    :ok
+  end
+  
+end
+
+Waw.rack do 
+  map '/' do
+    use ::Waw::JSONController
+    run Waw::ActionControllerBrickTest.instance
+  end
+end

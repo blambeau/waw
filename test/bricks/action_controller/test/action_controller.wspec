@@ -1,0 +1,6 @@
+requirement("Action controller should serve JSON by default") {
+  
+  browser.location = index_page + "say_hello"
+  i_see "ok"
+
+}
