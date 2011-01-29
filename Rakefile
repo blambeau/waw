@@ -17,13 +17,6 @@ Rake::TestTask.new(:unit) do |test|
   test.verbose    =  true
 end
 
-desc "Lauches integration tests on layouts"
-Rake::TestTask.new(:layouts) do |test|
-  test.libs       = [ "lib", "test/unit" ]
-  test.test_files = [ 'test/integration/**/*.rb' ]
-  test.verbose    =  true
-end
-
 desc "Lauches integration tests on examples"
 Rake::TestTask.new(:examples) do |test|
   test.libs       = [ "lib", "test/unit" ]
@@ -60,7 +53,7 @@ gemspec = Gem::Specification.new do |s|
   s.version = version
   s.summary = "Waw - making web applications simple"
   s.description = %{A web application framework written in Ruby}
-  s.files = Dir['lib/**/*'] + Dir['test/**/*'] + Dir['bin/*'] + Dir.glob('layouts/**/*', File::FNM_DOTMATCH)
+  s.files = Dir['lib/**/*'] + Dir['test/**/*'] + Dir['bin/*']
   s.require_path = 'lib'
   s.has_rdoc = true
   s.extra_rdoc_files = ["README.rdoc", "LICENCE.rdoc"]

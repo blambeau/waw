@@ -1,3 +1,0 @@
-requirement("The web server should at least be reachable") do
-  i_reach index_page
-end
