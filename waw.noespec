@@ -1,0 +1,55 @@
+# Noe template for ruby gem libraries (https://github.com/blambeau/noe) - short version
+# Run 'noe show-spec' and 'noe help show-spec' for additional details.
+
+# Don't remove this entry!
+template-info:
+  name: "ruby"
+  version: 1.3.0
+
+# Update to match your own configuration.
+variables:
+  # A ruby lower case project name.
+  lower: 
+    waw
+
+  # A ruby upper case project name. 
+  upper:
+    Waw
+
+  # Version of your library
+  version:
+    0.3.1
+    
+  # Project summary (~ 1 line).
+  summary: |-
+    Waw - Web Another Way
+
+  # Project description (~ 5 lines). Project description should be more complete
+  # than the summary and will be used to describe your gem on rubygems.org
+  description: |-
+    Waw is a ruby web framework that aims at thinking the web another way. It's has been
+    originally designed in the ReQuest research project of the University of Louvain, has
+    been entirely rewritten in ruby, and is still actively developped to reach its first
+    real stable version ;-)
+      
+  # Authors of the project (- {name: Bob, email: bob@gmail.com}, ...) 
+  authors: 
+    - {name: "Bernard Lambeau", email: blambeau@gmail.com}
+    - {name: "Louis Lambeau", email: louislambeau@gmail.com}
+
+  # Web links for the project (- http://..., - http://...). 
+  links: 
+    - http://github.com/blambeau/waw
+
+  # Gem dependencies. (- {name: ..., version: ..., groups: [...]}, ...)
+  dependencies: 
+    # development
+    - {name: rake,      version: "~> 0.8.7",  groups: [development]}
+    - {name: bundler,   version: "~> 1.0",    groups: [development]}
+    - {name: rspec,     version: "~> 2.4.0",  groups: [development]}
+    - {name: yard,      version: "~> 0.6.4",  groups: [development]}
+    - {name: bluecloth, version: "~> 2.0.9",  groups: [development]}
+    # runtime
+    - {name: rack,      version: "~> 1.2.1",  groups: [runtime]}
+    - {name: wlang,     version: "~> 0.10.1", groups: [runtime]}
+    - {name: json,      version: ">= 1.1.9",  groups: [runtime]}

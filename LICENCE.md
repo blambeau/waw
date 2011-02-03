@@ -1,8 +1,8 @@
-= Licence
+# Licence
 
 	The MIT License
 
-	Copyright (c) 2009 Bernard & Louis Lambeau and the University of Louvain 
+	Copyright (c) 2009-2011 Bernard & Louis Lambeau and the University of Louvain 
 	(Universite Catholique de Louvain, Louvain-la-Neuve, Belgium)
 	
 	Permission is hereby granted, free of charge, to any person obtaining a copy

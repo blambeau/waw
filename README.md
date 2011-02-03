@@ -1,10 +1,18 @@
-= Waw, making web applications simple
+# Waw, making web applications simple
 
 Waw is a web framework written in Ruby. It provides an alternative to Rails and other frameworks
 written in Ruby as well. It is designed to be somewhere in the middle between Rails (sometimes a 
-bit too heavy) and Rack (not really a framework, sometimes too low-level).
+bit too heavy) and Rack/Sinatra (not really a framework, sometimes too low-level).
 
-== Main features
+Waw has been originally designed in the ReQuest research project of the University of Louvain, has
+been entirely rewritten in ruby, and is still actively developped to reach its first real stable 
+version ;-)
+
+## Links
+
+http://github.com/blambeau/waw
+
+## Main features
 
 Waw basically provides an overall architecture for web sites and/or applications. Its main 
 features are
@@ -23,10 +31,4 @@ features are
 - When things become too restrictive for you (you don't fit the architecture exactly) you can 
   access lower stages ... edit the underlying Rack configuration and install your own services
   in a few minutes, bypassing waw when needed!
-  
-== Dependencies
 
-Waw requires the following ruby gems
-
-- rack >= 1.1.0 (provided through <code>gem install rack</code>)
-- wlang >= 0.9.0 (provided in the vendors folder)

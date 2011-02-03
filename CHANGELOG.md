@@ -1,6 +1,10 @@
-== Changelog
+# Version 0.3.1
 
-=== Version 0.3.0
+* On the devel side
+
+  * Bumped to ruby.noe 1.3.0
+
+# Version 0.3.0
 
 * Added a Matcher class in StaticController, and matcher dsl rule in .wawaccess
 * Modified some WawAccess API (env is passed instead of path at different places)
@@ -22,7 +26,7 @@
 * Fixed a bug with waw-profile when encountering relative links.
 * Moved to rspec 2.4.0
 
-=== Version 0.2.1
+# Version 0.2.1
 
 * Layouts have been cleaned. The empty layout is less complete than before
 * Layouts force the waw version that is loaded by config.ru to a version greater
@@ -33,16 +37,16 @@
   have been implemented.
 
 
-=== Version 0.2.0
+# Version 0.2.0
 
-==== Broken features and APIs (by order of importance)
+## Broken features and APIs (by order of importance)
 
 * Major changes due to wlang version 0.9.0 (see Changelog there). Waw 0.2.0 verifies
   that a wlang gem >= 0.9.0 is installed in rubygems.
 * The 'using self' syntax is deprecated in .wtpl files. Equivalence can be obtained 
   trough 'share all' (see also auto-waw-scoping later)
 
-==== New features
+## New features
 
 * All methods in Waw::ScopeUtils are automatically present in all wlang scopes as 
   low priority variables (aka auto-waw-scoping)
@@ -50,21 +54,21 @@
 * 'waw create' applies WLang::encode(upper_name, 'ruby/method-case') for computing 
   the lower project name.
 
-==== Bugfixes
+## Bugfixes
 
 * bug #290: Rack >= 1.1.0 is verified through rubygems
 * feature #259: CSS and JS files are sorted by names when put in css_files and js_files wlang 
   variables
 
-=== Version 0.1.3
+# Version 0.1.3
 
-==== Broken features and APIs (by order of importance)
+## Broken features and APIs (by order of importance)
 
 * wawspec become wspec, all old invocations and assertions have been removed
 * 'scenario' and 'because' in wspec are considered deprecated (but can still be used).
   They are replaced by 'requirement' and 'therefore'
 
-==== New features
+## New features
 
 * A mail agent has been added in tools. It expects a smtp_config variable in Waw.config.
   This agent really send mails in 'production' and 'acceptation' deployment modes. In

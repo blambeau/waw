@@ -2,9 +2,7 @@ $waw_deprecated_io = nil
 require 'singleton'
 require 'waw/ext/core'
 require 'waw/ext/rack'
-# 
-# Main waw module, providing the strict micro kernel of waw loader
-#
+require 'waw/version'
 module Waw
   
   # Requirements on gems for this version
@@ -13,9 +11,6 @@ module Waw
     :wlang => '>= 0.9.0',
     :json  => '>= 1.1.9'
   }
-  
-  # Waw version
-  VERSION = "0.3.1".freeze
   
   # Waw loading mutex
   WAW_KERNELS_LOCK = Mutex.new
@@ -74,10 +69,8 @@ end
 
 # Now, make ruby requires
 require 'rubygems'
-Waw::GEM_REQUIREMENTS.each_pair {|name, version|
-  gem(name.to_s, version)
-  require(name.to_s)
-}
+Waw::GEM_REQUIREMENTS.each_pair {|name, version| gem(name.to_s, version)}
+require 'waw/loader'
 require 'waw/errors'
 require 'waw/scope_utils'
 require 'waw/ext'
