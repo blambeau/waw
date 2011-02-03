@@ -1,10 +1,15 @@
 # Version 0.3.1
 
+* Major enhancements
+
+  * Added &, | and negate on wawaccess's Matchers
+  * Fixed #447: user-friendly message when params is forgotten in action method signature
+  * Cleaned the gemspec to include official dependencies
+
 * On the devel side
 
   * Bumped to ruby.noe 1.3.0
   * Spec tests moved under spec/ instead of test/spec
-  * Cleaned the gemspec to include official dependencies
   * Removed the vendor library, as all dependencies are official gems
 
 # Version 0.3.0
