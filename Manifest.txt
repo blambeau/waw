@@ -1,10 +1,12 @@
-waw.gemspec
-waw.noespec
 .gemtest
+bin/**/*
 CHANGELOG.md
 Gemfile
 Gemfile.lock
-bin/**/*
+layouts/**/*
+layouts/static/public/.wawaccess
+layouts/static/public/pages/.wawaccess
+layouts/static/public/templates/.wawaccess
 lib/**/*
 LICENCE.md
 Manifest.txt
@@ -13,3 +15,5 @@ README.md
 spec/**/*
 tasks/**/*
 test/**/*
+waw.gemspec
+waw.noespec
