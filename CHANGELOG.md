@@ -3,6 +3,7 @@
 * On the devel side
 
   * Bumped to ruby.noe 1.3.0
+  * Spec tests moved under spec/ instead of test/spec
 
 # Version 0.3.0
 
