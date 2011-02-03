@@ -4,6 +4,8 @@
 
   * Bumped to ruby.noe 1.3.0
   * Spec tests moved under spec/ instead of test/spec
+  * Cleaned the gemspec to include official dependencies
+  * Removed the vendor library, as all dependencies are official gems
 
 # Version 0.3.0
 
@@ -36,7 +38,6 @@
 * Bug/Feature #261 related to self referencing resource files has been implemented.
 * Features #305 and #306 related to default validators and validators taking blocks
   have been implemented.
-
 
 # Version 0.2.0
 

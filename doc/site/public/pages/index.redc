@@ -18,20 +18,3 @@ h3. Non intrusive framework
 * _wlang_ does not fit your needs? Use another templating engine if it helps!
 * You want access relational databases instead of an Object Relational Mapper? Do it! 
 
-h3. Linking requirements to code
-
-<pre>requirement("Users should be able to subscribe") do
-  milestone("A subscription link should appear on the index page") {
-    go     index_page
-    i_see  "Subscribe"
-  }
-  milestone("Following this link should lead to a registration form") {
-    i_follow link(:href   => "/subscribe")
-    i_see    form(:action => "/subscribe.do")
-  }
-  milestone("Sumitting this form should send an activation email") {
-    i_submit    form(:action => "/subscribe.do", :mail => "myself@example.com")
-    i_see       "Thank you for registration!"
-    i_received  email('myself@example.com')
-  }
-end</pre>
